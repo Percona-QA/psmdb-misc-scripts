@@ -15,5 +15,5 @@ var uuid=gtidHexString.substring(16);
 var seq=gtidHexString.substring(0,16);
 
 print(gtidHexString);
-print('0x'+uuid+':'+'0x'+seq);
+print('0x'+seq+':'+'0x'+uuid);
 
