@@ -2,13 +2,20 @@
 
 # Run smoke tests for PSMDB 
 
-# suite definitions - first element is suite 
-# followed by options
+# suite definitions - first element is suite name
+# followed by runSets 
 
-# options:
-# default - run the suite with default smoke config (mmapv1)
-# se - run the suite with all other storage engines
-# auth - run the suite with the --auth parameter
+# runSets:
+#   default    - run the suite with default smoke config
+#   se         - run the suite with all non-default storage engines
+#   auth       - run the suite with the authentication
+#   wiredTiger - run with wiredTiger storage engine
+#   PerconaFT  - run with PerconaFT storage engine
+#   rocksdb    - run with rocksdb storage engine
+#   mmapv1     - run with mmapv1 storage engine
+
+# suite name or runSets can have -- style options specified 
+# which are passed to smoke
 
 readarray SUITES <<-'EOS'
 aggregation,default,auth,se
@@ -37,13 +44,13 @@ replication,default,se,auth
 sharding,default,se,auth
 slow1,default,se
 slow2,default,se
-ssl,default
+ssl --use-ssl,default
 sslSpecial,default
 tool,default,se
 EOS
 
 # smoke parameters
-SMOKE_BASE="--continue-on-failure"
+SMOKE_BASE="--continue-on-failure --clean-every=1"
 SMOKE_DEFAULT=""
 SMOKE_AUTH="--auth"
 SMOKE_SE=""
@@ -90,30 +97,62 @@ for suite in "${SUITES[@]}"; do
   IFS=',' read -r -a suiteDefinition <<< "${suite}"
   suiteElementNumber=0
   for suiteElement in "${suiteDefinition[@]}"; do
-    if [ ${suiteElementNumber} -eq 0 ]; then
-      suite=${suiteElement}
+    if [[ ${suiteElement} =~ ^([a-z0-9_]+)[[:space:]](.*)$ ]]; then
+      suiteElementName=${BASH_REMATCH[1]}
+      suiteElementOptions=${BASH_REMATCH[2]}
     else
-      suiteOption=${suiteElement}
-      logOutputFilePrefix="smoke_${suite}_${suiteOption}"
-      case "$suiteOption" in
+      suiteElementName=${suiteElement}
+      suiteElementOptions=""
+    fi
+    if [ ${suiteElementNumber} -eq 0 ]; then
+      suite=${suiteElementName}
+      suiteOptions=${suiteElementOptions}
+    else
+      suiteRunSet=${suiteElementName}
+      suiteRunSetOptions=${suiteElementOptions}
+      logOutputFilePrefix="smoke_${suite}_${suiteRunSet}"
+      case "$suiteRunSet" in
         "default")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          smokeParams="${SMOKE_BASE} ${SMOKE_DEFAULT} --storageEngine=${DEFAULT_ENGINE} ${suite}"
+          smokeParams="${SMOKE_BASE} ${SMOKE_DEFAULT} --storageEngine=${DEFAULT_ENGINE} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
           runSmoke "${smokeParams}" "$logOutputFile"
           ;;
         "auth")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=${DEFAULT_ENGINE} ${suite}"
+          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=${DEFAULT_ENGINE} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
+          runSmoke "${smokeParams}" "$logOutputFile"
+          ;;
+        "wiredTiger")
+          logOutputFile="${logOutputFilePrefix}_${trial}.log"
+          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=wiredTiger ${suiteOptions} ${suiteRunSetOptions} ${suite}"
+          runSmoke "${smokeParams}" "$logOutputFile"
+          ;;
+        "PerconaFT")
+          logOutputFile="${logOutputFilePrefix}_${trial}.log"
+          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=PerconaFT ${suiteOptions} ${suiteRunSetOptions} ${suite}"
+          runSmoke "${smokeParams}" "$logOutputFile"
+          ;;
+        "rocksdb")
+          logOutputFile="${logOutputFilePrefix}_${trial}.log"
+          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=rocksdb ${suiteOptions} ${suiteRunSetOptions} ${suite}"
+          runSmoke "${smokeParams}" "$logOutputFile"
+          ;;
+        "mmapv1")
+          logOutputFile="${logOutputFilePrefix}_${trial}.log"
+          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=mmapv1 ${suiteOptions} ${suiteRunSetOptions} ${suite}"
           runSmoke "${smokeParams}" "$logOutputFile"
           ;;
         "se")
           for engine in "${ENGINES[@]}"; do
             if [ ! "${engine}" == "${DEFAULT_ENGINE}" ]; then
               logOutputFile="${logOutputFilePrefix}_${engine}_${trial}.log"
-              smokeParams="${SMOKE_BASE} --storageEngine=${engine} ${SMOKE_SE} ${suite}"
+              smokeParams="${SMOKE_BASE} --storageEngine=${engine} ${SMOKE_SE} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
               runSmoke "${smokeParams}" "$logOutputFile"
             fi
           done
+          ;;
+        *)
+          echo "failed: Unknown runSet definition: ${suiteRunSet} for ${suite}" >> "smoke_unknown_${trial}.log"
           ;;
       esac
     fi
