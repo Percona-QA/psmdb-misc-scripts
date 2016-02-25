@@ -8,7 +8,7 @@
 # runSets:
 #   default    - run the suite with default smoke config
 #   se         - run the suite with all non-default storage engines
-#   auth       - run the suite with the authentication
+#   auth       - run the suite with authentication
 #   wiredTiger - run with wiredTiger storage engine
 #   PerconaFT  - run with PerconaFT storage engine
 #   rocksdb    - run with rocksdb storage engine
@@ -43,7 +43,6 @@ replicasets,default,se,auth
 replication,default,se,auth
 sharding,default,se,auth
 slow1,default,se
-slow2,default,se
 ssl --use-ssl,default
 sslSpecial,default
 tool,default,se
@@ -55,11 +54,58 @@ SMOKE_DEFAULT=""
 SMOKE_AUTH="--auth"
 SMOKE_SE=""
 
-# detect engines
-if [ ! -x './mongod' ]; then
-  echo "Could not find ./mongod; make sure you are running this from the root build directory."
+# constants
+ULIMIT_NOFILES_MINIMUM=24576
+DBPATH="/data"   # don't change there are some hard codings
+
+### validations and fixes
+
+# ulimit
+
+ulimit_nofiles=$(ulimit -n)
+[ "${ulimit_nofiles}" -lt "${ULIMIT_NOFILES_MINIMUM}" ] && {
+  echo "please increase this limit before running."
+  exit 1;
+}
+
+# check for keys and set perms
+
+if ! ls jstests/libs/key* > /dev/null 2>&1; then
+  echo "Run from the root build directory."
   exit 1;
 fi
+chmod 400 jstests/libs/key*
+
+# check for needed mongo binaries
+
+for binary in bsondump mongo mongod mongodump mongoexport mongofiles mongoimport mongooplog mongorestore mongos mongostat; do
+  if [ ! -x "./${binary}" ]; then
+    echo "Could not find ./${binary}; make sure you are running this from the root build directory,"
+    echo "that the MongoDB binaries have been built and the mongo-tools binaries have been copied"
+    echo "to the build root."
+    exit 1;
+  fi
+done
+
+# check for dbpath
+
+if [[ ! -d "${DBPATH}" ]]; then
+  echo "The smoke test dbpath ${DBPATH} could not be found.  Please create this"
+  echo "data directory before running tests. (a symlink to another location is ok)"
+  echo "for faster speeds, an SSD target is recommended."
+  exit 1;
+fi
+
+# trial number
+
+if [ "$1" == "" ]; then
+  echo "Usage ./run_smoke.sh {trial #}"
+  exit 1;
+fi
+trial=$1
+
+# detect available engines
+
 ENGINES=()
 DEFAULT_ENGINE=$(./mongod --help | grep storageEngine | perl -ne 'm/\(=([^\)]+)\)/;print $1')
 ENGINES+=(${DEFAULT_ENGINE})
@@ -73,24 +119,17 @@ done
 
 # main script
 
-if [ "$1" == "" ]; then
-  echo "Usage ./run_smoke.sh {trial #}"                                                                               
-  exit 1;                                                                                                             
-fi                                                                                                                    
-trial=$1                                                                                                              
-
-# fix for auth tests
-if ! ls jstests/libs/key* > /dev/null 2>&1; then
-  echo "Run from the root build directory."
-  exit 1;
-fi
-
-chmod 400 jstests/libs/key*                                                                                           
-
 runSmoke() {
   local smokeParams=$1
   local logOutputFile=$2
+  # shellcheck disable=SC2086
   python buildscripts/smoke.py ${smokeParams} 2>&1 | tee "${logOutputFile}"
+}
+
+hasEngine() {
+  local engine
+  for engine in "${ENGINES[@]}"; do [[ "$engine" == "$1" ]] && return 0; done
+  return 1
 }
 
 for suite in "${SUITES[@]}"; do
@@ -112,35 +151,21 @@ for suite in "${SUITES[@]}"; do
       suiteRunSetOptions=${suiteElementOptions}
       logOutputFilePrefix="smoke_${suite}_${suiteRunSet}"
       case "$suiteRunSet" in
-        "default")
+        "default"|"auth")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          smokeParams="${SMOKE_BASE} ${SMOKE_DEFAULT} --storageEngine=${DEFAULT_ENGINE} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
+          [ "${suiteRunSet}" == "default" ] && smokeParams=${SMOKE_DEFAULT}
+          [ "${suiteRunSet}" == "auth" ] && smokeParams=${SMOKE_AUTH}
+          smokeParams="${SMOKE_BASE} ${smokeParams} --storageEngine=${DEFAULT_ENGINE} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
           runSmoke "${smokeParams}" "$logOutputFile"
           ;;
-        "auth")
+        "wiredTiger"|"PerconaFT"|"rocksdb"|"mmapv1")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=${DEFAULT_ENGINE} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
-          runSmoke "${smokeParams}" "$logOutputFile"
-          ;;
-        "wiredTiger")
-          logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=wiredTiger ${suiteOptions} ${suiteRunSetOptions} ${suite}"
-          runSmoke "${smokeParams}" "$logOutputFile"
-          ;;
-        "PerconaFT")
-          logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=PerconaFT ${suiteOptions} ${suiteRunSetOptions} ${suite}"
-          runSmoke "${smokeParams}" "$logOutputFile"
-          ;;
-        "rocksdb")
-          logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=rocksdb ${suiteOptions} ${suiteRunSetOptions} ${suite}"
-          runSmoke "${smokeParams}" "$logOutputFile"
-          ;;
-        "mmapv1")
-          logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          smokeParams="${SMOKE_BASE} ${SMOKE_AUTH} --storageEngine=mmapv1 ${suiteOptions} ${suiteRunSetOptions} ${suite}"
-          runSmoke "${smokeParams}" "$logOutputFile"
+          if hasEngine "${suiteRunSet}"; then
+            smokeParams="${SMOKE_BASE} ${SMOKE_SE} --storageEngine=${suiteRunSet} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
+            runSmoke "${smokeParams}" "$logOutputFile"
+          else
+            echo "failed: Storage Engine runSet: ${suiteRunSet} requested for suite ${suite} but is not available." | tee -a "${logOutputFile}"
+          fi
           ;;
         "se")
           for engine in "${ENGINES[@]}"; do
@@ -152,7 +177,7 @@ for suite in "${SUITES[@]}"; do
           done
           ;;
         *)
-          echo "failed: Unknown runSet definition: ${suiteRunSet} for ${suite}" >> "smoke_unknown_${trial}.log"
+          echo "failed: Unknown runSet definition: ${suiteRunSet} for ${suite}" | tee -a "smoke_unknown_${trial}.log"
           ;;
       esac
     fi
