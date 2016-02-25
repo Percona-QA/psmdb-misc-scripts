@@ -136,7 +136,7 @@ for suite in "${SUITES[@]}"; do
   IFS=',' read -r -a suiteDefinition <<< "${suite}"
   suiteElementNumber=0
   for suiteElement in "${suiteDefinition[@]}"; do
-    if [[ ${suiteElement} =~ ^([a-z0-9_]+)[[:space:]](.*)$ ]]; then
+    if [[ ${suiteElement} =~ ^([a-zA-Z0-9_]+)[[:space:]](.*)$ ]]; then
       suiteElementName=${BASH_REMATCH[1]}
       suiteElementOptions=${BASH_REMATCH[2]}
     else
