@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ $# -lt 2 ]; then
+    echo 'Usage: gdb_watch_and_break_multi.sh PROGNAME BREAK_GDB_FORMAT...'
+    echo 'Ex: gdb_watch_and_break_multi.sh mongod src/mongo/db/s/move_chunk_command.cpp:345'
+    exit 1
+fi
+
 set | grep -q TMUX= || {
   echo "Run this script in a tmux window"
   exit;
