@@ -3,7 +3,8 @@
 # Run resmoke test suites for PSMDB 3.2 
 
 # constants
-ULIMIT_NOFILES_MINIMUM=24576
+ULIMIT_NOFILES_MINIMUM=64000
+ULIMIT_UPROCS_MINIMUM=64000
 DBPATH="/data"   # don't change there are some hard codings
 
 # suite definitions - first element is suite name
@@ -65,7 +66,7 @@ mmap,mmapv1
 mongo_test,default
 multiversion,default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/  x86_64" "2.4" "2.6" "3.0"
+  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
   $ PATH=$PATH:${DBPATH}/multiversion
 noPassthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
 noPassthroughWithMongod,mmapv1,wiredTiger,PerconaFT,rocksdb
@@ -82,7 +83,7 @@ sharding_gle_auth_basics_passthrough_write_cmd --suites=sharding_gle_auth_basics
 sharding_jscore_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
 sharding_legacy_multiversion,default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/  x86_64" "2.4" "2.6" "3.0"
+  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
   $ PATH=$PATH:${DBPATH}/multiversion
 slow1,mmapv1,wiredTiger,PerconaFT,rocksdb
 slow2,mmapv1,wiredTiger,PerconaFT,rocksdb
@@ -106,7 +107,16 @@ RESMOKE_SE=""
 ulimit_nofiles=$(ulimit -n)
 [ "${ulimit_nofiles}" -lt "${ULIMIT_NOFILES_MINIMUM}" ] && {
   echo "Please increase this number of open files limit before running."
-  echo "It should be equal to or greater than: ${ULIMIT_NOFILES_MINIMUM}"
+  echo "It should be equal to or greater than: ${ULIMIT_NOFILES_MINIMUM}."
+  echo "The current setting is ${ulimit_nofiles}."
+  exit 1;
+}
+
+ulimit_uprocs=$(ulimit -u)
+[ "${ulimit_uprocs}" -lt "${ULIMIT_UPROCS_MINIMUM}" ] && {
+  echo "Please increase this number of user processes  limit before running."
+  echo "It should be equal to or greater than: ${ULIMIT_UPROCS_MINIMUM}"
+  echo "The current setting is ${ulimit_uprocs}."
   exit 1;
 }
 
@@ -188,7 +198,7 @@ runResmoke() {
         fi
       fi
 
-      IFS=',' read -r -a suiteDefinition <<< "${suite}"
+      IFS=',' read -r -a suiteDefinition <<< "${suiteCommand}"
       suiteName="${suiteDefinition[0]}"
       if [ "${suiteName}" = "${suiteRawName}" ]; then
         foundCommandSuite=true
@@ -196,7 +206,6 @@ runResmoke() {
       else
         foundCommandSuite=false
       fi
-
 
     done
 
@@ -247,7 +256,7 @@ for suite in "${SUITES[@]}"; do
 
       suiteRunSet=${suiteElementName}
       suiteRunSetOptions=${suiteElementOptions}
-      logOutputFilePrefix="smoke_${suite}_${suiteRunSet}"
+      logOutputFilePrefix="resmoke_${suite}_${suiteRunSet}"
 
       case "$suiteRunSet" in
 
@@ -287,7 +296,7 @@ for suite in "${SUITES[@]}"; do
           done
           ;;
         *)
-          echo "failed: Unknown runSet definition: ${suiteRunSet} for ${suite}" | tee -a "smoke_unknown_${trial}.log"
+          echo "failed: Unknown runSet definition: ${suiteRunSet} for ${suite}" | tee -a "resmoke_unknown_${trial}.log"
           ;;
       esac
 
@@ -298,3 +307,5 @@ for suite in "${SUITES[@]}"; do
   done
 
 done
+
+# find . -type f -name '*_13.log' -exec grep -q ' Summary of ' {} \; -print -exec perl -ne 'chomp;$last=$this;$this=$_;if(m/^\[resmoke\].* Summary of /){$summ=1;printf "\t$last\n"};if(m/^Running:/){$summ=0;};if($summ){printf "\t$this\n"}' {} \; | less
