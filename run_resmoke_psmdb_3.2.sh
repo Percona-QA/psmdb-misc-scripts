@@ -25,13 +25,13 @@ DBPATH="/data"   # don't change there are some hard codings
 # suite name or runSets can have options specified after a space
 # which are passed to resmoke.py
 #
-# If the suite name begins contains a preceeding '!' then no
+# If the suite name contains a preceeding '!' then no
 # 'suites' parameter is used (just the -- style options)
 #
 # if the suite name's options contain --suites then that
-# option will be used in space of the suite name
+# option will be used in place of the suite name
 #
-# lines beginning with a $ denote commands to run
+# indented lines beginning with a $ denote shell commands to run
 # before the preceding suite runSets are run.
 
 readarray SUITES <<-EOS
@@ -67,7 +67,7 @@ mongo_test,default
 multiversion,default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
-  $ PATH=$PATH:${DBPATH}/multiversion
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 noPassthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
 noPassthroughWithMongod,mmapv1,wiredTiger,PerconaFT,rocksdb
 parallel,mmapv1,wiredTiger,PerconaFT,rocksdb
@@ -84,7 +84,7 @@ sharding_jscore_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
 sharding_legacy_multiversion,default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
-  $ PATH=$PATH:${DBPATH}/multiversion
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 slow1,mmapv1,wiredTiger,PerconaFT,rocksdb
 slow2,mmapv1,wiredTiger,PerconaFT,rocksdb
 ssl,default
@@ -189,9 +189,14 @@ runResmoke() {
       if ${foundCommandSuite}; then
         if [[ "${suiteCommand}" =~ ^[[:space:]]*\$ ]]; then
           # shellcheck disable=SC2001
-          local command=$(echo "${suiteCommand}" | sed 's/^\s*\$//')
-          echo "Running: ${command}" | tee -a "${logOutputFile}"
-          eval "${command}" 2>&1 | tee -a "${logOutputFile}"
+          preprocessingCommand=$(echo "${suiteCommand}" | sed 's/^\s*\$//')
+          echo "Running: ${preprocessingCommand}" | tee -a "${logOutputFile}"
+          # if export builtin is piped it will fail
+          if [[ "${preprocessingCommand}" == *export* ]]; then
+            eval "${preprocessingCommand}"
+          else
+            eval "${preprocessingCommand}" 2>&1 | tee -a "${logOutputFile}"
+          fi
           continue
         else
           break
@@ -308,4 +313,12 @@ for suite in "${SUITES[@]}"; do
 
 done
 
-# find . -type f -name '*_13.log' -exec grep -q ' Summary of ' {} \; -print -exec perl -ne 'chomp;$last=$this;$this=$_;if(m/^\[resmoke\].* Summary of /){$summ=1;printf "\t$last\n"};if(m/^Running:/){$summ=0;};if($summ){printf "\t$this\n"}' {} \; | less
+echo "Generating summary:"
+
+# shellcheck disable=SC2016
+find . -type f -name "*_${trial}.log" \
+  -exec grep -q ' Summary of ' {} \; \
+  -print \
+  -exec perl -ne 'chomp;$last=$this;$this=$_;if(m/^\[resmoke\].* Summary of /){$summ=1;printf "\t$last\n"};if(m/^Running:/){$summ=0;};if($summ){printf "\t$this\n"}' {} \; \
+  > "resmoke_summary_${trial}.log"
+
