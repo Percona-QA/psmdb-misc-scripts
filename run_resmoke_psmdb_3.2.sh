@@ -229,6 +229,11 @@ hasEngine() {
 
 for suite in "${SUITES[@]}"; do
 
+  # skip lines begining with space
+  if [[ "${suite}" == " "* ]]; then
+    continue; 
+  fi
+
   IFS=',' read -r -a suiteDefinition <<< "${suite}"
   suiteElementNumber=0
 
