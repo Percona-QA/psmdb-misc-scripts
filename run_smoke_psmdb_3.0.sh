@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# Run smoke tests for PSMDB 
+# Run smoke tests for PSMDB 3.0
+
+basedir=$(cd "$(dirname "$0")" || exit; pwd)
+# shellcheck source=run_smoke_resmoke_funcs.sh
+source "${basedir}/run_smoke_resmoke_funcs.sh"
 
 # suite definitions - first element is suite name
 # followed by runSets 
@@ -19,6 +23,7 @@
 #
 # lines beginning one or more spaces followed by a $ denote shell commands to
 # run before the preceding suite runSets are run.
+
 
 readarray SUITES <<-EOS
 aggregation --nopreallocj,default,auth,se
@@ -61,47 +66,7 @@ SMOKE_DEFAULT=""
 SMOKE_AUTH="--auth"
 SMOKE_SE=""
 
-# constants
-ULIMIT_NOFILES_MINIMUM=24576
-DBPATH="/data"   # don't change there are some hard codings
-
-### validations and fixes
-
-# ulimit
-
-ulimit_nofiles=$(ulimit -n)
-[ "${ulimit_nofiles}" -lt "${ULIMIT_NOFILES_MINIMUM}" ] && {
-  echo "please increase this limit before running."
-  exit 1;
-}
-
-# check for keys and set perms
-
-if ! ls jstests/libs/key* > /dev/null 2>&1; then
-  echo "Run from the root build directory."
-  exit 1;
-fi
-chmod 400 jstests/libs/key*
-
-# check for needed mongo binaries
-
-for binary in bsondump mongo mongod mongodump mongoexport mongofiles mongoimport mongooplog mongorestore mongos mongostat; do
-  if [ ! -x "./${binary}" ]; then
-    echo "Could not find ./${binary}; make sure you are running this from the root build directory,"
-    echo "that the MongoDB binaries have been built and the mongo-tools binaries have been copied"
-    echo "to the build root."
-    exit 1;
-  fi
-done
-
-# check for dbpath
-
-if [[ ! -d "${DBPATH}" ]]; then
-  echo "The smoke test dbpath ${DBPATH} could not be found.  Please create this"
-  echo "data directory before running tests. (a symlink to another location is ok)"
-  echo "for faster speeds, an SSD target is recommended."
-  exit 1;
-fi
+run_system_validations
 
 # trial number
 
@@ -111,76 +76,21 @@ if [ "$1" == "" ]; then
 fi
 trial=$1
 
-# detect available engines
-
-ENGINES=()
-DEFAULT_ENGINE=$(./mongod --help | grep storageEngine | perl -ne 'm/\(=([^\)]+)\)/;print $1')
-ENGINES+=(${DEFAULT_ENGINE})
-for engine in mmapv1 wiredTiger PerconaFT rocksdb; do
-  if [ ! "${engine}" == "${DEFAULT_ENGINE}" ]; then
-    if ./mongod --help | grep -q "${engine}"; then
-      ENGINES+=("${engine}")
-    fi
-  fi
-done
-
 # main script
 
 runSmoke() {
   local smokeParams=$1
   local logOutputFile=$2
   local suiteRawName=$3
-  local foundCommandSuite=false
 
-  rm -rf ${DBPATH}/db/*
+  rm -rf "${DBPATH}/db/*"
 
-  # look for preprocessing commands
+  runPreprocessingCommands "${logOutputFile}" "${suiteRawName}"
 
-  (
-    for suiteCommand in "${SUITES[@]}"; do
+  echo "Running Command: python buildscripts/smoke.py ${smokeParams}" | tee -a "${logOutputFile}"
+  # shellcheck disable=SC2086
+  python buildscripts/smoke.py ${smokeParams} 2>&1 | tee -a "${logOutputFile}"
 
-      if ! ${foundCommandSuite} && [[ "${suiteCommand}" =~ ^[[:space:]]*\$ ]]; then
-        continue
-      fi
-
-      if ${foundCommandSuite}; then
-        if [[ "${suiteCommand}" =~ ^[[:space:]]*\$ ]]; then
-          # shellcheck disable=SC2001
-          preprocessingCommand=$(echo "${suiteCommand}" | sed 's/^\s*\$//')
-          echo "Running: ${preprocessingCommand}" | tee -a "${logOutputFile}"
-          # if export builtin is piped it will fail
-          if [[ "${preprocessingCommand}" == *export* ]]; then
-            eval "${preprocessingCommand}"
-          else
-            eval "${preprocessingCommand}" 2>&1 | tee -a "${logOutputFile}"
-          fi
-          continue
-        else
-          break
-        fi
-      fi
-
-      IFS=',' read -r -a suiteDefinition <<< "${suiteCommand}"
-      suiteName="${suiteDefinition[0]}"
-      if [ "${suiteName}" = "${suiteRawName}" ]; then
-        foundCommandSuite=true
-        continue
-      else
-        foundCommandSuite=false
-      fi
-
-    done
-
-    echo "Running Command: python buildscripts/smoke.py ${smokeParams}" | tee -a "${logOutputFile}"
-    # shellcheck disable=SC2086
-    python buildscripts/smoke.py ${smokeParams} 2>&1 | tee -a "${logOutputFile}"
-  )
-}
-
-hasEngine() {
-  local engine
-  for engine in "${ENGINES[@]}"; do [[ "$engine" == "$1" ]] && return 0; done
-  return 1
 }
 
 for suite in "${SUITES[@]}"; do
@@ -247,7 +157,7 @@ done
 
 # output summary report
 
-find . -type f -name '*_${trial}.log' \
+find . -type f -name "*_${trial}.log" \
   -print \
   -exec sh -c 'logfile="$1"; grep -E -A9999 "^[0-9]+ tests succeeded" "${logfile}" | sed -e "s/^/    /"' _ "{}" \; \
   -exec echo "" \; \
