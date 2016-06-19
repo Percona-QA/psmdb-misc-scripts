@@ -157,7 +157,7 @@ done
 
 # output summary report
 
-find . -type f -name "*_${trial}.log" \
+find . -type f \( -name "*_${trial}.log" -and -not -name "smoke_summary_${trial}.log" \) \
   -print \
   -exec sh -c 'logfile="$1"; grep -E -A9999 "^[0-9]+ tests succeeded" "${logfile}" | sed -e "s/^/    /"' _ "{}" \; \
   -exec echo "" \; \

@@ -220,7 +220,7 @@ done
 echo "Generating summary:"
 
 # shellcheck disable=SC2016
-find . -type f -name "*_${trial}.log" \
+find . -type f \( -name "*_${trial}.log" -and -not -name "resmoke_summary_${trial}.log" \) \
   -exec grep -q ' Summary of ' {} \; \
   -print \
   -exec perl -ne 'chomp;$last=$this;$this=$_;if(m/^\[resmoke\].* Summary of /){$summ=1;printf "\t$last\n"};if(m/^Running:/){$summ=0;};if($summ){printf "\t$this\n"}' {} \; \
