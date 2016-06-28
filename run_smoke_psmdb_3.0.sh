@@ -123,6 +123,7 @@ for suite in "${SUITES[@]}"; do
       case "$suiteRunSet" in
         "default"|"auth")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
+          echo "Suite Definition: ${suiteRawName},${suiteElement}" | tee -a "${logOutputFile}"
           [ "${suiteRunSet}" == "default" ] && smokeParams=${SMOKE_DEFAULT}
           [ "${suiteRunSet}" == "auth" ] && smokeParams=${SMOKE_AUTH}
           smokeParams="${SMOKE_BASE} ${smokeParams} --storageEngine=${DEFAULT_ENGINE} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
@@ -131,6 +132,7 @@ for suite in "${SUITES[@]}"; do
         "wiredTiger"|"PerconaFT"|"rocksdb"|"mmapv1")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
           if hasEngine "${suiteRunSet}"; then
+            echo "Suite Definition: ${suiteRawName},${suiteElement}" | tee -a "${logOutputFile}"
             smokeParams="${SMOKE_BASE} ${SMOKE_SE} --storageEngine=${suiteRunSet} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
             runSmoke "${smokeParams}" "${logOutputFile}" "${suiteRawName}"
           else
@@ -141,6 +143,12 @@ for suite in "${SUITES[@]}"; do
           for engine in "${ENGINES[@]}"; do
             if [ ! "${engine}" == "${DEFAULT_ENGINE}" ]; then
               logOutputFile="${logOutputFilePrefix}_${engine}_${trial}.log"
+              if [[ -z "${suiteRunSetOptions}" ]]; then
+                suiteDefinition="${suiteRawName},${engine}"
+              else
+                suiteDefinition="${suiteRawName},${engine} ${suiteRunSetOptions}"
+              fi
+              echo "Suite Definition: ${suiteDefinition}" | tee -a "${logOutputFile}"
               smokeParams="${SMOKE_BASE} --storageEngine=${engine} ${SMOKE_SE} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
               runSmoke "${smokeParams}" "${logOutputFile}" "${suiteRawName}"
             fi

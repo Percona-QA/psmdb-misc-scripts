@@ -36,13 +36,15 @@ source "${basedir}/run_smoke_resmoke_funcs.sh"
 readarray SUITES <<-EOS
 aggregation,mmapv1,wiredTiger,PerconaFT,rocksdb
 aggregation_auth,default
+audit,mmapv1,wiredTiger,PerconaFT,rocksdb
 auth,mmapv1,wiredTiger,PerconaFT,rocksdb
+auth_audit,mmapv1,wiredTiger,PerconaFT,rocksdb
 bulk_gle_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
-concurrency,mmapv1,wiredTiger,PerconaFT,rocksdb
+concurrency,mmapv1,wiredTiger,rocksdb
 concurrency_replication,mmapv1,wiredTiger,PerconaFT,rocksdb
-concurrency_sharded,mmapv1,wiredTiger,PerconaFT,rocksdb
+concurrency_sharded,mmapv1,wiredTiger,rocksdb
 concurrency_sharded_sccc,mmapv1,wiredTiger,PerconaFT,rocksdb
-!concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js,mmapv1,wiredTiger,PerconaFT,rocksdb
+!concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js,mmapv1,wiredTiger,rocksdb
 dbtest,mmapv1,wiredTiger,PerconaFT,rocksdb
 disk,default
 dur_jscore_passthrough,default
@@ -50,12 +52,12 @@ durability,default,default
 failpoints,default
 failpoints_auth,default
 gle_auth --shellWriteMode=legacy --shellReadMode=legacy,mmapv1,wiredTiger,PerconaFT,rocksdb
+gle_auth --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
 gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy,mmapv1,wiredTiger,PerconaFT,rocksdb
-gle_auth_basics_passthrough_write_cmd --suites=gle_auth_basics_passthrough --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
-gle_auth_write_cmd --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
+gle_auth_basics_passthrough --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
 core,mmapv1,wiredTiger,PerconaFT,rocksdb
 core_auth,default
-core_compatibility --shellReadMode=legacy --shellWriteMode=compatibility,mmapv1,wiredTiger,PerconaFT,rocksdb
+core --shellReadMode=legacy --shellWriteMode=compatibility,mmapv1,wiredTiger,PerconaFT,rocksdb
 core_small_oplog,mmapv1,wiredTiger,PerconaFT,rocksdb
 core_small_oplog_rs,mmapv1,wiredTiger,PerconaFT,rocksdb
 jstestfuzz,mmapv1,wiredTiger,PerconaFT,rocksdb
@@ -67,18 +69,18 @@ multiversion,default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-noPassthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
-noPassthroughWithMongod,mmapv1,wiredTiger,PerconaFT,rocksdb
+no_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
+no_passthrough_with_mongod,mmapv1,wiredTiger,PerconaFT,rocksdb
 parallel,mmapv1,wiredTiger,PerconaFT,rocksdb
-parallel_compatibility --suites=parallel --shellReadMode=legacy --shellWriteMode=compatibility,mmapv1,wiredTiger,PerconaFT,rocksdb
+parallel --shellReadMode=legacy --shellWriteMode=compatibility,mmapv1,wiredTiger,PerconaFT,rocksdb
 replica_sets,mmapv1,wiredTiger,PerconaFT,rocksdb
 replica_sets_auth,default
 replication,mmapv1,wiredTiger,PerconaFT,rocksdb
 replication_auth,default
-sharding,mmapv1,wiredTiger,PerconaFT,rocksdb
+sharding,mmapv1,wiredTiger,rocksdb
 sharding_auth,default
 sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy,mmapv1,wiredTiger,PerconaFT,rocksdb
-sharding_gle_auth_basics_passthrough_write_cmd --suites=sharding_gle_auth_basics_passthrough --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
+sharding_gle_auth_basics_passthrough --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
 sharding_jscore_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
 sharding_legacy_multiversion,default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
@@ -116,7 +118,7 @@ runResmoke() {
   local logOutputFile=$2
   local suiteRawName=$3
 
-  rm -rf "${DBPATH}/db/*"
+  rm -rf "${DBPATH}/*"
 
   runPreprocessingCommands "${logOutputFile}" "${suiteRawName}"
 
@@ -151,6 +153,7 @@ for suite in "${SUITES[@]}"; do
       suite=${suiteElementName}
       suiteRawName=${suite}
       suiteOptions=${suiteElementOptions}
+      suiteLogTag=$(echo "${suiteElement}" | sed -r -e 's/ +/_/g' -e 's/[-!]//g')
 
       if [[ "${suite}" == *"!"* ]]; then
         useSuitesOption=false
@@ -165,12 +168,13 @@ for suite in "${SUITES[@]}"; do
 
       suiteRunSet=${suiteElementName}
       suiteRunSetOptions=${suiteElementOptions}
-      logOutputFilePrefix="resmoke_${suite}_${suiteRunSet}"
+      logOutputFilePrefix="smoke_${suiteLogTag}_${suiteRunSet}"
 
       case "$suiteRunSet" in
 
         "default"|"auth")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
+          echo "Suite Definition: ${suiteRawName},${suiteElement}" | tee -a "${logOutputFile}"
           [ "${suiteRunSet}" == "default" ] && resmokeParams=${RESMOKE_DEFAULT}
           [ "${suiteRunSet}" == "auth" ] && resmokeParams=${RESMOKE_AUTH}
           resmokeParams="${RESMOKE_BASE} ${resmokeParams} ${suiteOptions} ${suiteRunSetOptions}"
@@ -182,6 +186,7 @@ for suite in "${SUITES[@]}"; do
           ;;
         "wiredTiger"|"PerconaFT"|"rocksdb"|"mmapv1")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
+          echo "Suite Definition: ${suiteRawName},${suiteElement}" | tee -a "${logOutputFile}"
           if hasEngine "${suiteRunSet}"; then
             resmokeParams="${RESMOKE_BASE} ${RESMOKE_SE} --storageEngine=${suiteRunSet} ${suiteOptions} ${suiteRunSetOptions}"
             if $useSuitesOption; then
@@ -196,6 +201,12 @@ for suite in "${SUITES[@]}"; do
           for engine in "${ENGINES[@]}"; do
             if [ ! "${engine}" == "${DEFAULT_ENGINE}" ]; then
               logOutputFile="${logOutputFilePrefix}_${engine}_${trial}.log"
+              if [[ -z "${suiteRunSetOptions}" ]]; then
+                suiteDefinition="${suiteRawName},${engine}"
+              else
+                suiteDefinition="${suiteRawName},${engine} ${suiteRunSetOptions}"
+              fi
+              echo "Suite Definition: ${suiteDefinition}" | tee -a "${logOutputFile}"
               resmokeParams="${RESMOKE_BASE} --storageEngine=${engine} ${RESMOKE_SE} ${suiteOptions} ${suiteRunSetOptions}"
               if $useSuitesOption; then
                 resmokeParams="${resmokeParams} --suites=${suite}"
