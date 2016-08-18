@@ -17,6 +17,7 @@ source "${basedir}/run_smoke_resmoke_funcs.sh"
 #   mmapv1     - run with mmapv1 storage engine
 #   PerconaFT  - run with PerconaFT storage engine
 #   rocksdb    - run with rocksdb storage engine
+#   inMemory   - run with inMemory storage engine
 #   se         - run the suite with all non-default storage engines
 #   wiredTiger - run with wiredTiger storage engine
 #
@@ -168,7 +169,7 @@ for suite in "${SUITES[@]}"; do
 
       suiteRunSet=${suiteElementName}
       suiteRunSetOptions=${suiteElementOptions}
-      logOutputFilePrefix="smoke_${suiteLogTag}_${suiteRunSet}"
+      logOutputFilePrefix="resmoke_${suiteLogTag}_${suiteRunSet}"
 
       case "$suiteRunSet" in
 
@@ -184,7 +185,7 @@ for suite in "${SUITES[@]}"; do
           runResmoke "${resmokeParams}" "$logOutputFile" "${suiteRawName}"
 
           ;;
-        "wiredTiger"|"PerconaFT"|"rocksdb"|"mmapv1")
+        "wiredTiger"|"PerconaFT"|"rocksdb"|"mmapv1"|"inMemory")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
           echo "Suite Definition: ${suiteRawName},${suiteElement}" | tee -a "${logOutputFile}"
           if hasEngine "${suiteRunSet}"; then
