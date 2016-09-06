@@ -56,6 +56,28 @@ run_system_validations() {
 
 }
 
+load_suite_set() {
+  local basedir="$1"
+  local suiteSet="$2"
+  local file=""
+
+  if [ -e "${basedir}/suite_sets/${suiteSet}" ]; then
+    file="${basedir}/suite_sets/${suiteSet}";
+  elif [ -e "${basedir}/suite_sets/${suiteSet}.txt" ]; then
+    file="${basedir}/suite_sets/${suiteSet}.txt";
+  elif [ -e "${suiteSet}" ]; then
+    file="${suiteSet}"
+  fi
+
+  if [ -z "${file}" ]; then
+    exit "Could not open suite set: ${suiteSet} (basedir: ${basedir}"
+    exit 1
+  fi
+
+  readarray SUITES < "${file}"
+
+}
+
 detectEngines() {
   ENGINES=()
   DEFAULT_ENGINE=$(./mongod --help | grep storageEngine | perl -ne 'm/\(=([^\)]+)\)/;print $1')

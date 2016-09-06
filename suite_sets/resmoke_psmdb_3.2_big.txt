@@ -1,0 +1,59 @@
+aggregation,mmapv1,wiredTiger,PerconaFT,rocksdb
+aggregation_auth,default
+audit,mmapv1,wiredTiger,PerconaFT,rocksdb
+auth,mmapv1,wiredTiger,PerconaFT,rocksdb
+auth_audit,mmapv1,wiredTiger,PerconaFT,rocksdb
+bulk_gle_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
+concurrency,mmapv1,wiredTiger,rocksdb
+concurrency_replication,mmapv1,wiredTiger,PerconaFT,rocksdb
+concurrency_sharded,mmapv1,wiredTiger,rocksdb
+concurrency_sharded_sccc,mmapv1,wiredTiger,PerconaFT,rocksdb
+!concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js,mmapv1,wiredTiger,rocksdb
+dbtest,mmapv1,wiredTiger,PerconaFT,rocksdb
+disk,default
+dur_jscore_passthrough,default
+durability,default,default
+failpoints,default
+failpoints_auth,default
+gle_auth --shellWriteMode=legacy --shellReadMode=legacy,mmapv1,wiredTiger,PerconaFT,rocksdb
+gle_auth --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
+gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy,mmapv1,wiredTiger,PerconaFT,rocksdb
+gle_auth_basics_passthrough --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
+core,mmapv1,wiredTiger,PerconaFT,rocksdb
+core_auth,default
+core --shellReadMode=legacy --shellWriteMode=compatibility,mmapv1,wiredTiger,PerconaFT,rocksdb
+core_small_oplog,mmapv1,wiredTiger,PerconaFT,rocksdb
+core_small_oplog_rs,mmapv1,wiredTiger,PerconaFT,rocksdb
+jstestfuzz,mmapv1,wiredTiger,PerconaFT,rocksdb
+jstestfuzz_replication,wiredTiger,PerconaFT,rocksdb
+jstestfuzz_sharded,wiredTiger,PerconaFT,rocksdb
+mmap,mmapv1
+mongo_test,default
+multiversion,default
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+no_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
+no_passthrough_with_mongod,mmapv1,wiredTiger,PerconaFT,rocksdb
+parallel,mmapv1,wiredTiger,PerconaFT,rocksdb
+parallel --shellReadMode=legacy --shellWriteMode=compatibility,mmapv1,wiredTiger,PerconaFT,rocksdb
+replica_sets,mmapv1,wiredTiger,PerconaFT,rocksdb
+replica_sets_auth,default
+replication,mmapv1,wiredTiger,PerconaFT,rocksdb
+replication_auth,default
+sharding,mmapv1,wiredTiger,rocksdb
+sharding_auth,default
+sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy,mmapv1,wiredTiger,PerconaFT,rocksdb
+sharding_gle_auth_basics_passthrough --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
+sharding_jscore_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
+sharding_legacy_multiversion,default
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+slow1,mmapv1,wiredTiger,PerconaFT,rocksdb
+slow2,mmapv1,wiredTiger,PerconaFT,rocksdb
+ssl,default
+ssl_special,default
+tool,mmapv1,wiredTiger,PerconaFT,rocksdb
+unittests,default
+
