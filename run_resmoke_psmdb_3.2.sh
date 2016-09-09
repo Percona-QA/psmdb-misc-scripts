@@ -83,6 +83,10 @@ runResmoke() {
     resmokeParams="${resmokeParams} --reportFile=${logOutputFile%.*}.json"
   fi
 
+  echo "Trial: ${trial}" | tee -a "${logOutputFile}"
+  echo "Base Directory: ${basedir}" | tee -a "${logOutputFile}"
+  echo "Suite Set: ${suiteSet}" | tee -a "${logOutputFile}"
+
   echo "Running Command: buildscripts/resmoke.py ${resmokeParams}" | tee -a "${logOutputFile}" 
   # shellcheck disable=SC2086
   python buildscripts/resmoke.py ${resmokeParams} 2>&1 | tee -a "${logOutputFile}"
@@ -159,7 +163,11 @@ for suite in "${SUITES[@]}"; do
           fi
           ;;
         "se")
+
+          detectEngines
+
           for engine in "${ENGINES[@]}"; do
+
             if [ ! "${engine}" == "${DEFAULT_ENGINE}" ]; then
               logOutputFile="${logOutputFilePrefix}_${engine}_${trial}.log"
               if [[ -z "${suiteRunSetOptions}" ]]; then
