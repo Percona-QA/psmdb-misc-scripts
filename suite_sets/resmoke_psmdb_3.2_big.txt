@@ -3,6 +3,7 @@ aggregation_auth,default
 audit,mmapv1,wiredTiger,PerconaFT,rocksdb
 auth,mmapv1,wiredTiger,PerconaFT,rocksdb
 auth_audit,mmapv1,wiredTiger,PerconaFT,rocksdb
+backup,wiredTiger,rocksdb
 bulk_gle_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
 concurrency,mmapv1,wiredTiger,rocksdb
 concurrency_replication,mmapv1,wiredTiger,PerconaFT,rocksdb
@@ -27,6 +28,7 @@ core_small_oplog_rs,mmapv1,wiredTiger,PerconaFT,rocksdb
 jstestfuzz,mmapv1,wiredTiger,PerconaFT,rocksdb
 jstestfuzz_replication,wiredTiger,PerconaFT,rocksdb
 jstestfuzz_sharded,wiredTiger,PerconaFT,rocksdb
+knobs,mmapv1,wiredTiger,rocksdb
 mmap,mmapv1
 mongo_test,default
 multiversion,default
@@ -37,6 +39,7 @@ no_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
 no_passthrough_with_mongod,mmapv1,wiredTiger,PerconaFT,rocksdb
 parallel,mmapv1,wiredTiger,PerconaFT,rocksdb
 parallel --shellReadMode=legacy --shellWriteMode=compatibility,mmapv1,wiredTiger,PerconaFT,rocksdb
+ratelimit,mmapv1,wiredTiger,rocksdb
 replica_sets,mmapv1,wiredTiger,PerconaFT,rocksdb
 replica_sets_auth,default
 replication,mmapv1,wiredTiger,PerconaFT,rocksdb
