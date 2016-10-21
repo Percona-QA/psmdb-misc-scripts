@@ -41,8 +41,6 @@ RESMOKE_DEFAULT=""
 RESMOKE_AUTH="--auth"
 RESMOKE_SE=""
 
-run_system_validations
-
 # trial number
 
 if [ "$1" == "" ]; then
@@ -56,6 +54,8 @@ if [ "$1" == "" ]; then
   exit 1;
 fi
 trial=$1
+
+run_system_validations
 
 # read suite sets
 
