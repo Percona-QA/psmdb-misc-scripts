@@ -33,7 +33,7 @@ mmap,mmapv1
 mongo_test,default
 multiversion,default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
+  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 no_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
 no_passthrough_with_mongod,mmapv1,wiredTiger,PerconaFT,rocksdb
@@ -51,7 +51,7 @@ sharding_gle_auth_basics_passthrough --shellWriteMode=commands,mmapv1,wiredTiger
 sharding_jscore_passthrough,mmapv1,wiredTiger,PerconaFT,rocksdb
 sharding_legacy_multiversion,default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
+  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 slow1,mmapv1,wiredTiger,PerconaFT,rocksdb
 slow2,mmapv1,wiredTiger,PerconaFT,rocksdb
