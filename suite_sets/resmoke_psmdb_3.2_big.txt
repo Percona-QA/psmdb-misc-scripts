@@ -28,6 +28,7 @@ core_small_oplog_rs,mmapv1,wiredTiger,PerconaFT,rocksdb
 jstestfuzz,mmapv1,wiredTiger,PerconaFT,rocksdb
 jstestfuzz_replication,wiredTiger,PerconaFT,rocksdb
 jstestfuzz_sharded,wiredTiger,PerconaFT,rocksdb
+knobs,mmapv1,wiredTiger,rocksdb
 mmap,mmapv1
 mongo_test,default
 multiversion,default
