@@ -1,0 +1,42 @@
+aggregation,default
+aggregation_auth,default
+audit,wiredTiger,rocksdb
+auth,default
+auth_audit,default
+backup,wiredTiger,rocksdb
+bulk_gle_passthrough,wiredTiger,rocksdb
+concurrency,wiredTiger,rocksdb
+concurrency_replication,wiredTiger,rocksdb
+concurrency_sharded,wiredTiger,rocksdb
+concurrency_sharded_sccc,default
+!concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js,wiredTiger,rocksdb
+core,wiredTiger,rocksdb
+core_auth,default
+core_small_oplog,wiredTiger,rocksdb
+core_small_oplog_rs,wiredTiger,rocksdb
+dbtest,wiredTiger,rocksdb
+disk,default
+dur_jscore_passthrough,default
+durability,default
+failpoints,default
+failpoints_auth,default
+ jstestfuzz,wiredTiger,rocksdb
+ jstestfuzz_replication,wiredTiger,rocksdb
+ jstestfuzz_sharded,wiredTiger,rocksdb
+knobs,wiredTiger,rocksdb
+mongos_test,default
+no_passthrough,wiredTiger,rocksdb
+no_passthrough_with_mongod,wiredTiger,rocksdb
+parallel,wiredTiger,rocksdb
+ratelimit,wiredTiger,rocksdb
+replica_sets,default
+replica_sets_auth,default
+replication,default
+replication_auth,default
+sharding,default
+sharding_auth,default
+sharding_jscore_passthrough,wiredTiger,rocksdb
+ssl,default
+ssl_special,default
+tool,wiredTiger,rocksdb
+unittests,default

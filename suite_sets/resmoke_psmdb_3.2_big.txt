@@ -10,27 +10,27 @@ concurrency_replication,mmapv1,wiredTiger,PerconaFT,rocksdb
 concurrency_sharded,mmapv1,wiredTiger,rocksdb
 concurrency_sharded_sccc,mmapv1,wiredTiger,PerconaFT,rocksdb
 !concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js,mmapv1,wiredTiger,rocksdb
+core,mmapv1,wiredTiger,PerconaFT,rocksdb
+core_auth,default
+core --shellReadMode=legacy --shellWriteMode=compatibility,mmapv1,wiredTiger,PerconaFT,rocksdb
+core_small_oplog,mmapv1,wiredTiger,PerconaFT,rocksdb
+core_small_oplog_rs,mmapv1,wiredTiger,PerconaFT,rocksdb
 dbtest,mmapv1,wiredTiger,PerconaFT,rocksdb
 disk,default
 dur_jscore_passthrough,default
-durability,default,default
+durability,default
 failpoints,default
 failpoints_auth,default
 gle_auth --shellWriteMode=legacy --shellReadMode=legacy,mmapv1,wiredTiger,PerconaFT,rocksdb
 gle_auth --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
 gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy,mmapv1,wiredTiger,PerconaFT,rocksdb
 gle_auth_basics_passthrough --shellWriteMode=commands,mmapv1,wiredTiger,PerconaFT,rocksdb
-core,mmapv1,wiredTiger,PerconaFT,rocksdb
-core_auth,default
-core --shellReadMode=legacy --shellWriteMode=compatibility,mmapv1,wiredTiger,PerconaFT,rocksdb
-core_small_oplog,mmapv1,wiredTiger,PerconaFT,rocksdb
-core_small_oplog_rs,mmapv1,wiredTiger,PerconaFT,rocksdb
 jstestfuzz,mmapv1,wiredTiger,PerconaFT,rocksdb
 jstestfuzz_replication,wiredTiger,PerconaFT,rocksdb
 jstestfuzz_sharded,wiredTiger,PerconaFT,rocksdb
 knobs,mmapv1,wiredTiger,rocksdb
 mmap,mmapv1
-mongo_test,default
+mongos_test,default
 multiversion,default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
@@ -59,4 +59,3 @@ ssl,default
 ssl_special,default
 tool,mmapv1,wiredTiger,PerconaFT,rocksdb
 unittests,default
-
