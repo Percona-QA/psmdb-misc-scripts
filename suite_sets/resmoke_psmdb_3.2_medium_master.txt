@@ -10,7 +10,7 @@ concurrency_replication,wiredTiger,rocksdb
 concurrency_sharded,wiredTiger,rocksdb
 concurrency_sharded_sccc,default
 !concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js,wiredTiger,rocksdb
-core,wiredTiger,rocksdb
+core,mmapv1,wiredTiger,rocksdb
 core_auth,default
 core_small_oplog,wiredTiger,rocksdb
 core_small_oplog_rs,wiredTiger,rocksdb
