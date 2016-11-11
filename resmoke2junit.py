@@ -13,7 +13,7 @@ def resmoke2junit(skip_long_lines=1):
         junitfile.write('<testsuites>\n')
 
         for jsonfile in os.listdir(cwd):
-            if jsonfile.endswith('.json'):
+            if jsonfile.startswith('resmoke') and jsonfile.endswith('.json'):
                 with open(jsonfile) as data_file:
                     data = json.load(data_file)
                     junitfile.write('\t<testsuite name="{}" failures="{}" tests="{}">\n'.format(jsonfile[8:-7], data['failures'], len(data['results'])))
