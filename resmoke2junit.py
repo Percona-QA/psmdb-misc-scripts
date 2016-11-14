@@ -24,8 +24,12 @@ def resmoke2junit(skip_long_lines=1):
                             junitfile.write('\n\t\t\t<failure><![CDATA[\n')
                             logfile = '{}.log'.format(jsonfile[:-5])
                             if '/' in result['test_file'][:-3]:
-                                test_name = result['test_file'][:-3].rsplit('/', 1)[1]
-                                prefix = '[js_test:'
+                                if jsonfile.startswith('resmoke_unittests'):
+                                    test_name = result['test_file'].rsplit('/', 1)[1]
+                                    prefix = '[cpp_unit_test:'
+                                else:
+                                    test_name = result['test_file'][:-3].rsplit('/', 1)[1]
+                                    prefix = '[js_test:'
                             else:
                                 test_name = result['test_file']
                                 prefix = ''
