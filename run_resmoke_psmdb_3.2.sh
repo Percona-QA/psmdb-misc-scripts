@@ -89,7 +89,7 @@ runResmoke() {
 
   echo "Running Command: buildscripts/resmoke.py ${resmokeParams}" | tee -a "${logOutputFile}" 
   # shellcheck disable=SC2086
-  python buildscripts/resmoke.py ${resmokeParams} 2>&1 | tee -a "${logOutputFile}"
+  python buildscripts/resmoke.py ${resmokeParams} >>"${logOutputFile}" 2>&1
 
 }
 
