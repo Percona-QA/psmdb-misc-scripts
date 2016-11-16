@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import json
 import os
-import re
+import string
 
 def resmoke2junit(skip_long_lines=1):
     """This function iterates over resmoke json result files in directory
@@ -42,8 +42,8 @@ def resmoke2junit(skip_long_lines=1):
                                         if len(line) >= 2048 and skip_long_lines == 1:
                                             junitfile.write('### Skipped very long line ###\n')
                                         else:
-                                            line = "{}{}".format(re.sub(r'[\x00-\x1f\x7f-\x9f]', '', line),'\n')
-                                            junitfile.write(line)
+                                            printable = set(string.printable)
+                                            junitfile.write(filter(lambda x: x in printable, line))
                                         has_error_text = 1
 
                             if has_error_text == 0:
