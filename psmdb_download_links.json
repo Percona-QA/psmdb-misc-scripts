@@ -1,0 +1,85 @@
+{
+   "versions": [
+      {
+         "current": false, 
+         "development_release": false, 
+         "downloads": [
+            {
+               "arch": "x86_64", 
+               "archive": {
+                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.2/LATEST/binary/tarball/percona-server-mongodb-3.2.11-3.1-trusty-x86_64.tar.gz"
+               }, 
+               "edition": "base", 
+               "target": "linux_x86_64"
+            }
+         ],
+         "production_release": true, 
+         "release_candidate": false, 
+         "version": "3.2.11"
+      },
+      {
+         "development_release": false, 
+         "downloads": [
+            {
+               "arch": "x86_64", 
+               "archive": {
+                  "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.2.1.tgz"
+               }, 
+               "edition": "base", 
+               "target": "linux_x86_64"
+            }
+         ],
+         "production_release": true, 
+         "release_candidate": false, 
+         "version": "3.2.1"
+      },
+      {
+         "development_release": false, 
+         "downloads": [
+            {
+               "arch": "x86_64", 
+               "archive": {
+                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.0/LATEST/binary/tarball/percona-server-mongodb-3.0.14-1.9-xenial-x86_64.tar.gz"
+               }, 
+               "edition": "base", 
+               "target": "linux_x86_64"
+            }
+         ],
+         "production_release": true, 
+         "release_candidate": false, 
+         "version": "3.0.14"
+      },
+      {
+         "development_release": false, 
+         "downloads": [
+            {
+               "arch": "x86_64", 
+               "archive": {
+                  "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.6.12.tgz"
+               }, 
+               "edition": "base", 
+               "target": "linux_x86_64"
+            }
+         ],
+         "production_release": true, 
+         "release_candidate": false, 
+         "version": "2.6.12"
+      },
+      {
+         "development_release": false, 
+         "downloads": [
+            {
+               "arch": "x86_64", 
+               "archive": {
+                  "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.4.14.tgz"
+               }, 
+               "edition": "base", 
+               "target": "linux_x86_64"
+            }
+         ],
+         "production_release": true, 
+         "release_candidate": false, 
+         "version": "2.4.14"
+      }
+   ]
+}
