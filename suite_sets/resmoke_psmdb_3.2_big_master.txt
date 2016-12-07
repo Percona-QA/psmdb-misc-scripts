@@ -48,6 +48,7 @@ no_passthrough,mmapv1,wiredTiger,inMemory,rocksdb
 no_passthrough_with_mongod,mmapv1,wiredTiger,inMemory,rocksdb
 parallel,mmapv1,wiredTiger,inMemory,rocksdb
 parallel --shellReadMode=legacy --shellWriteMode=compatibility,mmapv1,wiredTiger,inMemory,rocksdb
+percona_no_passthrough_with_mongod,mmapv1,wiredTiger,inMemory,rocksdb
 ratelimit,mmapv1,wiredTiger,inMemory,rocksdb
 read_only,mmapv1,wiredTiger,rocksdb
 read_only_sharded,mmapv1,wiredTiger,rocksdb
