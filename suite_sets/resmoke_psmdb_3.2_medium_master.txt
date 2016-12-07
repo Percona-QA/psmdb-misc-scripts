@@ -35,8 +35,8 @@ multiversion_multistorage_engine,wiredTiger,inMemory,rocksdb
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.6" "3.0" "3.2" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-read_only,wiredTiger,inMemory,rocksdb
-read_only_sharded,wiredTiger,inMemory,rocksdb
+read_only,wiredTiger,rocksdb
+read_only_sharded,wiredTiger,rocksdb
 replica_sets_auth,default
 replication,default
 replication_auth,default

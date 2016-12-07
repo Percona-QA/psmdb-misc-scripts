@@ -3,7 +3,7 @@ aggregation_auth,default
 audit,mmapv1,wiredTiger,inMemory,rocksdb
 auth,mmapv1,wiredTiger,inMemory,rocksdb
 auth_audit,mmapv1,wiredTiger,inMemory,rocksdb
-backup,wiredTiger,inMemory,rocksdb
+backup,wiredTiger,rocksdb
 bulk_gle_passthrough,mmapv1,wiredTiger,inMemory,rocksdb
 concurrency,mmapv1,wiredTiger,inMemory,rocksdb
 concurrency_replication,mmapv1,wiredTiger,inMemory,rocksdb
