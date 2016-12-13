@@ -1,8 +1,10 @@
 aggregation|mmapv1|wiredTiger|inMemory|rocksdb
 aggregation_auth|default
 audit|mmapv1|wiredTiger|inMemory|rocksdb
-auth|mmapv1|wiredTiger|inMemory|rocksdb
-auth_audit|mmapv1|wiredTiger|inMemory|rocksdb
+auth|mmapv1|wiredTiger|rocksdb
+auth --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
+auth_audit|mmapv1|wiredTiger|rocksdb
+auth_audit --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 backup|wiredTiger|rocksdb
 bulk_gle_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
 concurrency|mmapv1|wiredTiger|inMemory|rocksdb
@@ -21,7 +23,8 @@ dur_jscore_passthrough|default
 durability|default
 failpoints|default
 failpoints_auth|default
-gle_auth --shellWriteMode=legacy --shellReadMode=legacy|mmapv1|wiredTiger|inMemory|rocksdb
+gle_auth --shellWriteMode=legacy --shellReadMode=legacy|mmapv1|wiredTiger|rocksdb
+gle_auth --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 gle_auth --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
 gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy|mmapv1|wiredTiger|inMemory|rocksdb
 gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
@@ -35,16 +38,21 @@ multiversion|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-no_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-no_passthrough_with_mongod|mmapv1|wiredTiger|inMemory|rocksdb
+no_passthrough|mmapv1|wiredTiger|rocksdb
+no_passthrough --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
+no_passthrough_with_mongod|mmapv1|wiredTiger|rocksdb
+no_passthrough_with_mongod --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 parallel|mmapv1|wiredTiger|inMemory|rocksdb
 parallel --shellReadMode=legacy --shellWriteMode=compatibility|mmapv1|wiredTiger|inMemory|rocksdb
 ratelimit|mmapv1|wiredTiger|inMemory|rocksdb
-replica_sets|mmapv1|wiredTiger|inMemory|rocksdb
+replica_sets|mmapv1|wiredTiger|rocksdb
+replica_sets --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 replica_sets_auth|default
-replication|mmapv1|wiredTiger|inMemory|rocksdb
+replication|mmapv1|wiredTiger|rocksdb
+replication --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 replication_auth|default
-sharding|mmapv1|wiredTiger|inMemory|rocksdb
+sharding|mmapv1|wiredTiger|rocksdb
+sharding --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 sharding_auth|default
 sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy|mmapv1|wiredTiger|inMemory|rocksdb
 sharding_gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
