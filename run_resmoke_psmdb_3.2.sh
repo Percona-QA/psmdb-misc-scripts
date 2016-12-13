@@ -100,7 +100,7 @@ for suite in "${SUITES[@]}"; do
     continue; 
   fi
 
-  IFS=',' read -r -a suiteDefinition <<< "${suite}"
+  IFS='|' read -r -a suiteDefinition <<< "${suite}"
   suiteElementNumber=0
 
   for suiteElement in "${suiteDefinition[@]}"; do
@@ -139,7 +139,7 @@ for suite in "${SUITES[@]}"; do
 
         "default"|"auth")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          echo "Suite Definition: ${suiteRawName},${suiteElement}" | tee -a "${logOutputFile}"
+          echo "Suite Definition: ${suiteRawName}|${suiteElement}" | tee -a "${logOutputFile}"
           [ "${suiteRunSet}" == "default" ] && resmokeParams=${RESMOKE_DEFAULT}
           [ "${suiteRunSet}" == "auth" ] && resmokeParams=${RESMOKE_AUTH}
           resmokeParams="${RESMOKE_BASE} ${resmokeParams} ${suiteOptions} ${suiteRunSetOptions}"
@@ -151,7 +151,7 @@ for suite in "${SUITES[@]}"; do
           ;;
         "wiredTiger"|"PerconaFT"|"rocksdb"|"mmapv1"|"inMemory")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          echo "Suite Definition: ${suiteRawName},${suiteElement}" | tee -a "${logOutputFile}"
+          echo "Suite Definition: ${suiteRawName}|${suiteElement}" | tee -a "${logOutputFile}"
           if hasEngine "${suiteRunSet}"; then
             resmokeParams="${RESMOKE_BASE} ${RESMOKE_SE} --storageEngine=${suiteRunSet} ${suiteOptions} ${suiteRunSetOptions}"
             if $useSuitesOption; then
@@ -171,9 +171,9 @@ for suite in "${SUITES[@]}"; do
             if [ ! "${engine}" == "${DEFAULT_ENGINE}" ]; then
               logOutputFile="${logOutputFilePrefix}_${engine}_${trial}.log"
               if [[ -z "${suiteRunSetOptions}" ]]; then
-                suiteDefinition="${suiteRawName},${engine}"
+                suiteDefinition="${suiteRawName}|${engine}"
               else
-                suiteDefinition="${suiteRawName},${engine} ${suiteRunSetOptions}"
+                suiteDefinition="${suiteRawName}|${engine} ${suiteRunSetOptions}"
               fi
               echo "Suite Definition: ${suiteDefinition}" | tee -a "${logOutputFile}"
               resmokeParams="${RESMOKE_BASE} --storageEngine=${engine} ${RESMOKE_SE} ${suiteOptions} ${suiteRunSetOptions}"
