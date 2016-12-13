@@ -1,42 +1,42 @@
-aggregation,default
-aggregation_auth,default
-audit,wiredTiger,PerconaFT,rocksdb
-auth,default
-auth_audit,default
-backup,wiredTiger,rocksdb
-bulk_gle_passthrough,wiredTiger,PerconaFT,rocksdb
-concurrency,wiredTiger,rocksdb
-concurrency_replication,wiredTiger,PerconaFT,rocksdb
-concurrency_sharded,wiredTiger,rocksdb
-concurrency_sharded_sccc,default
-!concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js,wiredTiger,rocksdb
-core,mmapv1,wiredTiger,inMemory,PerconaFT,rocksdb
-core_auth,default
-core_small_oplog,wiredTiger,inMemory,PerconaFT,rocksdb
-core_small_oplog_rs,wiredTiger,inMemory,PerconaFT,rocksdb
-dbtest,wiredTiger,PerconaFT,rocksdb
-disk,default
-dur_jscore_passthrough,default
-durability,default
-failpoints,default
-failpoints_auth,default
- jstestfuzz,wiredTiger,PerconaFT,rocksdb
- jstestfuzz_replication,wiredTiger,PerconaFT,rocksdb
- jstestfuzz_sharded,wiredTiger,PerconaFT,rocksdb
-knobs,wiredTiger,rocksdb
-mongos_test,default
-no_passthrough,wiredTiger,PerconaFT,rocksdb
-no_passthrough_with_mongod,wiredTiger,rocksdb
-parallel,wiredTiger,rocksdb
-ratelimit,wiredTiger,rocksdb
-replica_sets,default
-replica_sets_auth,default
-replication,default
-replication_auth,default
-sharding,default
-sharding_auth,default
-sharding_jscore_passthrough,wiredTiger,PerconaFT,rocksdb
-ssl,default
-ssl_special,default
-tool,wiredTiger,PerconaFT,rocksdb
-unittests,default
+aggregation|default
+aggregation_auth|default
+audit|wiredTiger|PerconaFT|rocksdb
+auth|default
+auth_audit|default
+backup|wiredTiger|rocksdb
+bulk_gle_passthrough|wiredTiger|PerconaFT|rocksdb
+concurrency|wiredTiger|rocksdb
+concurrency_replication|wiredTiger|PerconaFT|rocksdb
+concurrency_sharded|wiredTiger|rocksdb
+concurrency_sharded_sccc|default
+!concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js|wiredTiger|rocksdb
+core|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
+core_auth|default
+core_small_oplog|wiredTiger|inMemory|PerconaFT|rocksdb
+core_small_oplog_rs|wiredTiger|inMemory|PerconaFT|rocksdb
+dbtest|wiredTiger|PerconaFT|rocksdb
+disk|default
+dur_jscore_passthrough|default
+durability|default
+failpoints|default
+failpoints_auth|default
+ jstestfuzz|wiredTiger|PerconaFT|rocksdb
+ jstestfuzz_replication|wiredTiger|PerconaFT|rocksdb
+ jstestfuzz_sharded|wiredTiger|PerconaFT|rocksdb
+knobs|wiredTiger|rocksdb
+mongos_test|default
+no_passthrough|wiredTiger|PerconaFT|rocksdb
+no_passthrough_with_mongod|wiredTiger|rocksdb
+parallel|wiredTiger|rocksdb
+ratelimit|wiredTiger|rocksdb
+replica_sets|default
+replica_sets_auth|default
+replication|default
+replication_auth|default
+sharding|default
+sharding_auth|default
+sharding_jscore_passthrough|wiredTiger|PerconaFT|rocksdb
+ssl|default
+ssl_special|default
+tool|wiredTiger|PerconaFT|rocksdb
+unittests|default

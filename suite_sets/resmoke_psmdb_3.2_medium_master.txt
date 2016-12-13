@@ -1,57 +1,57 @@
-aggregation,default
-aggregation_auth,default
-audit,wiredTiger,rocksdb
-auth,default
-auth_audit,default
-backup,wiredTiger,rocksdb
-bulk_gle_passthrough,wiredTiger,rocksdb
-concurrency,wiredTiger,rocksdb
-concurrency_replication,wiredTiger,rocksdb
-concurrency_sharded,wiredTiger,rocksdb
-concurrency_sharded_sccc,default
-!concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js,wiredTiger,rocksdb
-core,mmapv1,wiredTiger,inMemory,rocksdb
-core_compression,default
-core_auth,default
-core_small_oplog,wiredTiger,inMemory,rocksdb
-core_small_oplog_rs,wiredTiger,inMemory,rocksdb
-dbtest,wiredTiger,rocksdb
-disk,default
-dur_jscore_passthrough,default
-durability,default
-failpoints,default
-failpoints_auth,default
- jstestfuzz,wiredTiger,rocksdb
- jstestfuzz_replication,wiredTiger,rocksdb
- jstestfuzz_sharded,wiredTiger,rocksdb
-knobs,wiredTiger,rocksdb
-mongos_test,default
-no_passthrough,wiredTiger,rocksdb
-no_passthrough_with_mongod,wiredTiger,rocksdb
-parallel,wiredTiger,rocksdb
-ratelimit,wiredTiger,rocksdb
-replica_sets,default
-multiversion_multistorage_engine,wiredTiger,inMemory,rocksdb
+aggregation|default
+aggregation_auth|default
+audit|wiredTiger|rocksdb
+auth|default
+auth_audit|default
+backup|wiredTiger|rocksdb
+bulk_gle_passthrough|wiredTiger|rocksdb
+concurrency|wiredTiger|rocksdb
+concurrency_replication|wiredTiger|rocksdb
+concurrency_sharded|wiredTiger|rocksdb
+concurrency_sharded_sccc|default
+!concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js|wiredTiger|rocksdb
+core|mmapv1|wiredTiger|inMemory|rocksdb
+core_compression|default
+core_auth|default
+core_small_oplog|wiredTiger|inMemory|rocksdb
+core_small_oplog_rs|wiredTiger|inMemory|rocksdb
+dbtest|wiredTiger|rocksdb
+disk|default
+dur_jscore_passthrough|default
+durability|default
+failpoints|default
+failpoints_auth|default
+ jstestfuzz|wiredTiger|rocksdb
+ jstestfuzz_replication|wiredTiger|rocksdb
+ jstestfuzz_sharded|wiredTiger|rocksdb
+knobs|wiredTiger|rocksdb
+mongos_test|default
+no_passthrough|wiredTiger|rocksdb
+no_passthrough_with_mongod|wiredTiger|rocksdb
+parallel|wiredTiger|rocksdb
+ratelimit|wiredTiger|rocksdb
+replica_sets|default
+multiversion_multistorage_engine|wiredTiger|inMemory|rocksdb
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.6" "3.0" "3.2" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-percona_no_passthrough_with_mongod,wiredTiger,rocksdb
-read_only,wiredTiger,rocksdb
-read_only_sharded,wiredTiger,rocksdb
-replica_sets_auth,default
-replication,default
-replication_auth,default
-serial_run,default
-sharding,default
-sharding_auth,default
-sharding_jscore_passthrough,wiredTiger,rocksdb
-sharding_last_stable_mongos_and_mixed_shards,default
+percona_no_passthrough_with_mongod|wiredTiger|rocksdb
+read_only|wiredTiger|rocksdb
+read_only_sharded|wiredTiger|rocksdb
+replica_sets_auth|default
+replication|default
+replication_auth|default
+serial_run|default
+sharding|default
+sharding_auth|default
+sharding_jscore_passthrough|wiredTiger|rocksdb
+sharding_last_stable_mongos_and_mixed_shards|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.6" "3.0" "3.2" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-ssl,default
-ssl_special,default
-tool,wiredTiger,rocksdb
-unittests,default
-views,default
-views_rs,default
+ssl|default
+ssl_special|default
+tool|wiredTiger|rocksdb
+unittests|default
+views|default
+views_rs|default
