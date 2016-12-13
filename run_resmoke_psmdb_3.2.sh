@@ -41,8 +41,6 @@ RESMOKE_DEFAULT=""
 RESMOKE_AUTH="--auth"
 RESMOKE_SE=""
 
-run_system_validations
-
 # trial number
 
 if [ "$1" == "" ]; then
@@ -53,9 +51,15 @@ if [ "$1" == "" ]; then
   echo -e "\t\tdefault suite set is: resmoke_psmdb_3.2_default.txt"
   echo -e "\t\tif the suite set is not found in psmdb-misc-scripts/suite_sets"
   echo -e "\t\tthen script will attempt to load as absolute path."
+  echo -e "Env vars:"
+  echo -e "\t\tMONGOTOOLS - path to mongo-tools, defaults to the working directory."
   exit 1;
 fi
 trial=$1
+
+: ${MONGOTOOLS:=.}
+
+run_system_validations
 
 # read suite sets
 
