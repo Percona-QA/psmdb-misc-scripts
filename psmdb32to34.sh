@@ -27,6 +27,26 @@ STORAGE_ENGINE=$3
 BASE_DATADIR="${WORKDIR}/data"
 MONGO_START_TIMEOUT=60
 
+# Parameters of parameterized build
+if [ -z $SDURATION ]; then
+  SDURATION=5
+fi
+if [ -z $SCOLLECTIONS ]; then
+  SCOLLECTIONS=10
+fi
+if [ -z $SDOCSPERCOL ]; then
+  SDOCSPERCOL=1000000
+fi
+if [ -z $SWRITE_CONCERN ]; then
+  SWRITE_CONCERN="SAFE"
+fi
+if [ -z $SLOADER_THREADS ]; then
+  SLOADER_THREADS=8
+fi
+if [ -z $SWRITER_THREADS ]; then
+  SWRITER_THREADS=64
+fi
+
 cd ${WORKDIR}
 
 PSMDB32_TAR=$(find . -maxdepth 1|grep -o percona-server-mongodb-3.2*.tar.gz)
@@ -35,6 +55,15 @@ PSMDB34_TAR=$(find . -maxdepth 1|grep -o percona-server-mongodb-3.4*.tar.gz)
 PSMDB34_DIR=$(echo ${PSMDB34_TAR%.tar.gz}|cut --delimiter=- -f1-5)
 PSMDB32_BINDIR="${WORKDIR}/${PSMDB32_DIR}"
 PSMDB34_BINDIR="${WORKDIR}/${PSMDB34_DIR}"
+
+if [ -z ${PSMDB32_TAR} ]; then
+  echo "PSMDB 3.2 tarball not found!"
+  exit 1
+fi
+if [ -z ${PSMDB34_TAR} ]; then
+  echo "PSMDB 3.4 tarball not found!"
+  exit 1
+fi
 
 rm -rf ${BASE_DATADIR}
 rm -f ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}.tar
@@ -194,10 +223,13 @@ run_sysbench()
   sed -i "/export USERNAME=/c\export USERNAME=none" sysbench-mongodb/config.bash
   sed -i "/export MONGO_SERVER=/c\export MONGO_SERVER=${HOST}" sysbench-mongodb/config.bash
   sed -i "/export MONGO_PORT=/c\export MONGO_PORT=${FUN_PORT}" sysbench-mongodb/config.bash
-  sed -i "/export NUM_COLLECTIONS=/c\export NUM_COLLECTIONS=1" sysbench-mongodb/config.bash
-  sed -i "/export NUM_DOCUMENTS_PER_COLLECTION=/c\export NUM_DOCUMENTS_PER_COLLECTION=100000" sysbench-mongodb/config.bash
-  sed -i "/export RUN_TIME_MINUTES=/c\export RUN_TIME_MINUTES=1" sysbench-mongodb/config.bash
+  sed -i "/export NUM_COLLECTIONS=/c\export NUM_COLLECTIONS=${SCOLLECTIONS}" sysbench-mongodb/config.bash
+  sed -i "/export NUM_DOCUMENTS_PER_COLLECTION=/c\export NUM_DOCUMENTS_PER_COLLECTION=${SDOCSPERCOL}" sysbench-mongodb/config.bash
+  sed -i "/export RUN_TIME_MINUTES=/c\export RUN_TIME_MINUTES=${SDURATION}" sysbench-mongodb/config.bash
   sed -i "/export DROP_COLLECTIONS=/c\export DROP_COLLECTIONS=${FUN_DROP}" sysbench-mongodb/config.bash
+  sed -i "/export NUM_WRITER_THREADS=/c\export NUM_WRITER_THREADS=${SWRITER_THREADS}" sysbench-mongodb/config.bash
+  sed -i "/export NUM_LOADER_THREADS=/c\export NUM_LOADER_THREADS=${SLOADER_THREADS}" sysbench-mongodb/config.bash
+  sed -i "/export WRITE_CONCERN=/c\export WRITE_CONCERN=${SWRITE_CONCERN}" sysbench-mongodb/config.bash
 
   # Execute sysbench-mongodb
   echo "Executing sysbench-mongodb run on node${FUN_NODE_NR} port ${FUN_PORT} database ${FUN_DATABASE}"
@@ -236,6 +268,7 @@ if [ ${TEST_TYPE} = "single" ]; then
   show_node_info 1 ${NODE1_PORT}
   stop_single 1 3.2 ${NODE1_DATA} ${NODE1_DATA}/node1-3.2-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB32_BINDIR} ${NODE1_PORT}
   start_single 1 3.4 ${NODE1_DATA} ${NODE1_DATA}/node1-3.4-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB34_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
+  import_test_data 1 3.4 ${PSMDB34_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/node1-3.4-${STORAGE_ENGINE}-import.log
   run_sysbench 1 sbtest2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
   echo -e "\n\n##### Show info of node${FUN_NODE} after upgrade #####\n"
   show_node_info 1 ${NODE1_PORT}
