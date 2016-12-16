@@ -1,5 +1,6 @@
 aggregation|default
 aggregation_auth|default
+aggregation_read_concern_majority_passthrough|default
 audit|wiredTiger|rocksdb
 auth|default
 auth_audit|default
@@ -11,11 +12,13 @@ concurrency_sharded|wiredTiger|rocksdb
 concurrency_sharded_sccc|default
 !concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js|wiredTiger|rocksdb
 core|mmapv1|wiredTiger|inMemory|rocksdb
-core_compression|default
 core_auth|default
+core_compression|default
+core_op|wiredTiger|rocksdb|inMemory
 core_small_oplog|wiredTiger|inMemory|rocksdb
 core_small_oplog_rs|wiredTiger|inMemory|rocksdb
 dbtest|wiredTiger|rocksdb
+decimal|wiredTiger|rocksdb|inMemory
 disk|default
 dur_jscore_passthrough|default
 durability|default
@@ -24,20 +27,22 @@ failpoints_auth|default
  jstestfuzz|wiredTiger|rocksdb
  jstestfuzz_replication|wiredTiger|rocksdb
  jstestfuzz_sharded|wiredTiger|rocksdb
+httpinterface|default
 knobs|wiredTiger|rocksdb
 mongos_test|default
 no_passthrough|wiredTiger|rocksdb
 no_passthrough_with_mongod|wiredTiger|rocksdb
 parallel|wiredTiger|rocksdb
-ratelimit|wiredTiger|rocksdb
-replica_sets|default
 multiversion_multistorage_engine|wiredTiger|inMemory|rocksdb
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.6" "3.0" "3.2" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 percona_no_passthrough_with_mongod|wiredTiger|rocksdb
+ratelimit|wiredTiger|rocksdb
+read_concern_majority_passthrough|default
 read_only|wiredTiger|rocksdb
 read_only_sharded|wiredTiger|rocksdb
+replica_sets|default
 replica_sets_auth|default
 replication|default
 replication_auth|default
