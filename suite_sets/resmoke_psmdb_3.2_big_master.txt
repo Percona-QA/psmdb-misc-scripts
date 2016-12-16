@@ -36,9 +36,9 @@ gle_auth --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
 gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy|mmapv1|wiredTiger|inMemory|rocksdb
 gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
 httpinterface|mmapv1|wiredTiger|inMemory|rocksdb
-jstestfuzz|mmapv1|wiredTiger|inMemory|rocksdb
-jstestfuzz_replication|wiredTiger|inMemory|rocksdb
-jstestfuzz_sharded|wiredTiger|inMemory|rocksdb
+ jstestfuzz|mmapv1|wiredTiger|inMemory|rocksdb
+ jstestfuzz_replication|wiredTiger|inMemory|rocksdb
+ jstestfuzz_sharded|wiredTiger|inMemory|rocksdb
 knobs|mmapv1|wiredTiger|inMemory|rocksdb
 mmap|mmapv1
 mongos_test|default
