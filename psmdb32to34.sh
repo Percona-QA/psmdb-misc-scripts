@@ -25,7 +25,7 @@ WORKDIR=$1
 TEST_TYPE=$2
 STORAGE_ENGINE=$3
 BASE_DATADIR="${WORKDIR}/data"
-MONGO_START_TIMEOUT=60
+MONGO_START_TIMEOUT=180
 
 # Parameters of parameterized build
 if [ -z $SDURATION ]; then
@@ -162,11 +162,11 @@ stop_single()
   echo "Stopping node${FUN_NODE_NR} version ${FUN_NODE_VER} storage engine ${FUN_NODE_SE} port ${FUN_NODE_PORT}"
   for X in $(seq 0 ${MONGO_START_TIMEOUT}); do
     sleep 1
-    if ! ${FUN_BIN_DIR}/bin/mongo --host=${HOST} --port ${FUN_NODE_PORT} --eval "db.serverStatus()" > /dev/null 2>&1; then
+    if [ $(cat ${FUN_NODE_DATA}/mongod.lock|wc -l) -eq "0" ]; then
       break
     fi
   done
-  if ! ${FUN_BIN_DIR}/bin/mongo --host=${HOST} --port ${FUN_NODE_PORT} --eval "db.serverStatus()" > /dev/null 2>&1; then
+  if [ $(cat ${FUN_NODE_DATA}/mongod.lock|wc -l) -eq "0" ]; then
     echo "PSMDB node${FUN_NODE_NR} stopped ok.."
   else
     echo "PSMDB node${FUN_NODE_NR} stop failed.. Please check error log: ${FUN_LOG_ERR}"
