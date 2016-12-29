@@ -18,6 +18,7 @@ core|mmapv1|wiredTiger|inMemory|rocksdb
 core_auth|default
 core_compression|default
 core --shellReadMode=legacy --shellWriteMode=compatibility|mmapv1|wiredTiger|inMemory|rocksdb
+core_minimum_batch_size|mmapv1|wiredTiger|inMemory|rocksdb
 core_op_query|mmapv1|wiredTiger|inMemory|rocksdb
 core_small_oplog|mmapv1|wiredTiger|inMemory|rocksdb
 core_small_oplog_rs|mmapv1|wiredTiger|inMemory|rocksdb
@@ -72,6 +73,8 @@ serial_run|mmapv1|wiredTiger|inMemory|rocksdb
 sharded_collections_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
 sharding|mmapv1|wiredTiger|rocksdb
 sharding --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
+sharding --shellReadMode=legacy|mmapv1|wiredTiger|rocksdb
+sharding --shellReadMode=legacy --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 sharding_auth|default
 sharding_auth_audit|mmapv1|wiredTiger|rocksdb
 sharding_auth_audit --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
@@ -81,6 +84,7 @@ sharding_continuous_config_stepdown --excludeWithAnyTags=requires_persistence,re
 sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy|mmapv1|wiredTiger|inMemory|rocksdb
 sharding_gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
 sharding_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
+sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legacy|mmapv1|wiredTiger|inMemory|rocksdb
 sharding_last_stable_mongos_and_mixed_shards|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.6" "3.0" "3.2" "3.2.1"
