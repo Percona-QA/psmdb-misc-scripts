@@ -14,6 +14,7 @@ concurrency_sharded_sccc|default
 core|mmapv1|wiredTiger|inMemory|rocksdb
 core_auth|default
 core_compression|default
+core_minimum_batch_size|mmapv1|wiredTiger|inMemory|rocksdb
 core_op|wiredTiger|rocksdb|inMemory
 core_small_oplog|wiredTiger|inMemory|rocksdb
 core_small_oplog_rs|wiredTiger|inMemory|rocksdb
