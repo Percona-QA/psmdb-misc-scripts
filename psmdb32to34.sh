@@ -254,18 +254,19 @@ run_sysbench()
 show_node_info()
 {
   local FUN_PORT=$1
-  echo -e "\n\n##### Show databases info on node ${FUN_PORT} #####\n"
-  ${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.adminCommand('listDatabases')"
-  echo -e "\n\n##### Show server info on node ${FUN_PORT} #####\n"
-  ${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.serverStatus()"
-  echo -e "\n\n##### Show info on sbtest database on node ${FUN_PORT} #####\n"
-  ${PSMDB32_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/sbtest --eval "db.stats()"
-  echo -e "\n\n##### Show info on test database on node ${FUN_PORT} #####\n"
-  ${PSMDB32_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/test --eval "db.stats()"
-  echo -e "\n\n##### Show replica set status on node ${FUN_PORT} #####\n"
-  ${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "rs.status()"
-  echo -e "\n\n##### Show isMaster info on node ${FUN_PORT} #####\n"
-  ${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.isMaster()"
+  local FUN_TEXT=$2
+  echo -e "\n\n##### Show databases info on node ${FUN_PORT} ${FUN_TEXT} #####\n"
+  ${PSMDB34_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "rs.slaveOk(); db.adminCommand('listDatabases')"
+  echo -e "\n\n##### Show server info on node ${FUN_PORT} ${FUN_TEXT} #####\n"
+  ${PSMDB34_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.serverStatus()"
+  echo -e "\n\n##### Show info on sbtest database on node ${FUN_PORT} ${FUN_TEXT} #####\n"
+  ${PSMDB34_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/sbtest --eval "db.stats()"
+  echo -e "\n\n##### Show info on test database on node ${FUN_PORT} ${FUN_TEXT} #####\n"
+  ${PSMDB34_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/test --eval "db.stats()"
+  echo -e "\n\n##### Show replica set status on node ${FUN_PORT} ${FUN_TEXT} #####\n"
+  ${PSMDB34_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "rs.status()"
+  echo -e "\n\n##### Show isMaster info on node ${FUN_PORT} ${FUN_TEXT} #####\n"
+  ${PSMDB34_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.isMaster()"
 }
 
 update_primary_info()
@@ -310,7 +311,7 @@ if [ ${TEST_TYPE} = "single" ]; then
     run_sysbench sbtest ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA}
   fi
   echo -e "\n\n##### Show info of node ${NODE1_PORT} before upgrade #####\n"
-  show_node_info ${NODE1_PORT}
+  show_node_info ${NODE1_PORT} "beforeUpgrade"
   stop_single 3.2 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.2-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB32_BINDIR} ${NODE1_PORT}
   start_single 3.4 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.4-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB34_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data 3.4 ${PSMDB34_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-3.4-${STORAGE_ENGINE}-import.log
@@ -318,7 +319,7 @@ if [ ${TEST_TYPE} = "single" ]; then
     run_sysbench sbtest2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
   fi
   echo -e "\n\n##### Show info of node ${NODE1_PORT} after upgrade #####\n"
-  show_node_info ${NODE1_PORT}
+  show_node_info ${NODE1_PORT} "afterUpgrade"
   if [ "${LEAVE_RUNNING}" = "false" ]; then
     stop_single 3.4 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.4-${STORAGE_ENGINE}-final-stop.log ${PSMDB34_BINDIR} ${NODE1_PORT}
   fi
@@ -331,10 +332,10 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest ${PRIMARY_PORT} TRUE beforeUpgrade ${PRIMARY_DATA}
+    run_sysbench sbtest ${PRIMARY_PORT} FALSE beforeUpgrade ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${PRIMARY_PORT} after sysbench and before any upgrades #####\n"
-  show_node_info ${PRIMARY_PORT}
+  show_node_info ${PRIMARY_PORT} "beforeUpgrade"
   upgrade_next_rs_node
   if [ "${SKIP_SYSBENCH}" = "false" ]; then
     update_primary_info
@@ -343,7 +344,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     run_sysbench sbtest2 ${PRIMARY_PORT} TRUE afterUpgrade ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
-  show_node_info ${UPGRADE_PORT}
+  show_node_info ${UPGRADE_PORT} "afterUpgrade"
   upgrade_next_rs_node
   if [ "${SKIP_SYSBENCH}" = "false" ]; then
     update_primary_info
@@ -352,7 +353,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     run_sysbench sbtest3 ${PRIMARY_PORT} TRUE afterUpgrade ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
-  show_node_info ${UPGRADE_PORT}
+  show_node_info ${UPGRADE_PORT} "afterUpgrade"
   upgrade_next_rs_node
   if [ "${SKIP_SYSBENCH}" = "false" ]; then
     update_primary_info
@@ -361,7 +362,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     run_sysbench sbtest4 ${PRIMARY_PORT} TRUE afterUpgrade ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
-  show_node_info ${UPGRADE_PORT}
+  show_node_info ${UPGRADE_PORT} "afterUpgrade"
   if [ "${LEAVE_RUNNING}" = "false" ]; then
     killall mongod
   fi
