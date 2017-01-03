@@ -103,12 +103,14 @@ fi
 TEST_DB_FILE=${WORKDIR}/primer-dataset.json
 
 # Download sysbench-mongodb
-if [ ! -f mongo-java-driver-3.2.1.jar ]; then
-  wget https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
-fi
-export CLASSPATH=$PWD/mongo-java-driver-3.2.1.jar:$CLASSPATH
-if [ ! -d sysbench-mongodb ]; then
-  git clone https://github.com/Percona-Lab/sysbench-mongodb.git
+if [ "${SKIP_SYSBENCH}" = "false" ]; then
+  if [ ! -f mongo-java-driver-3.2.1.jar ]; then
+    wget https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
+  fi
+  export CLASSPATH=$PWD/mongo-java-driver-3.2.1.jar:$CLASSPATH
+  if [ ! -d sysbench-mongodb ]; then
+    git clone https://github.com/Percona-Lab/sysbench-mongodb.git
+  fi
 fi
 
 ### COMMON FUNCTIONS
@@ -304,13 +306,17 @@ upgrade_next_rs_node()
 if [ ${TEST_TYPE} = "single" ]; then
   start_single 3.2 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.2-${STORAGE_ENGINE}-first-start.log ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data 3.2 ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-3.2-${STORAGE_ENGINE}-import.log
-  run_sysbench sbtest ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA}
+  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+    run_sysbench sbtest ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA}
+  fi
   echo -e "\n\n##### Show info of node ${NODE1_PORT} before upgrade #####\n"
   show_node_info ${NODE1_PORT}
   stop_single 3.2 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.2-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB32_BINDIR} ${NODE1_PORT}
   start_single 3.4 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.4-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB34_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data 3.4 ${PSMDB34_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-3.4-${STORAGE_ENGINE}-import.log
-  run_sysbench sbtest2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
+  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+    run_sysbench sbtest2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
+  fi
   echo -e "\n\n##### Show info of node ${NODE1_PORT} after upgrade #####\n"
   show_node_info ${NODE1_PORT}
   if [ "${LEAVE_RUNNING}" = "false" ]; then
