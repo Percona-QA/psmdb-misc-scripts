@@ -28,6 +28,12 @@ BASE_DATADIR="${WORKDIR}/data"
 MONGO_START_TIMEOUT=180
 
 # Parameters of parameterized build
+if [ -z $LEAVE_RUNNING ]; then
+  LEAVE_RUNNING=false
+fi
+if [ -z $SKIP_SYSBENCH ]; then
+  SKIP_SYSBENCH=false
+fi
 if [ -z $SDURATION ]; then
   SDURATION=5
 fi
@@ -79,9 +85,13 @@ HOST=$(hostname)
 NODE1_PORT=27017
 NODE2_PORT=27018
 NODE3_PORT=27019
-NODE1_DATA="${BASE_DATADIR}/node1"
-NODE2_DATA="${BASE_DATADIR}/node2"
-NODE3_DATA="${BASE_DATADIR}/node3"
+PRIMARY_PORT=""
+PRIMARY_DATA=""
+UPGRADE_PORT=""
+UPGRADE_DATA=""
+NODE1_DATA="${BASE_DATADIR}/${NODE1_PORT}"
+NODE2_DATA="${BASE_DATADIR}/${NODE2_PORT}"
+NODE3_DATA="${BASE_DATADIR}/${NODE3_PORT}"
 
 echo "Workdir: $WORKDIR"
 echo "Bindirs: $PSMDB32_BINDIR $PSMDB34_BINDIR"
@@ -112,17 +122,16 @@ trap archives EXIT KILL
 
 start_single()
 {
-  local FUN_NODE_NR=$1
-  local FUN_NODE_VER=$2
-  local FUN_NODE_DATA=$3
-  local FUN_LOG_ERR=$4
-  local FUN_BIN_DIR=$5
-  local FUN_NODE_PORT=$6
-  local FUN_NODE_SE=$7
-  local FUN_REPL_SET="$8"
+  local FUN_NODE_VER=$1
+  local FUN_NODE_DATA=$2
+  local FUN_LOG_ERR=$3
+  local FUN_BIN_DIR=$4
+  local FUN_NODE_PORT=$5
+  local FUN_NODE_SE=$6
+  local FUN_REPL_SET="$7"
 
   local REPL_SET=""
-  if [ ! -z $8 ]; then
+  if [ ! -z $7 ]; then
     local REPL_SET="--replSet "${FUN_REPL_SET}""
   fi
 
@@ -130,7 +139,7 @@ start_single()
     mkdir -p ${FUN_NODE_DATA}
   fi
 
-  echo "Starting PSMDB-${FUN_NODE_VER} node${FUN_NODE_NR} storage engine: ${FUN_NODE_SE} port ${FUN_NODE_PORT}"
+  echo "Starting node on port ${FUN_NODE_PORT} storage engine: ${FUN_NODE_SE}"
 
   ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --logpath ${FUN_LOG_ERR} --port ${FUN_NODE_PORT} --logappend --fork  --storageEngine ${FUN_NODE_SE} ${REPL_SET} > ${FUN_LOG_ERR} 2>&1 &
 
@@ -141,25 +150,24 @@ start_single()
     fi
   done
   if ${FUN_BIN_DIR}/bin/mongo --host=${HOST} --port ${FUN_NODE_PORT} --eval "db.serverStatus()" ping > /dev/null 2>&1; then
-    echo "PSMDB node${FUN_NODE_NR} started ok.."
+    echo "PSMDB on port ${FUN_NODE_PORT} started ok.."
   else
-    echo "PSMDB node${FUN_NODE_NR} startup failed.. Please check error log: ${FUN_LOG_ERR}"
+    echo "PSMDB on port ${FUN_NODE_PORT} startup failed.. Please check error log: ${FUN_LOG_ERR}"
   fi
   sleep 10
 }
 
 stop_single()
 {
-  local FUN_NODE_NR=$1
-  local FUN_NODE_VER=$2
-  local FUN_NODE_DATA=$3
-  local FUN_LOG_ERR=$4
-  local FUN_BIN_DIR=$5
-  local FUN_NODE_PORT=$6
+  local FUN_NODE_VER=$1
+  local FUN_NODE_DATA=$2
+  local FUN_LOG_ERR=$3
+  local FUN_BIN_DIR=$4
+  local FUN_NODE_PORT=$5
 
   ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --port ${FUN_NODE_PORT} --shutdown > ${FUN_LOG_ERR} 2>&1 &
 
-  echo "Stopping node${FUN_NODE_NR} version ${FUN_NODE_VER} storage engine ${FUN_NODE_SE} port ${FUN_NODE_PORT}"
+  echo "Stopping node ${FUN_NODE_PORT} version ${FUN_NODE_VER} storage engine ${FUN_NODE_SE}"
   for X in $(seq 0 ${MONGO_START_TIMEOUT}); do
     sleep 1
     if [ $(cat ${FUN_NODE_DATA}/mongod.lock|wc -l) -eq "0" ]; then
@@ -167,17 +175,17 @@ stop_single()
     fi
   done
   if [ $(cat ${FUN_NODE_DATA}/mongod.lock|wc -l) -eq "0" ]; then
-    echo "PSMDB node${FUN_NODE_NR} stopped ok.."
+    echo "PSMDB on port ${FUN_NODE_PORT} stopped ok.."
   else
-    echo "PSMDB node${FUN_NODE_NR} stop failed.. Please check error log: ${FUN_LOG_ERR}"
+    echo "PSMDB on port ${FUN_NODE_PORT} stop failed.. Please check error log: ${FUN_LOG_ERR}"
   fi
 }
 
 start_replica()
 {
-  start_single 1 3.2 ${NODE1_DATA} ${NODE1_DATA}/node1-3.2-${STORAGE_ENGINE}-first-start.log ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} rs0
-  start_single 2 3.2 ${NODE2_DATA} ${NODE2_DATA}/node2-3.2-${STORAGE_ENGINE}-first-start.log ${PSMDB32_BINDIR} ${NODE2_PORT} ${STORAGE_ENGINE} rs0
-  start_single 3 3.2 ${NODE3_DATA} ${NODE3_DATA}/node3-3.2-${STORAGE_ENGINE}-first-start.log ${PSMDB32_BINDIR} ${NODE3_PORT} ${STORAGE_ENGINE} rs0
+  start_single 3.2 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.2-${STORAGE_ENGINE}-first-start.log ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} rs0
+  start_single 3.2 ${NODE2_DATA} ${NODE2_DATA}/${NODE2_PORT}-3.2-${STORAGE_ENGINE}-first-start.log ${PSMDB32_BINDIR} ${NODE2_PORT} ${STORAGE_ENGINE} rs0
+  start_single 3.2 ${NODE3_DATA} ${NODE3_DATA}/${NODE3_PORT}-3.2-${STORAGE_ENGINE}-first-start.log ${PSMDB32_BINDIR} ${NODE3_PORT} ${STORAGE_ENGINE} rs0
 }
 
 init_replica()
@@ -190,17 +198,16 @@ init_replica()
 
 import_test_data()
 {
-  local FUN_NODE_NR=$1
-  local FUN_NODE_VER=$2
-  local FUN_BIN_DIR=$3
-  local FUN_NODE_PORT=$4
-  local FUN_NODE_SE=$5
-  local FUN_DB=$6
-  local FUN_COLLECTION=$7
-  local FUN_IMPORT_FILE=$8
-  local FUN_LOG_ERR=$9
+  local FUN_NODE_VER=$1
+  local FUN_BIN_DIR=$2
+  local FUN_NODE_PORT=$3
+  local FUN_NODE_SE=$4
+  local FUN_DB=$5
+  local FUN_COLLECTION=$6
+  local FUN_IMPORT_FILE=$7
+  local FUN_LOG_ERR=$8
 
-  echo "Importing test database to node${FUN_NODE_NR} version ${FUN_NODE_VER} storage engine ${FUN_NODE_SE}"
+  echo "Importing test database to node ${FUN_NODE_PORT} version ${FUN_NODE_VER} storage engine ${FUN_NODE_SE}"
   ${FUN_BIN_DIR}/bin/mongoimport --host=${HOST} --port=${FUN_NODE_PORT} --db ${FUN_DB} --collection ${FUN_COLLECTION} --drop --file ${FUN_IMPORT_FILE} > ${FUN_LOG_ERR} 2>&1
   if [ $? -eq 0 ]; then
     echo "Importing test database was successful."
@@ -211,12 +218,11 @@ import_test_data()
 
 run_sysbench()
 {
-  local FUN_NODE=$1
-  local FUN_DATABASE=$2
-  local FUN_PORT=$3
-  local FUN_DROP=$4
-  local FUN_PREFIX=$5
-  local FUN_DATA=$6
+  local FUN_DATABASE=$1
+  local FUN_PORT=$2
+  local FUN_DROP=$3
+  local FUN_PREFIX=$4
+  local FUN_DATA=$5
 
   # Set run parameters
   sed -i "/export DB_NAME=/c\export DB_NAME=${FUN_DATABASE}" sysbench-mongodb/config.bash
@@ -232,7 +238,7 @@ run_sysbench()
   sed -i "/export WRITE_CONCERN=/c\export WRITE_CONCERN=${SWRITE_CONCERN}" sysbench-mongodb/config.bash
 
   # Execute sysbench-mongodb
-  echo "Executing sysbench-mongodb run on node${FUN_NODE_NR} port ${FUN_PORT} database ${FUN_DATABASE}"
+  echo "Executing sysbench-mongodb run on node ${FUN_PORT} database ${FUN_DATABASE}"
   pushd sysbench-mongodb
   ./run.simple.bash
   rename "s/^mongoSysbench/${FUN_PREFIX}_mongoSysbench/" *.txt
@@ -240,44 +246,119 @@ run_sysbench()
   mv *.txt ${FUN_DATA}
   mv *.tsv ${FUN_DATA}
   popd
-  echo "Finished with sysbench-mongodb run on node${FUN_NODE_NR} port ${FUN_PORT} database ${FUN_DATABASE}"
+  echo "Finished with sysbench-mongodb run on node ${FUN_PORT} database ${FUN_DATABASE}"
 }
 
 show_node_info()
 {
-  local FUN_NODE=$1
-  local FUN_PORT=$2
-  echo -e "\n\n##### Show server info on node${FUN_NODE} #####\n"
+  local FUN_PORT=$1
+  echo -e "\n\n##### Show databases info on node ${FUN_PORT} #####\n"
+  ${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.adminCommand('listDatabases')"
+  echo -e "\n\n##### Show server info on node ${FUN_PORT} #####\n"
   ${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.serverStatus()"
-  echo -e "\n\n##### Show info on sbtest database on node${FUN_NODE} #####\n"
+  echo -e "\n\n##### Show info on sbtest database on node ${FUN_PORT} #####\n"
   ${PSMDB32_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/sbtest --eval "db.stats()"
-  echo -e "\n\n##### Show info on test database on node${FUN_NODE} #####\n"
+  echo -e "\n\n##### Show info on test database on node ${FUN_PORT} #####\n"
   ${PSMDB32_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/test --eval "db.stats()"
-  echo -e "\n\n##### Show replica set status on node${FUN_NODE} #####\n"
+  echo -e "\n\n##### Show replica set status on node ${FUN_PORT} #####\n"
   ${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "rs.status()"
-  echo -e "\n\n##### Show isMaster info on node${FUN_NODE} #####\n"
+  echo -e "\n\n##### Show isMaster info on node ${FUN_PORT} #####\n"
   ${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.isMaster()"
+}
+
+update_primary_info()
+{
+  PRIMARY_PORT=""
+  PRIMARY_DATA=""
+  for node_port in $NODE1_PORT $NODE2_PORT $NODE3_PORT; do
+    if [ $(${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --eval 'db.isMaster().ismaster' | tail -n1) = "true" ]; then
+      PRIMARY_PORT=$node_port
+      PRIMARY_DATA=$(${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --eval 'db.serverCmdLineOpts().parsed.storage.dbPath' | tail -n1)
+      break;
+    fi
+  done
+}
+
+choose_rs_node_upgrade()
+{
+  UPGRADE_PORT=""
+  UPGRADE_DATA=""
+  for node_port in $NODE3_PORT $NODE2_PORT $NODE1_PORT; do
+    if [ $(${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --eval 'db.serverBuildInfo().version'|tail -n1|cut -d '.' -f 1,2) = "3.2" ]; then
+      UPGRADE_PORT=$node_port
+      UPGRADE_DATA=$(${PSMDB32_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --eval 'db.serverCmdLineOpts().parsed.storage.dbPath' | tail -n1)
+      break;
+    fi
+  done
+}
+
+upgrade_next_rs_node()
+{
+  choose_rs_node_upgrade
+  echo -e "\n\n##### Upgrading ${HOST}:${UPGRADE_PORT} - ${UPGRADE_DATA}\n"
+  stop_single 3.2 ${UPGRADE_DATA} ${UPGRADE_DATA}/${UPGRADE_PORT}-3.2-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB32_BINDIR} ${UPGRADE_PORT}
+  start_single 3.4 ${UPGRADE_DATA} ${UPGRADE_DATA}/${UPGRADE_PORT}-3.4-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB34_BINDIR} ${UPGRADE_PORT} ${STORAGE_ENGINE} rs0
 }
 ### END COMMON FUNCTIONS
 
 if [ ${TEST_TYPE} = "single" ]; then
-  start_single 1 3.2 ${NODE1_DATA} ${NODE1_DATA}/node1-3.2-${STORAGE_ENGINE}-first-start.log ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
-  import_test_data 1 3.2 ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/node1-3.2-${STORAGE_ENGINE}-import.log
-  run_sysbench 1 sbtest ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA}
-  echo -e "\n\n##### Show info of node${FUN_NODE} before upgrade #####\n"
-  show_node_info 1 ${NODE1_PORT}
-  stop_single 1 3.2 ${NODE1_DATA} ${NODE1_DATA}/node1-3.2-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB32_BINDIR} ${NODE1_PORT}
-  start_single 1 3.4 ${NODE1_DATA} ${NODE1_DATA}/node1-3.4-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB34_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
-  import_test_data 1 3.4 ${PSMDB34_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/node1-3.4-${STORAGE_ENGINE}-import.log
-  run_sysbench 1 sbtest2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
-  echo -e "\n\n##### Show info of node${FUN_NODE} after upgrade #####\n"
-  show_node_info 1 ${NODE1_PORT}
-  stop_single 1 3.4 ${NODE1_DATA} ${NODE1_DATA}/node1-3.4-${STORAGE_ENGINE}-final-stop.log ${PSMDB34_BINDIR} ${NODE1_PORT}
+  start_single 3.2 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.2-${STORAGE_ENGINE}-first-start.log ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
+  import_test_data 3.2 ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-3.2-${STORAGE_ENGINE}-import.log
+  run_sysbench sbtest ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA}
+  echo -e "\n\n##### Show info of node ${NODE1_PORT} before upgrade #####\n"
+  show_node_info ${NODE1_PORT}
+  stop_single 3.2 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.2-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB32_BINDIR} ${NODE1_PORT}
+  start_single 3.4 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.4-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB34_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
+  import_test_data 3.4 ${PSMDB34_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-3.4-${STORAGE_ENGINE}-import.log
+  run_sysbench sbtest2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
+  echo -e "\n\n##### Show info of node ${NODE1_PORT} after upgrade #####\n"
+  show_node_info ${NODE1_PORT}
+  if [ "${LEAVE_RUNNING}" = "false" ]; then
+    stop_single 3.4 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.4-${STORAGE_ENGINE}-final-stop.log ${PSMDB34_BINDIR} ${NODE1_PORT}
+  fi
 elif [ ${TEST_TYPE} = "replicaset" ]; then
   start_replica
   init_replica
-  import_test_data 1 3.2 ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/node1-3.2-${STORAGE_ENGINE}-import.log
-  sleep 5
+  update_primary_info
+  import_test_data 3.2 ${PSMDB32_BINDIR} ${PRIMARY_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${PRIMARY_DATA}/${PRIMARY_PORT}-3.2-${STORAGE_ENGINE}-import.log
+  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+    update_primary_info
+    echo "PRIMARY_PORT: ${PRIMARY_PORT}"
+    echo "PRIMARY_DATA: ${PRIMARY_DATA}"
+    run_sysbench sbtest ${PRIMARY_PORT} TRUE beforeUpgrade ${PRIMARY_DATA}
+  fi
+  echo -e "\n\n##### Show info of node ${PRIMARY_PORT} after sysbench and before any upgrades #####\n"
+  show_node_info ${PRIMARY_PORT}
+  upgrade_next_rs_node
+  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+    update_primary_info
+    echo "PRIMARY_PORT: ${PRIMARY_PORT}"
+    echo "PRIMARY_DATA: ${PRIMARY_DATA}"
+    run_sysbench sbtest2 ${PRIMARY_PORT} TRUE afterUpgrade ${PRIMARY_DATA}
+  fi
+  echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
+  show_node_info ${UPGRADE_PORT}
+  upgrade_next_rs_node
+  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+    update_primary_info
+    echo "PRIMARY_PORT: ${PRIMARY_PORT}"
+    echo "PRIMARY_DATA: ${PRIMARY_DATA}"
+    run_sysbench sbtest3 ${PRIMARY_PORT} TRUE afterUpgrade ${PRIMARY_DATA}
+  fi
+  echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
+  show_node_info ${UPGRADE_PORT}
+  upgrade_next_rs_node
+  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+    update_primary_info
+    echo "PRIMARY_PORT: ${PRIMARY_PORT}"
+    echo "PRIMARY_DATA: ${PRIMARY_DATA}"
+    run_sysbench sbtest4 ${PRIMARY_PORT} TRUE afterUpgrade ${PRIMARY_DATA}
+  fi
+  echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
+  show_node_info ${UPGRADE_PORT}
+  if [ "${LEAVE_RUNNING}" = "false" ]; then
+    killall mongod
+  fi
 else
   echo "Wrong test type specified!"
   exit 1
