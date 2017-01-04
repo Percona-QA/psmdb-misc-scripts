@@ -25,9 +25,12 @@ WORKDIR=$1
 TEST_TYPE=$2
 STORAGE_ENGINE=$3
 BASE_DATADIR="${WORKDIR}/data"
-MONGO_START_TIMEOUT=180
+MONGO_START_TIMEOUT=600
 
 # Parameters of parameterized build
+if [ -z $MONGOD_EXTRA ]; then
+  MONGOD_EXTRA=""
+fi
 if [ -z $LEAVE_RUNNING ]; then
   LEAVE_RUNNING=false
 fi
@@ -143,7 +146,7 @@ start_single()
 
   echo "Starting node on port ${FUN_NODE_PORT} storage engine: ${FUN_NODE_SE}"
 
-  ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --logpath ${FUN_LOG_ERR} --port ${FUN_NODE_PORT} --logappend --fork  --storageEngine ${FUN_NODE_SE} ${REPL_SET} > ${FUN_LOG_ERR} 2>&1 &
+  ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --logpath ${FUN_LOG_ERR} --port ${FUN_NODE_PORT} --logappend --fork  --storageEngine ${FUN_NODE_SE} ${REPL_SET} ${MONGOD_EXTRA} > ${FUN_LOG_ERR} 2>&1 &
 
   for X in $(seq 0 ${MONGO_START_TIMEOUT}); do
     sleep 1
@@ -332,7 +335,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest ${PRIMARY_PORT} FALSE beforeUpgrade ${PRIMARY_DATA}
+    run_sysbench sbtest ${PRIMARY_PORT} FALSE "beforeUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${PRIMARY_PORT} after sysbench and before any upgrades #####\n"
   show_node_info ${PRIMARY_PORT} "beforeUpgrade"
@@ -341,7 +344,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest2 ${PRIMARY_PORT} TRUE afterUpgrade ${PRIMARY_DATA}
+    run_sysbench sbtest2 ${PRIMARY_PORT} TRUE "afterUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
@@ -350,7 +353,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest3 ${PRIMARY_PORT} TRUE afterUpgrade ${PRIMARY_DATA}
+    run_sysbench sbtest3 ${PRIMARY_PORT} TRUE "afterUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
@@ -359,7 +362,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest4 ${PRIMARY_PORT} TRUE afterUpgrade ${PRIMARY_DATA}
+    run_sysbench sbtest4 ${PRIMARY_PORT} TRUE "afterUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
