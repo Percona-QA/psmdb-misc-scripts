@@ -118,9 +118,10 @@ fi
 
 ### COMMON FUNCTIONS
 archives() {
-  #find data -maxdepth 3 -name "*.log" -name "*.txt" -name "*.tsv" -exec tar -rf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}.tar {} \;
-  find data -maxdepth 3 -type f \( -iname \*.log -o -iname \*.txt -o -iname \*.tsv \) -exec tar -rf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}.tar {} \;
-  #rm -rf ${BASE_DATADIR}
+  rm -rf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}
+  mkdir ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}
+  find data -maxdepth 3 -type f \( -iname \*.log -o -iname \*.txt -o -iname \*.tsv \) -exec cp {} ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE} \;
+  tar czf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}.tar.gz ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}
 }
 
 trap archives EXIT KILL
@@ -301,7 +302,7 @@ choose_rs_node_upgrade()
 upgrade_next_rs_node()
 {
   choose_rs_node_upgrade
-  echo -e "\n\n##### Upgrading ${HOST}:${UPGRADE_PORT} - ${UPGRADE_DATA}\n"
+  echo -e "\n\n##### Upgrading ${HOST}:${UPGRADE_PORT} - ${UPGRADE_DATA} #####\n"
   stop_single 3.2 ${UPGRADE_DATA} ${UPGRADE_DATA}/${UPGRADE_PORT}-3.2-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB32_BINDIR} ${UPGRADE_PORT}
   start_single 3.4 ${UPGRADE_DATA} ${UPGRADE_DATA}/${UPGRADE_PORT}-3.4-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB34_BINDIR} ${UPGRADE_PORT} ${STORAGE_ENGINE} rs0
 }
@@ -311,7 +312,7 @@ if [ ${TEST_TYPE} = "single" ]; then
   start_single 3.2 ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-3.2-${STORAGE_ENGINE}-first-start.log ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data 3.2 ${PSMDB32_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-3.2-${STORAGE_ENGINE}-import.log
   if [ "${SKIP_SYSBENCH}" = "false" ]; then
-    run_sysbench sbtest ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA}
+    run_sysbench sbtest ${NODE1_PORT} TRUE beforeUpgrade ${NODE1_DATA}
   fi
   echo -e "\n\n##### Show info of node ${NODE1_PORT} before upgrade #####\n"
   show_node_info ${NODE1_PORT} "beforeUpgrade"
@@ -335,16 +336,19 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest ${PRIMARY_PORT} FALSE "beforeUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
+    run_sysbench sbtest ${PRIMARY_PORT} TRUE "beforeUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${PRIMARY_PORT} after sysbench and before any upgrades #####\n"
   show_node_info ${PRIMARY_PORT} "beforeUpgrade"
   upgrade_next_rs_node
+  echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
+  show_node_info ${UPGRADE_PORT} "afterUpgrade"
+  upgrade_next_rs_node
   if [ "${SKIP_SYSBENCH}" = "false" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest2 ${PRIMARY_PORT} TRUE "afterUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
+    run_sysbench sbtest ${PRIMARY_PORT} TRUE "afterTwoUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
@@ -353,16 +357,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest3 ${PRIMARY_PORT} TRUE "afterUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
-  fi
-  echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
-  show_node_info ${UPGRADE_PORT} "afterUpgrade"
-  upgrade_next_rs_node
-  if [ "${SKIP_SYSBENCH}" = "false" ]; then
-    update_primary_info
-    echo "PRIMARY_PORT: ${PRIMARY_PORT}"
-    echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest4 ${PRIMARY_PORT} TRUE "afterUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
+    run_sysbench sbtest ${PRIMARY_PORT} TRUE "afterAllUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
