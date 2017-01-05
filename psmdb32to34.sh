@@ -121,7 +121,7 @@ archives() {
   rm -rf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}
   mkdir ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}
   find data -maxdepth 3 -type f \( -iname \*.log -o -iname \*.txt -o -iname \*.tsv \) -exec cp {} ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE} \;
-  tar czf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}.tar.gz ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}
+  tar czf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}.tar.gz -C ${WORKDIR} results_${TEST_TYPE}_${STORAGE_ENGINE}
 }
 
 trap archives EXIT KILL
