@@ -28,31 +28,31 @@ BASE_DATADIR="${WORKDIR}/data"
 MONGO_START_TIMEOUT=600
 
 # Parameters of parameterized build
-if [ -z $MONGOD_EXTRA ]; then
+if [ -z "$MONGOD_EXTRA" ]; then
   MONGOD_EXTRA=""
 fi
-if [ -z $LEAVE_RUNNING ]; then
+if [ -z "$LEAVE_RUNNING" ]; then
   LEAVE_RUNNING=false
 fi
-if [ -z $SKIP_SYSBENCH ]; then
+if [ -z "$SKIP_SYSBENCH" ]; then
   SKIP_SYSBENCH=false
 fi
-if [ -z $SDURATION ]; then
+if [ -z "$SDURATION" ]; then
   SDURATION=5
 fi
-if [ -z $SCOLLECTIONS ]; then
+if [ -z "$SCOLLECTIONS" ]; then
   SCOLLECTIONS=10
 fi
-if [ -z $SDOCSPERCOL ]; then
+if [ -z "$SDOCSPERCOL" ]; then
   SDOCSPERCOL=1000000
 fi
-if [ -z $SWRITE_CONCERN ]; then
+if [ -z "$SWRITE_CONCERN" ]; then
   SWRITE_CONCERN="SAFE"
 fi
-if [ -z $SLOADER_THREADS ]; then
+if [ -z "$SLOADER_THREADS" ]; then
   SLOADER_THREADS=8
 fi
-if [ -z $SWRITER_THREADS ]; then
+if [ -z "$SWRITER_THREADS" ]; then
   SWRITER_THREADS=64
 fi
 
