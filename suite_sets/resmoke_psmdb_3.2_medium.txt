@@ -18,6 +18,7 @@ dbtest|wiredTiger|PerconaFT|rocksdb
 disk|default
 dur_jscore_passthrough|default
 durability|default
+external_auth|default
 failpoints|default
 failpoints_auth|default
  jstestfuzz|wiredTiger|PerconaFT|rocksdb
