@@ -36,7 +36,7 @@ source "${basedir}/run_smoke_resmoke_funcs.sh"
 
 # smoke parameters
 RESMOKE_JOBS=$(grep -cw ^processor /proc/cpuinfo)
-RESMOKE_BASE="--continueOnFailure --jobs=${RESMOKE_JOBS} --shuffle"
+RESMOKE_BASE="--storageEngineCacheSizeGB=1 --continueOnFailure --jobs=${RESMOKE_JOBS} --shuffle"
 RESMOKE_DEFAULT=""
 RESMOKE_AUTH="--auth"
 RESMOKE_SE=""
