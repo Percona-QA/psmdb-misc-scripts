@@ -62,6 +62,7 @@ ratelimit|mmapv1|wiredTiger|inMemory|rocksdb
 read_concern_majority_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
 read_only|mmapv1|wiredTiger|rocksdb
 read_only_sharded|mmapv1|wiredTiger|rocksdb
+redaction|default
 replica_sets|mmapv1|wiredTiger|rocksdb
 replica_sets_auth|default
 replica_sets_compression|default

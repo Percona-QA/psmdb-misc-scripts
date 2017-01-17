@@ -44,6 +44,7 @@ ratelimit|wiredTiger|rocksdb
 read_concern_majority_passthrough|default
 read_only|wiredTiger|rocksdb
 read_only_sharded|wiredTiger|rocksdb
+redaction|default
 replica_sets|default
 replica_sets_auth|default
 replication|default
