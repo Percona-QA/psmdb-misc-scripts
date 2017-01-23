@@ -118,11 +118,13 @@ for suite in "${SUITES[@]}"; do
       suite=${suiteElementName}
       suiteRawName=${suite}
       suiteOptions=${suiteElementOptions}
-      suiteLogTag=$(echo "${suiteElement}" | sed -r -e 's/ +/_/g' -e 's/[-!]//g')
+      suiteLogTag=$(echo "${suiteElement}" | sed -r -e 's/ +/_/g' -e 's/[-!/]//g')
 
       if [[ "${suite}" == *"!"* ]]; then
         useSuitesOption=false
         suite=${suite#!}
+        suiteOptions=$(echo ${suite}|cut -d " " -f2-)
+        suite=$(echo ${suite}|cut -d " " -f1)
       elif [[ "${suiteOptions}" == *"--suites"* ]]; then
         useSuitesOption=false
       else
