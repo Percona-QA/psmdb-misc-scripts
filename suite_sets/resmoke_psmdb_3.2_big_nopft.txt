@@ -1,5 +1,6 @@
 aggregation|mmapv1|wiredTiger|inMemory|rocksdb
 aggregation_auth|default
+aggregation_read_concern_majority_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
 audit|mmapv1|wiredTiger|inMemory|rocksdb
 auth|mmapv1|wiredTiger|rocksdb
 auth --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
@@ -15,6 +16,8 @@ concurrency_sharded_sccc|mmapv1|wiredTiger|inMemory|rocksdb
 core|mmapv1|PerconaFT|wiredTiger|inMemory|rocksdb
 core_auth|default
 core --shellReadMode=legacy --shellWriteMode=compatibility|mmapv1|PerconaFT|wiredTiger|inMemory|rocksdb
+core_minimum_batch_size|mmapv1|wiredTiger|inMemory|rocksdb
+core_op_query|mmapv1|wiredTiger|inMemory|rocksdb
 core_small_oplog|mmapv1|PerconaFT|wiredTiger|inMemory|rocksdb
 core_small_oplog_rs|mmapv1|PerconaFT|wiredTiger|inMemory|rocksdb
 dbtest|mmapv1|wiredTiger|inMemory|rocksdb
@@ -29,6 +32,7 @@ gle_auth --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=req
 gle_auth --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
 gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy|mmapv1|wiredTiger|inMemory|rocksdb
 gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
+httpinterface|mmapv1|wiredTiger|inMemory|rocksdb
 jstestfuzz|mmapv1|wiredTiger|inMemory|rocksdb
 jstestfuzz_replication|wiredTiger|inMemory|rocksdb
 jstestfuzz_sharded|wiredTiger|inMemory|rocksdb
@@ -46,6 +50,7 @@ no_passthrough_with_mongod --excludeWithAnyTags=requires_persistence,requires_jo
 parallel|mmapv1|wiredTiger|inMemory|rocksdb
 parallel --shellReadMode=legacy --shellWriteMode=compatibility|mmapv1|wiredTiger|inMemory|rocksdb
 ratelimit|mmapv1|wiredTiger|inMemory|rocksdb
+read_concern_majority_passthrough|wiredTiger|rocksdb
 replica_sets|mmapv1|wiredTiger|rocksdb
 replica_sets --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 replica_sets_auth|default
