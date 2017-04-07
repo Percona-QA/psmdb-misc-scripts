@@ -120,6 +120,10 @@ export CFLAGS="${CFLAGS:-} -fno-omit-frame-pointer"
 export CXXFLAGS="${CFLAGS}"
 export INSTALLDIR=${PSMDIR_ABS}/install
 #
+rm -rf ${INSTALLDIR}
+mkdir -p ${INSTALLDIR}/include
+mkdir -p ${INSTALLDIR}/bin
+mkdir -p ${INSTALLDIR}/lib
 # TokuBackup
 pushd ${PSMDIR}/src/third_party/Percona-TokuBackup/backup
 cmake . -DCMAKE_BUILD_TYPE=${TOKUBACKUP_TARGET} -DCMAKE_INSTALL_PREFIX=/ -DBUILD_STATIC_LIBRARY=ON
@@ -142,10 +146,6 @@ tar xvzf lz4-r127.tar.gz
 pushd lz4-r127/lib
 make CFLAGS=' -g -I. -std=c99 -Wall -Wextra -Wundef -Wshadow -Wcast-align -Wstrict-prototypes -pedantic -fPIC' all
 popd
-rm -rf ${INSTALLDIR}
-mkdir -p ${INSTALLDIR}/include
-mkdir -p ${INSTALLDIR}/bin
-mkdir -p ${INSTALLDIR}/lib
 cp lz4-r127/lib/liblz4.a .
 cp ./lz4-r127/lib/lz4.h ${INSTALLDIR}/include
 cp ./lz4-r127/lib/lz4frame.h ${INSTALLDIR}/include
