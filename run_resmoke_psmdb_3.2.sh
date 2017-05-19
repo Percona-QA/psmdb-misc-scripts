@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Run resmoke test suites for PSMDB 3.2 
 
