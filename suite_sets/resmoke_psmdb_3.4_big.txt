@@ -96,6 +96,3 @@ ssl|default
 ssl_special|default
 tool|mmapv1|wiredTiger|inMemory|rocksdb
 unittests|default
-views|mmapv1|wiredTiger|rocksdb
-views --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-views_rs|mmapv1|wiredTiger|inMemory|rocksdb

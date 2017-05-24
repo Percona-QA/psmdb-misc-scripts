@@ -20,7 +20,8 @@ core_small_oplog|wiredTiger|inMemory|rocksdb
 core_small_oplog_rs|wiredTiger|inMemory|rocksdb
 dbtest|wiredTiger|rocksdb
 decimal|wiredTiger|rocksdb|inMemory
-disk|default
+disk_mmapv1|default
+disk_wiredtiger --excludeWithAnyTags=requires_mmapv1|default
 dur_jscore_passthrough|default
 durability|default
 external_auth|default
@@ -61,5 +62,3 @@ ssl|default
 ssl_special|default
 tool|wiredTiger|rocksdb
 unittests|default
-views|default
-views_rs|default
