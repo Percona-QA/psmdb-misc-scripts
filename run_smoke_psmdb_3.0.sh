@@ -89,7 +89,7 @@ runSmoke() {
 
   echo "Running Command: python buildscripts/smoke.py ${smokeParams}" | tee -a "${logOutputFile}"
   # shellcheck disable=SC2086
-  python buildscripts/smoke.py ${smokeParams} 2>&1 | tee -a "${logOutputFile}"
+  python buildscripts/smoke.py ${smokeParams} >>"${logOutputFile}" 2>&1
 
 }
 
