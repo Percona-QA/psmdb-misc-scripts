@@ -26,38 +26,38 @@ source "${basedir}/run_smoke_resmoke_funcs.sh"
 
 
 readarray SUITES <<-EOS
-aggregation --nopreallocj,default,auth,se
-audit --nopreallocj,default,se
-auth --nopreallocj,default,se
-concurrency --nopreallocj,default,se
-concurrency --nopreallocj --shell-write-mode compatibility,default,se
-dbtest --nopreallocj,default,se
-disk --nopreallocj,default
-dur --nopreallocj,default
-failPoint --nopreallocj,default,auth
-gle --nopreallocj --auth,default,se
-gle --nopreallocj --auth --shell-write-mode commands,default,se
-jsCore --nopreallocj --shell-write-mode commands,se,default,auth
-jsCore --nopreallocj --shell-write-mode compatibility,default,se
-jsCore --shell-write-mode commands --small-oplog,default,se
-mmap_v1 --nopreallocj,default
-mongosTest --nopreallocj,default
-multiVersion --nopreallocj,default
+aggregation --nopreallocj|default|auth|se
+audit --nopreallocj|default|se
+auth --nopreallocj|default|se
+concurrency --nopreallocj|default|se
+concurrency --nopreallocj --shell-write-mode compatibility|default|se
+dbtest --nopreallocj|default|se
+disk --nopreallocj|default
+dur --nopreallocj|default
+failPoint --nopreallocj|default|auth
+gle --nopreallocj --auth|default|se
+gle --nopreallocj --auth --shell-write-mode commands|default|se
+jsCore --nopreallocj --shell-write-mode commands|se|default|auth
+jsCore --nopreallocj --shell-write-mode compatibility|default|se
+jsCore --shell-write-mode commands --small-oplog|default|se
+mmap_v1 --nopreallocj|default
+mongosTest --nopreallocj|default
+multiVersion --nopreallocj|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "Linux/x86_64" "1.8" "2.0" "2.2" "2.4" "2.6"
-  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion 
-noPassthrough --nopreallocj,default,se	
-noPassthroughWithMongod --nopreallocj,default,se
-parallel --nopreallocj,default,se	
-parallel --nopreallocj --shell-write-mode compatibility,default,se	
-replSets --nopreallocj,default,se,auth
-repl --nopreallocj,default,se,auth
-sharding --nopreallocj,default,se,auth
-slow1 --nopreallocj,default,se
-slow2 --nopreallocj,default,se
-ssl --nopreallocj --use-ssl,default
-sslSpecial --nopreallocj,default
-tool --nopreallocj,default,se
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+noPassthrough --nopreallocj|default|se
+noPassthroughWithMongod --nopreallocj|default|se
+parallel --nopreallocj|default|se
+parallel --nopreallocj --shell-write-mode compatibility|default|se
+replSets --nopreallocj|default|se|auth
+repl --nopreallocj|default|se|auth
+sharding --nopreallocj|default|se|auth
+slow1 --nopreallocj|default|se
+slow2 --nopreallocj|default|se
+ssl --nopreallocj --use-ssl|default
+sslSpecial --nopreallocj|default
+tool --nopreallocj|default|se
 EOS
 
 # smoke parameters
@@ -100,7 +100,7 @@ for suite in "${SUITES[@]}"; do
     continue; 
   fi
 
-  IFS=',' read -r -a suiteDefinition <<< "${suite}"
+  IFS='|' read -r -a suiteDefinition <<< "${suite}"
   suiteElementNumber=0
 
   for suiteElement in "${suiteDefinition[@]}"; do
@@ -123,7 +123,7 @@ for suite in "${SUITES[@]}"; do
       case "$suiteRunSet" in
         "default"|"auth")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          echo "Suite Definition: ${suiteRawName},${suiteElement}" | tee -a "${logOutputFile}"
+          echo "Suite Definition: ${suiteRawName}|${suiteElement}" | tee -a "${logOutputFile}"
           [ "${suiteRunSet}" == "default" ] && smokeParams=${SMOKE_DEFAULT}
           [ "${suiteRunSet}" == "auth" ] && smokeParams=${SMOKE_AUTH}
           smokeParams="${SMOKE_BASE} ${smokeParams} --storageEngine=${DEFAULT_ENGINE} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
@@ -132,7 +132,7 @@ for suite in "${SUITES[@]}"; do
         "wiredTiger"|"PerconaFT"|"rocksdb"|"mmapv1")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
           if hasEngine "${suiteRunSet}"; then
-            echo "Suite Definition: ${suiteRawName},${suiteElement}" | tee -a "${logOutputFile}"
+            echo "Suite Definition: ${suiteRawName}|${suiteElement}" | tee -a "${logOutputFile}"
             smokeParams="${SMOKE_BASE} ${SMOKE_SE} --storageEngine=${suiteRunSet} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
             runSmoke "${smokeParams}" "${logOutputFile}" "${suiteRawName}"
           else
@@ -144,9 +144,9 @@ for suite in "${SUITES[@]}"; do
             if [ ! "${engine}" == "${DEFAULT_ENGINE}" ]; then
               logOutputFile="${logOutputFilePrefix}_${engine}_${trial}.log"
               if [[ -z "${suiteRunSetOptions}" ]]; then
-                suiteDefinition="${suiteRawName},${engine}"
+                suiteDefinition="${suiteRawName}|${engine}"
               else
-                suiteDefinition="${suiteRawName},${engine} ${suiteRunSetOptions}"
+                suiteDefinition="${suiteRawName}|${engine} ${suiteRunSetOptions}"
               fi
               echo "Suite Definition: ${suiteDefinition}" | tee -a "${logOutputFile}"
               smokeParams="${SMOKE_BASE} --storageEngine=${engine} ${SMOKE_SE} ${suiteOptions} ${suiteRunSetOptions} ${suite}"
