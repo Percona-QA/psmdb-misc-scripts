@@ -5,6 +5,7 @@
 basedir=$(cd "$(dirname "$0")" || exit; pwd)
 # shellcheck source=run_smoke_resmoke_funcs.sh
 source "${basedir}/run_smoke_resmoke_funcs.sh"
+detectEngines
 
 # suite definitions - first element is suite name
 # followed by runSets 
