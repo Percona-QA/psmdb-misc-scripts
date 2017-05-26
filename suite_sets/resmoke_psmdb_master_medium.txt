@@ -15,9 +15,7 @@ core|mmapv1|wiredTiger|inMemory|rocksdb
 core_auth|default
 core_compression|default
 core_minimum_batch_size|mmapv1|wiredTiger|inMemory|rocksdb
-core_op|wiredTiger|rocksdb|inMemory
-core_small_oplog|wiredTiger|inMemory|rocksdb
-core_small_oplog_rs|wiredTiger|inMemory|rocksdb
+core_op_query|wiredTiger|rocksdb|inMemory
 dbtest|wiredTiger|rocksdb
 decimal|wiredTiger|rocksdb|inMemory
 disk_mmapv1|default
@@ -32,6 +30,10 @@ failpoints_auth|default
  jstestfuzz_sharded|wiredTiger|rocksdb
 httpinterface|default
 knobs|wiredTiger|rocksdb
+master_slave|wiredTiger|rocksdb
+master_slave --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
+master_slave_auth|default
+master_slave_jscore_passthrough|wiredTiger|inMemory|rocksdb
 mongos_test|default
 no_passthrough|wiredTiger|rocksdb
 no_passthrough_with_mongod|wiredTiger|rocksdb
@@ -48,8 +50,6 @@ read_only_sharded|wiredTiger|rocksdb
 redaction|default
 replica_sets|default
 replica_sets_auth|default
-replication|default
-replication_auth|default
 serial_run|default
 sharding|default
 sharding_auth|default
