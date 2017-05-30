@@ -1,0 +1,20 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "wvera/sles11sp4"
+  config.vm.hostname = "sles11sp4"
+
+#  config.vm.provider "virtualbox" do |v|
+#    v.memory = 24576
+#    v.cpus = 8
+#  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "sles11sp4.yml"
+    ansible.sudo = "true"
+    # ansible.verbose = "vvvv"
+    # ansible.host_key_checking = "false"
+  end
+
+end

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+echo never > /sys/kernel/mm/transparent_hugepage/enabled || exit 1
+echo never > /sys/kernel/mm/transparent_hugepage/defrag || exit 1
+exit 0

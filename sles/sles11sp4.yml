@@ -1,0 +1,101 @@
+---
+# This playbook sets up a SLES11 test environment for PSMDB
+
+- hosts: all
+  become: true
+  become_method: sudo
+
+  tasks:
+  - name: register SLES for updates
+    command: suse_register -a email="@@REG_EMAIL@@" -a regcode-sles=@@REG_CODE@@
+
+  - name: add hostname into hosts file
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '^127\.0\.0\.1'
+      line: '127.0.0.1       localhost sles11sp4'
+      owner: root
+      group: root
+      mode: 0644
+
+  # - copy:
+  #     src: sle-sdk-release-11.4-1.55.x86_64.rpm
+  #     dest: /home/vagrant/sle-sdk-release-11.4-1.55.x86_64.rpm
+  #
+  # - copy:
+  #     src: sle-sdk-release-SDK-11.4-1.55.x86_64.rpm
+  #     dest: /home/vagrant/sle-sdk-release-SDK-11.4-1.55.x86_64.rpm
+
+  # - name: install SDK repo packages
+  #   zypper:
+  #     name: /home/vagrant/sle-sdk-release-SDK-11.4-1.55.x86_64.rpm
+  #     state: present
+  #
+  # - name: install second SDK repo packages
+  #   zypper:
+  #     name: /home/vagrant/sle-sdk-release-11.4-1.55.x86_64.rpm
+  #     state: present
+
+  - name: install needed packages for running tests with zypper
+    zypper: name="{{ item }}" state=latest
+    with_items:
+    - wget
+    - vim
+    - mc
+    - libopenssl0_9_8-hmac
+
+  - name: copy proper limits.conf file
+    copy:
+      src: limits.conf
+      dest: /etc/security/limits.conf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: download get-pip.py
+    get_url:
+      url: https://bootstrap.pypa.io/get-pip.py
+      dest: /home/vagrant/get-pip.py
+      validate_certs: False
+
+  - name: install pip for python
+    command: python /home/vagrant/get-pip.py
+
+  - name: install python modules
+    command: /usr/local/bin/pip install pymongo PyYAML
+
+  - name: copy after.local script for disabling THP on boot
+    copy:
+      src: after.local
+      dest: /etc/init.d/after.local
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: build and install bash 4.4
+    command: /vagrant/bash-4.4-install.sh
+
+  - name: create datadir for psmdb testing
+    file:
+      path: /data
+      state: directory
+      mode: 0777
+
+  - name: update all packages
+    command: zypper -n update
+
+  - name: install patches
+    command: zypper -n patch
+
+  - name: add ulimit line to bashrc
+    lineinfile:
+      dest: /home/vagrant/.bashrc
+      line: 'ulimit -v unlimited'
+
+  - name: add second ulimit line to bashrc
+    lineinfile:
+      dest: /home/vagrant/.bashrc
+      line: 'ulimit -n 999999'
+
+  - name: disable THP in the current session
+    command: /vagrant/disable_thp.sh

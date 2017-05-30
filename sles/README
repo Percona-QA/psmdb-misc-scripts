@@ -1,0 +1,9 @@
+
+Files in this directory are used to setup vagrant/virtualbox 
+test environment for PSMDB on SLES11.
+
+Steps:
+1. Setup vagrant/virtualbox/ansible on desired machine
+2. Update SLES registration info in sles11sp4.yml (replace @@REG_EMAIL@@ and @@REG_CODE@@) 
+3. Uncomment cpu and memory info for vm in Vagrantfile (change the recommended values if desired)
+4. Run "vagrant up" and wait for finish
