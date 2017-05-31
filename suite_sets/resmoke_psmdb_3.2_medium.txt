@@ -25,6 +25,7 @@ failpoints_auth|default
  jstestfuzz_replication|wiredTiger|PerconaFT|rocksdb
  jstestfuzz_sharded|wiredTiger|PerconaFT|rocksdb
 knobs|wiredTiger|rocksdb
+mongo_rocks|default
 mongos_test|default
 no_passthrough|wiredTiger|PerconaFT|rocksdb
 no_passthrough_with_mongod|wiredTiger|rocksdb
