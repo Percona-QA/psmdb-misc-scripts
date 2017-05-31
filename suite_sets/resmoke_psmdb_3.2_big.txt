@@ -38,6 +38,7 @@ httpinterface|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
  jstestfuzz_sharded|wiredTiger|inMemory|PerconaFT|rocksdb
 knobs|mmapv1|wiredTiger|inMemory|rocksdb
 mmap|mmapv1
+mongo_rocks|default
 mongos_test|default
 multiversion|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
