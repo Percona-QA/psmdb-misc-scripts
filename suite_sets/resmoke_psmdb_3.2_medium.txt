@@ -21,6 +21,8 @@ durability|default
 external_auth|default
 failpoints|default
 failpoints_auth|default
+integration_tests_replset|default
+integration_tests_standalone|default
  jstestfuzz|wiredTiger|PerconaFT|rocksdb
  jstestfuzz_replication|wiredTiger|PerconaFT|rocksdb
  jstestfuzz_sharded|wiredTiger|PerconaFT|rocksdb
