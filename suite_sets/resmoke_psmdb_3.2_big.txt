@@ -33,6 +33,8 @@ gle_auth --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
 gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
 gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
 httpinterface|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
+integration_tests_replset|default
+integration_tests_standalone|default
  jstestfuzz|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
  jstestfuzz_replication|wiredTiger|inMemory|PerconaFT|rocksdb
  jstestfuzz_sharded|wiredTiger|inMemory|PerconaFT|rocksdb

@@ -28,6 +28,8 @@ failpoints_auth|default
  jstestfuzz_replication|wiredTiger|rocksdb
  jstestfuzz_sharded|wiredTiger|rocksdb
 httpinterface|default
+integration_tests_replset|default
+integration_tests_standalone|default
 knobs|wiredTiger|rocksdb
 master_slave|wiredTiger|rocksdb
 master_slave --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
