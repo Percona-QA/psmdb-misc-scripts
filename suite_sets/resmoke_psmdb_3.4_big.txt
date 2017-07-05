@@ -39,6 +39,7 @@ integration_tests_standalone|default
  jstestfuzz_replication|wiredTiger|inMemory|rocksdb
  jstestfuzz_sharded|wiredTiger|inMemory|rocksdb
 knobs|mmapv1|wiredTiger|inMemory|rocksdb
+master_slave|mmapv1|wiredTiger|rocksdb
 master_slave --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 master_slave_auth|default
 master_slave_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
@@ -80,6 +81,7 @@ replica_sets_compression|default
 replica_sets_initsync_jscore_passthrough|mmapv1|wiredTiger|rocksdb
 replica_sets_initsync_static_jscore_passthrough|mmapv1|wiredTiger|rocksdb
 replica_sets_jscore_passthrough|mmapv1|wiredTiger|rocksdb
+replica_sets_kill_secondaries_jscore_passthrough|mmapv1|wiredTiger|rocksdb
 replica_sets_legacy|default
 replica_sets_pv0|default
 replica_sets_resync_jscore_passthrough|mmapv1|wiredTiger|rocksdb
