@@ -2,12 +2,14 @@
 import json
 import os
 import string
+from collections import deque
 
 def resmoke2junit(skip_long_lines=1):
     """This function iterates over resmoke json result files in directory
      and converts the results to junit format suitable for Jenkins test results"""
 
     cwd = os.getcwd()
+    error_log = deque("",200)
 
     with open('junit.xml', 'w') as junitfile:
         junitfile.write('<?xml version="1.0" ?>\n')
@@ -37,18 +39,22 @@ def resmoke2junit(skip_long_lines=1):
 
                             has_error_text = 0
                             with open(logfile, 'r') as logfile:
+                                error_log.clear()
                                 for line in logfile:
                                     if '{}{}]'.format(prefix, test_name) in line:
                                         if len(line) >= 2048 and skip_long_lines == 1:
-                                            junitfile.write('### Skipped very long line ###\n')
+                                            error_log.append('### Skipped very long line ###\n')
                                         else:
                                             printable = set(string.printable)
-                                            junitfile.write(filter(lambda x: x in printable, line))
+                                            error_log.append(filter(lambda x: x in printable, line))
                                         has_error_text = 1
 
                             if has_error_text == 0:
                                 junitfile.write('Couldn\'t collect error text from the log file.]]></failure>')
                             else:
+                                for err in error_log:
+                                    junitfile.write(err)
+
                                 junitfile.write('\t\t\t]]></failure>')
 
                         if result['status'] != 'pass':
