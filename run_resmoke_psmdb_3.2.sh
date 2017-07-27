@@ -141,7 +141,8 @@ for suite in "${SUITES[@]}"; do
 
         "default"|"auth")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          echo "Suite Definition: ${suiteRawName}|${suiteElement}" | tee -a "${logOutputFile}"
+          echo "-----------------" | tee -a "${logOutputFile}"
+          echo "Suite Definition: ${suiteRawName}${suiteOptions:+ ${suiteOptions}}|${suiteElement}" | tee -a "${logOutputFile}"
           [ "${suiteRunSet}" == "default" ] && resmokeParams=${RESMOKE_DEFAULT}
           [ "${suiteRunSet}" == "auth" ] && resmokeParams=${RESMOKE_AUTH}
           resmokeParams="${RESMOKE_BASE} ${resmokeParams} ${suiteOptions} ${suiteRunSetOptions}"
@@ -153,7 +154,8 @@ for suite in "${SUITES[@]}"; do
           ;;
         "wiredTiger"|"PerconaFT"|"rocksdb"|"mmapv1"|"inMemory")
           logOutputFile="${logOutputFilePrefix}_${trial}.log"
-          echo "Suite Definition: ${suiteRawName}|${suiteElement}" | tee -a "${logOutputFile}"
+          echo "-----------------" | tee -a "${logOutputFile}"
+          echo "Suite Definition: ${suiteRawName}${suiteOptions:+ ${suiteOptions}}|${suiteElement}" | tee -a "${logOutputFile}"
           if hasEngine "${suiteRunSet}"; then
             resmokeParams="${RESMOKE_BASE} ${RESMOKE_SE} --storageEngine=${suiteRunSet} ${suiteOptions} ${suiteRunSetOptions}"
             if $useSuitesOption; then
@@ -177,7 +179,8 @@ for suite in "${SUITES[@]}"; do
               else
                 suiteDefinition="${suiteRawName}|${engine} ${suiteRunSetOptions}"
               fi
-              echo "Suite Definition: ${suiteDefinition}" | tee -a "${logOutputFile}"
+              echo "-----------------" | tee -a "${logOutputFile}"
+              echo "Suite Definition: ${suiteDefinition}${suiteOptions:+ ${suiteOptions}}" | tee -a "${logOutputFile}"
               resmokeParams="${RESMOKE_BASE} --storageEngine=${engine} ${RESMOKE_SE} ${suiteOptions} ${suiteRunSetOptions}"
               if $useSuitesOption; then
                 resmokeParams="${resmokeParams} --suites=${suite}"

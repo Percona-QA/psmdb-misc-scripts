@@ -133,7 +133,7 @@ runPreprocessingCommands() {
       fi
     fi
 
-    IFS='|' read -r -a suiteDefinition <<< "${suiteCommand}"
+    IFS='| ' read -r -a suiteDefinition <<< "${suiteCommand}"
     suiteName="${suiteDefinition[0]}"
     if [ "${suiteName}" = "${suiteRawName}" ]; then
       foundCommandSuite=true
