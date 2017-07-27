@@ -1,6 +1,6 @@
 aggregation|mmapv1|wiredTiger|inMemory|rocksdb
 aggregation_auth|default
-aggregation_facet_unwind_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
+aggregation_facet_unwind_passthrough --excludeWithAnyTags=do_not_wrap_aggregations_in_facets|mmapv1|wiredTiger|inMemory|rocksdb
 aggregation_read_concern_majority_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
 aggregation_sharded_collections_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
 audit|mmapv1|wiredTiger|inMemory|rocksdb
