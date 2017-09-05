@@ -204,8 +204,23 @@ done
 
 echo "Generating summary:"
 
+for f in $(find . -maxdepth 1 -type f \( -name "*_${trial}.log" -and -not -name "resmoke_summary_${trial}.log" \)); do
+  json_file=$(echo "${f}" | sed 's:\.log$:\.json:')
+  if [ $(grep -c ' Summary of ' ${f}) -eq 0 ]; then
+    suite_name=$(grep "Suite Definition" ${f}|sed 's/Suite Definition: //'|sed 's:|.*::'|sed 's: .*::')
+    echo "[js_test:${suite_name}] TEST SUITE HAS FAILED TO EXECUTE - PLEASE CHECK FULL LOG" >> ${f}
+    echo "[resmoke] xxxx-xx-xxTxx:xx:xx.xxx+0000 ================================================================================" >> ${f}
+    echo "[resmoke] xxxx-xx-xxTxx:xx:xx.xxx+0000 Summary of ${suite_name} suite: TEST SUITE HAS FAILED TO EXECUTE" >> ${f}
+    echo "[resmoke] xxxx-xx-xxTxx:xx:xx.xxx+0000 ================================================================================" >> ${f}
+  fi
+  if [ ! -f ${json_file} ]; then
+    suite_name=$(grep "Suite Definition" ${f}|sed 's/Suite Definition: //'|sed 's:|.*::'|sed 's: .*::')
+    echo "{\"failures\": 1, \"results\": [{\"status\": \"fail\", \"end\": 0.0, \"exit_code\": 1, \"elapsed\": 0.0, \"start\": 0.0, \"test_file\": \"${suite_name}\"}]}" > ${json_file}
+  fi
+done
+
 # shellcheck disable=SC2016
-find . -type f \( -name "*_${trial}.log" -and -not -name "resmoke_summary_${trial}.log" \) \
+find . -maxdepth 1 -type f \( -name "*_${trial}.log" -and -not -name "resmoke_summary_${trial}.log" \) \
   -exec grep -q ' Summary of ' {} \; \
   -print \
   -exec perl -ne 'chomp;$last=$this;$this=$_;if(m/^\[resmoke\].* Summary of /){$summ=1;printf "\t$last\n"};if(m/^Running:/){$summ=0;};if($summ){printf "\t$this\n"}' {} \; \
