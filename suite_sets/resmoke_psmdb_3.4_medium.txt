@@ -9,7 +9,6 @@ bulk_gle_passthrough|wiredTiger|rocksdb
 concurrency|wiredTiger|rocksdb
 concurrency_replication|wiredTiger|rocksdb
 concurrency_sharded|wiredTiger|rocksdb
-concurrency_sharded_sccc|default
 !concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js|wiredTiger|rocksdb
 core|mmapv1|wiredTiger|inMemory|rocksdb
 core_auth|default
