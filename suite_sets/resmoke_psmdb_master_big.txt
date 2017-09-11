@@ -16,7 +16,6 @@ concurrency_sharded|mmapv1|wiredTiger|inMemory|rocksdb
 !concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js|mmapv1|wiredTiger|inMemory|rocksdb
 core|mmapv1|wiredTiger|inMemory|rocksdb
 core_auth|default
-core_compression|default
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory|rocksdb
 core_minimum_batch_size|mmapv1|wiredTiger|inMemory|rocksdb
 core_op_query|mmapv1|wiredTiger|inMemory|rocksdb
@@ -33,13 +32,13 @@ gle_auth --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=req
 gle_auth --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
 gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory|rocksdb
 gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
-httpinterface|mmapv1|wiredTiger|inMemory|rocksdb
 integration_tests_replset|default
 integration_tests_sharded|default
 integration_tests_standalone|default
  jstestfuzz|mmapv1|wiredTiger|inMemory|rocksdb
  jstestfuzz_replication|wiredTiger|inMemory|rocksdb
  jstestfuzz_sharded|wiredTiger|inMemory|rocksdb
+json_schema|mmapv1|wiredTiger|inMemory|rocksdb
 knobs|mmapv1|wiredTiger|inMemory|rocksdb
 master_slave|mmapv1|wiredTiger|rocksdb
 master_slave --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
@@ -113,3 +112,4 @@ ssl|default
 ssl_special|default
 tool|mmapv1|wiredTiger|inMemory|rocksdb
 unittests|default
+watchdog|mmapv1|wiredTiger|inMemory|rocksdb

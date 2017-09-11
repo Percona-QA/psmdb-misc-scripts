@@ -12,7 +12,6 @@ concurrency_sharded|wiredTiger|rocksdb
 !concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js|wiredTiger|rocksdb
 core|mmapv1|wiredTiger|inMemory|rocksdb
 core_auth|default
-core_compression|default
 core_minimum_batch_size|mmapv1|wiredTiger|inMemory|rocksdb
 core_op_query|wiredTiger|rocksdb|inMemory
 dbtest|wiredTiger|rocksdb
@@ -27,10 +26,10 @@ failpoints_auth|default
  jstestfuzz|wiredTiger|rocksdb
  jstestfuzz_replication|wiredTiger|rocksdb
  jstestfuzz_sharded|wiredTiger|rocksdb
-httpinterface|default
 integration_tests_replset|default
 integration_tests_sharded|default
 integration_tests_standalone|default
+json_schema|default
 knobs|wiredTiger|rocksdb
 master_slave|wiredTiger|rocksdb
 master_slave --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
@@ -65,3 +64,4 @@ ssl|default
 ssl_special|default
 tool|wiredTiger|rocksdb
 unittests|default
+watchdog|default
