@@ -45,10 +45,10 @@ DOCKER_NAME="psmdb-${TAG}-image-test"
 }
 
 @test "check that all data is stored" {
-  run bash -c docker run -it --link ${DOCKER_NAME} --rm ${REPO}:${TAG} mongo --eval 'db.users.find().forEach(printjson)' ${DOCKER_NAME}:27017 | grep 'John Doe'
+  run bash -c "docker run -it --link ${DOCKER_NAME} --rm ${REPO}:${TAG} mongo --eval 'db.users.find().forEach(printjson)' ${DOCKER_NAME}:27017 | grep 'John Doe'"
   [ $status -eq 0 ]
 
-  run bash -c docker run -it --link ${DOCKER_NAME} --rm ${REPO}:${TAG} mongo --eval 'db.users.find().forEach(printjson)' ${DOCKER_NAME}:27017 | grep 'Jane Doe'
+  run bash -c "docker run -it --link ${DOCKER_NAME} --rm ${REPO}:${TAG} mongo --eval 'db.users.find().forEach(printjson)' ${DOCKER_NAME}:27017 | grep 'Jane Doe'"
   [ $status -eq 0 ]
 }
 
