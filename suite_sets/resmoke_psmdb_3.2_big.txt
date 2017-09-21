@@ -61,6 +61,7 @@ replica_sets_legacy|default
 replication|mmapv1|wiredTiger|PerconaFT|rocksdb
 replication --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 replication_auth|default
+sharded_collections_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
 sharding|mmapv1|wiredTiger|rocksdb
 sharding --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 sharding_auth|default
