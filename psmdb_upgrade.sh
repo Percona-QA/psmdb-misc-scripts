@@ -5,8 +5,8 @@
 
 if [ "$#" -ne 5 ]; then
   echo "This script requires absolute workdir, test type, storage engine and directories for old and new binaries as parameters!";
-  echo "Example: ./psmdb_upgrade.sh /tmp/psmdb-upgrade single rocksdb /tmp/mongo-old-dir /tmp/mongo-new-dir"
-  echo "         ./psmdb_upgrade.sh /tmp/psmdb-upgrade replicaset wiredTiger /tmp/mongo-old-dir /tmp/mongo-new-dir"
+  echo "Example: ./psmdb_upgrade.sh /tmp/psmdb-upgrade single rocksdb /mongo-old-bindir /mongo-new-bindir"
+  echo "         ./psmdb_upgrade.sh /tmp/psmdb-upgrade replicaset wiredTiger /mongo-old-bindir /mongo-new-bindir"
   exit 1
 fi
 
@@ -262,8 +262,10 @@ show_node_info()
   ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.serverStatus()"
   echo -e "\n\n##### Show info on sbtest database on node ${FUN_PORT} ${FUN_TEXT} #####\n"
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/sbtest --eval "db.stats()"
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/sbtest --eval "db.runCommand({ dbHash: 1 })"
   echo -e "\n\n##### Show info on test database on node ${FUN_PORT} ${FUN_TEXT} #####\n"
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/test --eval "db.stats()"
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/test --eval "db.runCommand({ dbHash: 1 })"
   echo -e "\n\n##### Show replica set status on node ${FUN_PORT} ${FUN_TEXT} #####\n"
   ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "rs.status()"
   echo -e "\n\n##### Show isMaster info on node ${FUN_PORT} ${FUN_TEXT} #####\n"
@@ -309,21 +311,31 @@ if [ ${TEST_TYPE} = "single" ]; then
   start_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-first-start.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data ${OLD_VER} ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
   if [ "${SKIP_SYSBENCH}" = "false" ]; then
-    run_sysbench sbtest ${NODE1_PORT} TRUE beforeUpgrade ${NODE1_DATA}
+    run_sysbench sbtest ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA}
   fi
+  # create db hashes
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/sbtest --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
+  #
   echo -e "\n\n##### Show info of node ${NODE1_PORT} before upgrade #####\n"
-  show_node_info ${NODE1_PORT} "beforeUpgrade"
+  show_node_info ${NODE1_PORT} "beforeUpgrade" | tee ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-nodeInfo-beforeUpgrade.log
   stop_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT}
   start_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data ${NEW_VER} ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-import.log
   if [ "${SKIP_SYSBENCH}" = "false" ]; then
     run_sysbench sbtest2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
   fi
+  # create db hashes
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/sbtest --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
+  #
   echo -e "\n\n##### Show info of node ${NODE1_PORT} after upgrade #####\n"
-  show_node_info ${NODE1_PORT} "afterUpgrade"
+  show_node_info ${NODE1_PORT} "afterUpgrade" | tee ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-nodeInfo-afterUpgrade.log
   if [ "${LEAVE_RUNNING}" = "false" ]; then
     stop_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-final-stop.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT}
   fi
+  diff ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
+  exit $?
 elif [ ${TEST_TYPE} = "replicaset" ]; then
   start_replica
   init_replica
@@ -333,8 +345,16 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest ${PRIMARY_PORT} TRUE "beforeUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
+    run_sysbench sbtest ${PRIMARY_PORT} FALSE "beforeUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
+  # create db hashes
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/sbtest --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE2_DATA}/${NODE2_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node2-dbhash-before.log
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/sbtest --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE2_DATA}/${NODE2_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node2-dbhash-before.log
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/sbtest --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log
+  #
   echo -e "\n\n##### Show info of node ${PRIMARY_PORT} after sysbench and before any upgrades #####\n"
   show_node_info ${PRIMARY_PORT} "beforeUpgrade"
   upgrade_next_rs_node
@@ -345,7 +365,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest ${PRIMARY_PORT} TRUE "afterTwoUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
+    run_sysbench sbtest2 ${PRIMARY_PORT} FALSE "afterTwoUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
@@ -354,13 +374,23 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_sysbench sbtest ${PRIMARY_PORT} TRUE "afterAllUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
+    run_sysbench sbtest3 ${PRIMARY_PORT} FALSE "afterAllUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
+  # create db hashes
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/sbtest --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE2_DATA}/${NODE2_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node2-dbhash-after.log
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/sbtest --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE2_DATA}/${NODE2_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node2-dbhash-after.log
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE3_DATA}/${NODE3_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node3-dbhash-after.log
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/sbtest --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE3_DATA}/${NODE3_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node3-dbhash-after.log
+  #
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
   if [ "${LEAVE_RUNNING}" = "false" ]; then
     killall mongod
   fi
+  diff --from-file=${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log ${NODE2_DATA}/${NODE2_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node2-dbhash-before.log ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log ${NODE2_DATA}/${NODE2_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node2-dbhash-after.log ${NODE3_DATA}/${NODE3_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node3-dbhash-after.log
+  exit $?
 else
   echo "Wrong test type specified!"
   exit 1
