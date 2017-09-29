@@ -115,10 +115,10 @@ fi
 
 ### COMMON FUNCTIONS
 archives() {
-  rm -rf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}
-  mkdir ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}
-  find data -maxdepth 3 -type f \( -iname \*.log -o -iname \*.txt -o -iname \*.tsv \) -exec cp {} ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE} \;
-  tar czf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}.tar.gz -C ${WORKDIR} results_${TEST_TYPE}_${STORAGE_ENGINE}
+  rm -rf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
+  mkdir ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
+  find data -maxdepth 3 -type f \( -iname \*.log -o -iname \*.txt -o -iname \*.tsv \) -exec cp {} ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER} \;
+  tar czf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}.tar.gz -C ${WORKDIR} results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
 }
 
 trap archives EXIT KILL
