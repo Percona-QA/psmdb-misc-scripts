@@ -119,6 +119,8 @@ cd /tmp
 export CFLAGS="${CFLAGS:-} -fno-omit-frame-pointer"
 export CXXFLAGS="${CFLAGS}"
 export INSTALLDIR=${PSMDIR_ABS}/install
+export PORTABLE=1
+export USE_SSE=1
 #
 rm -rf ${INSTALLDIR}
 mkdir -p ${INSTALLDIR}/include
