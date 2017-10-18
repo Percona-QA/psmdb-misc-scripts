@@ -108,6 +108,8 @@ chmod +x ${TOOLSDIR_ABS}/set_tools_revision.sh
 export CFLAGS="${CFLAGS:-} -fno-omit-frame-pointer"
 export CXXFLAGS="${CFLAGS}"
 export INSTALLDIR=${PSMDIR_ABS}/install
+export PORTABLE=1
+export USE_SSE=1
 #
 # static librocksdb.a
 pushd ${PSMDIR}/src/third_party/rocksdb
