@@ -34,7 +34,7 @@ master_slave|wiredTiger|rocksdb
 master_slave --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 master_slave_auth|default
 master_slave_jscore_passthrough|wiredTiger|inMemory|rocksdb
-mongo_rocks|default
+mongo_rocks|rocksdb
 mongos_test|default
 no_passthrough|wiredTiger|rocksdb
 no_passthrough_with_mongod|wiredTiger|rocksdb

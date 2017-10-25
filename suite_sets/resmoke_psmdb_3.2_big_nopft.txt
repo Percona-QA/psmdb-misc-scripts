@@ -40,7 +40,7 @@ jstestfuzz_replication|wiredTiger|inMemory|rocksdb
 jstestfuzz_sharded|wiredTiger|inMemory|rocksdb
 knobs|mmapv1|wiredTiger|inMemory|rocksdb
 mmap|mmapv1
-mongo_rocks|default
+mongo_rocks|rocksdb
 mongos_test|default
 multiversion|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
