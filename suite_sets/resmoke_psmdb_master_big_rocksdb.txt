@@ -27,9 +27,7 @@ core_minimum_batch_size|rocksdb
 core_op_query|rocksdb
 dbtest|rocksdb
 decimal|rocksdb
-disk_wiredtiger --excludeWithAnyTags=requires_mmapv1|rocksdb
 dur_jscore_passthrough|rocksdb
-durability|rocksdb
 external_auth|rocksdb
 failpoints|rocksdb
 failpoints_auth|rocksdb

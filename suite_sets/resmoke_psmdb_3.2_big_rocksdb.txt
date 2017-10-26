@@ -19,9 +19,7 @@ core_op_query|rocksdb
 core_small_oplog|rocksdb
 core_small_oplog_rs|rocksdb
 dbtest|rocksdb
-disk|rocksdb
 dur_jscore_passthrough|rocksdb
-durability|rocksdb
 external_auth|rocksdb
 failpoints|rocksdb
 failpoints_auth|rocksdb
