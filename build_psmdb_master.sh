@@ -123,7 +123,7 @@ popd
 #
 # Finally build Percona Server for MongoDB with SCons
 cd ${PSMDIR_ABS}
-scons CC=${CC} CXX=${CXX} --ssl ${SCONS_OPTS} -j${NJOBS} --use-sasl-client --wiredtiger --audit --rocksdb --inmemory --hotbackup ${ASAN_OPTIONS} CPPPATH=${INSTALLDIR}/include LIBPATH=${INSTALLDIR}/lib ${PSM_TARGETS}
+buildscripts/scons.py CC=${CC} CXX=${CXX} --ssl ${SCONS_OPTS} -j${NJOBS} --use-sasl-client --wiredtiger --audit --rocksdb --inmemory --hotbackup ${ASAN_OPTIONS} CPPPATH=${INSTALLDIR}/include LIBPATH=${INSTALLDIR}/lib ${PSM_TARGETS}
 #
 # Build mongo tools
 cd ${TOOLSDIR_ABS}
