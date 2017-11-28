@@ -120,7 +120,7 @@ export CFLAGS="${CFLAGS:-} -fno-omit-frame-pointer"
 export CXXFLAGS="${CFLAGS}"
 export INSTALLDIR=${PSMDIR_ABS}/install
 export PORTABLE=1
-#export USE_SSE=1
+export USE_SSE=1
 #
 rm -rf ${INSTALLDIR}
 mkdir -p ${INSTALLDIR}/include
@@ -154,7 +154,8 @@ cp ./lz4-r127/lib/lz4frame.h ${INSTALLDIR}/include
 cp ./lz4-r127/lib/lz4hc.h ${INSTALLDIR}/include
 cp ./lz4-r127/lib/liblz4.a ${INSTALLDIR}/lib
 # static librocksdb.a
-make -j${NJOBS} ${ROCKSDB_TARGET}
+CC=$(CC) CXX=$(CXX) EXTRA_CFLAGS='-DHAVE_SSE42' EXTRA_CXXFLAGS='-DHAVE_SSE42' make -j$(NJOBS) ${ROCKSDB_TARGET}
+#make -j${NJOBS} ${ROCKSDB_TARGET}
 make install-static INSTALL_PATH=${INSTALLDIR}
 popd
 #

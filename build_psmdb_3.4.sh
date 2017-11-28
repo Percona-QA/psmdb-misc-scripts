@@ -109,11 +109,11 @@ export CFLAGS="${CFLAGS:-} -fno-omit-frame-pointer"
 export CXXFLAGS="${CFLAGS}"
 export INSTALLDIR=${PSMDIR_ABS}/install
 export PORTABLE=1
-#export USE_SSE=1
+export USE_SSE=1
 #
 # static librocksdb.a
 pushd ${PSMDIR}/src/third_party/rocksdb
-make -j${NJOBS} EXTRA_CFLAGS='-fPIC -DLZ4 -I../lz4-r131 -DSNAPPY -I../snappy-1.1.3' EXTRA_CXXFLAGS='-fPIC -DLZ4 -I../lz4-r131 -DSNAPPY -I../snappy-1.1.3' DISABLE_JEMALLOC=1 ${ROCKSDB_TARGET}
+make -j${NJOBS} EXTRA_CFLAGS='-fPIC -DLZ4 -I../lz4-r131 -DSNAPPY -I../snappy-1.1.3 -DHAVE_SSE42' EXTRA_CXXFLAGS='-fPIC -DLZ4 -I../lz4-r131 -DSNAPPY -I../snappy-1.1.3 -DHAVE_SSE42' DISABLE_JEMALLOC=1 ${ROCKSDB_TARGET}
 rm -rf ${INSTALLDIR}
 mkdir -p ${INSTALLDIR}/include
 mkdir -p ${INSTALLDIR}/bin
