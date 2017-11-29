@@ -154,8 +154,7 @@ cp ./lz4-r127/lib/lz4frame.h ${INSTALLDIR}/include
 cp ./lz4-r127/lib/lz4hc.h ${INSTALLDIR}/include
 cp ./lz4-r127/lib/liblz4.a ${INSTALLDIR}/lib
 # static librocksdb.a
-CC=$(CC) CXX=$(CXX) EXTRA_CFLAGS='-DHAVE_SSE42' EXTRA_CXXFLAGS='-DHAVE_SSE42' make -j$(NJOBS) ${ROCKSDB_TARGET}
-#make -j${NJOBS} ${ROCKSDB_TARGET}
+make -j${NJOBS} EXTRA_CFLAGS='-DHAVE_SSE42' EXTRA_CXXFLAGS='-DHAVE_SSE42' ${ROCKSDB_TARGET}
 make install-static INSTALL_PATH=${INSTALLDIR}
 popd
 #
