@@ -35,7 +35,7 @@ no_passthrough_with_mongod|rocksdb
 parallel|rocksdb
 multiversion_multistorage_engine|rocksdb
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "3.0" "3.2" "3.4"
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "Linux/x86_64" "3.0" "3.2" "3.4"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 percona_no_passthrough_with_mongod|rocksdb
 ratelimit|rocksdb
@@ -51,7 +51,7 @@ sharding_auth|rocksdb
 sharding_jscore_passthrough|rocksdb
 sharding_last_stable_mongos_and_mixed_shards|rocksdb
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "3.0" "3.2" "3.4"
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "Linux/x86_64" "3.0" "3.2" "3.4"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 ssl|rocksdb
 ssl_special|rocksdb
