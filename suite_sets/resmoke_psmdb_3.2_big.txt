@@ -1,6 +1,6 @@
 aggregation|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
 aggregation_auth|default
-aggregation_read_concern_majority_passthrough|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
+aggregation_read_concern_majority_passthrough|wiredTiger|inMemory|PerconaFT|rocksdb
 audit|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
 auth|mmapv1|wiredTiger|PerconaFT|rocksdb
 auth --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
