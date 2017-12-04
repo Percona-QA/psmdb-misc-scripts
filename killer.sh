@@ -6,16 +6,18 @@
 
 WORKDIR=$(pwd)
 INTERVAL=3600
+REGEX='^[0-9]+$'
 
-re='^[0-9]+$'
 if [ -z "$1" ]; then
   echo "You can specify check interval in seconds as first parameter."
   echo "Since not specified default will be used."
-elif ! [[ $yournumber =~ $re ]]; then
+elif ! [[ $1 =~ ${REGEX} ]]; then
    echo "Specified interval is not a number!" >&2
    exit 1
 elif [ "$1" -lt 60 ]; then
   echo "It's not recommended to specify interval lower then 60s."
+  INTERVAL=$1
+else
   INTERVAL=$1
 fi
 echo "Using check interval: ${INTERVAL}"
