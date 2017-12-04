@@ -5,15 +5,20 @@
 # and kills all mongo processes
 
 WORKDIR=$(pwd)
+INTERVAL=3600
 
+re='^[0-9]+$'
 if [ -z "$1" ]; then
-  echo "This script requires interval parameter specified in seconds!"
-  exit 1
+  echo "You can specify check interval in seconds as first parameter."
+  echo "Since not specified default will be used."
+elif ! [[ $yournumber =~ $re ]]; then
+   echo "Specified interval is not a number!" >&2
+   exit 1
 elif [ "$1" -lt 60 ]; then
   echo "It's not recommended to specify interval lower then 60s."
+  INTERVAL=$1
 fi
-
-INTERVAL=$1
+echo "Using check interval: ${INTERVAL}"
 
 function save_state(){
   ps -e -o cmd|grep -i -E "mongo|resmoke|psmdb|percona-server-mongodb"|grep -v grep > ${WORKDIR}/ps-output-new.txt
@@ -26,6 +31,8 @@ function write_log(){
   ps aux|grep -i -E "mongo|resmoke|psmdb|percona-server-mongodb"|grep -v grep >> ${WORKDIR}/killer.log
   echo -e "\n>>> END OF PROCESS CLEANUP <<<\n\n" >> ${WORKDIR}/killer.log
 }
+
+touch ${WORKDIR}/killer.log
 
 if [ ! -f ${WORKDIR}/ps-output-new.txt ]; then
   save_state
