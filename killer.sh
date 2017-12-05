@@ -23,7 +23,7 @@ fi
 echo "Using check interval: ${INTERVAL}"
 
 function save_state(){
-  ps -e -o cmd|grep -i -E "mongo|resmoke|psmdb|percona-server-mongodb"|grep -v grep > ${WORKDIR}/ps-output-new.txt
+  ps -e -o cmd|grep -i -E "mongo|resmoke|psmdb|percona-server-mongodb|test"|grep -v grep > ${WORKDIR}/ps-output-new.txt
 }
 
 function write_log(){
