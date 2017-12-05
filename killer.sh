@@ -44,13 +44,15 @@ while true; do
   sleep ${INTERVAL}
   cp ${WORKDIR}/ps-output-new.txt ${WORKDIR}/ps-output-old.txt
   save_state
-  if [ "$(md5sum ${WORKDIR}/ps-output-new.txt|cut -f1 -d ' ')" == "$(md5sum ${WORKDIR}/ps-output-old.txt|cut -f1 -d ' ')" ]; then
-    LOAD=$(uptime|grep -o "[0-9]*\.[0-9]*$"|cut -f 1 -d '.')
-    if [ ${LOAD} -lt 1 ]; then
-      write_log
-      killall -9 mongod mongos mongo >/dev/null 2>&1
-      sleep 300
-      save_state
+  if [ $(grep "resmoke" ${WORKDIR}/ps-output-new.txt|wc -l) -ne 0 ]; then
+    if [ "$(md5sum ${WORKDIR}/ps-output-new.txt|cut -f1 -d ' ')" == "$(md5sum ${WORKDIR}/ps-output-old.txt|cut -f1 -d ' ')" ]; then
+      LOAD=$(uptime|grep -o "[0-9]*\.[0-9]*$"|cut -f 1 -d '.')
+      if [ ${LOAD} -lt 1 ]; then
+        write_log
+        killall -9 mongod mongos mongo >/dev/null 2>&1
+        sleep 300
+        save_state
+      fi
     fi
   fi
 done
