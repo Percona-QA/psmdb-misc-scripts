@@ -5,7 +5,7 @@
 # and kills all mongo processes
 
 WORKDIR=$(pwd)
-INTERVAL=3600
+INTERVAL=1800
 REGEX='^[0-9]+$'
 
 if [ -z "$1" ]; then
@@ -27,7 +27,8 @@ function save_state(){
 }
 
 function write_log(){
-  echo -e ">>> START OF PROCESS CLEANUP <<<\n" >> ${WORKDIR}/killer.log
+  echo -e ">>> START OF PROCESS CLEANUP <<<" >> ${WORKDIR}/killer.log
+  echo -e "$(date)" >> ${WORKDIR}/killer.log
   echo -e "$(uptime)\n" >> ${WORKDIR}/killer.log
   ps aux|head -n1 >> ${WORKDIR}/killer.log
   ps aux|grep -i -E "mongo|resmoke|psmdb|percona-server-mongodb"|grep -v grep >> ${WORKDIR}/killer.log
