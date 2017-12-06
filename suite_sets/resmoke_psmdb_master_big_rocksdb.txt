@@ -66,7 +66,6 @@ read_only_sharded|rocksdb
 redaction|rocksdb
 replica_sets|rocksdb
 replica_sets_auth|rocksdb
-replica_sets_compression|rocksdb
 replica_sets_initsync_jscore_passthrough|rocksdb
 replica_sets_initsync_static_jscore_passthrough|rocksdb
 replica_sets_jscore_passthrough|rocksdb
@@ -83,7 +82,6 @@ sharding|rocksdb
 sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|rocksdb
 sharding_auth|rocksdb
 sharding_auth_audit|rocksdb
-sharding_compression|rocksdb
 sharding_continuous_config_stepdown|rocksdb
 sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|rocksdb
 sharding_gle_auth_basics_passthrough --shellWriteMode=commands|rocksdb

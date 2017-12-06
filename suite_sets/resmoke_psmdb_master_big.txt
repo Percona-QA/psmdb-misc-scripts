@@ -87,7 +87,6 @@ redaction|default
 replica_sets|mmapv1|wiredTiger|rocksdb
 replica_sets --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 replica_sets_auth|default
-replica_sets_compression|default
 replica_sets_initsync_jscore_passthrough|mmapv1|wiredTiger|rocksdb
 replica_sets_initsync_static_jscore_passthrough|mmapv1|wiredTiger|rocksdb
 replica_sets_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
@@ -107,7 +106,6 @@ sharding --shellReadMode=legacy --excludeWithAnyTags=requires_persistence,requir
 sharding_auth|default
 sharding_auth_audit|mmapv1|wiredTiger|rocksdb
 sharding_auth_audit --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-sharding_compression|default
 sharding_continuous_config_stepdown|mmapv1|wiredTiger|rocksdb
 sharding_continuous_config_stepdown --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory|rocksdb
