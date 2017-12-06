@@ -50,7 +50,7 @@ multiversion --excludeWithAnyTags=requires_wiredtiger|mmapv1
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.6" "3.0" "3.2" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-multiversion --excludeWithAnyTags=requires_mmapv1|wiredTiger|inMemory|rocksdb
+multiversion --excludeWithAnyTags=requires_mmapv1|wiredTiger|rocksdb
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.6" "3.0" "3.2" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
@@ -58,7 +58,7 @@ multiversion_auth --excludeWithAnyTags=requires_wiredtiger|mmapv1
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.6" "3.0" "3.2" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-multiversion_multistorage_engine|mmapv1|wiredTiger|inMemory|rocksdb
+multiversion_multistorage_engine|mmapv1|wiredTiger|rocksdb
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.6" "3.0" "3.2" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion

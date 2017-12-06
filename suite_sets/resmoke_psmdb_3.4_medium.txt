@@ -39,7 +39,7 @@ mongos_test|default
 no_passthrough|wiredTiger|rocksdb
 no_passthrough_with_mongod|wiredTiger|rocksdb
 parallel|wiredTiger|rocksdb
-multiversion_multistorage_engine|wiredTiger|inMemory|rocksdb
+multiversion_multistorage_engine|wiredTiger|rocksdb
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.6" "3.0" "3.2" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
