@@ -91,6 +91,10 @@ runResmoke() {
   # shellcheck disable=SC2086
   python buildscripts/resmoke.py ${resmokeParams} >>"${logOutputFile}" 2>&1
 
+  if [ -f "${basedir}/killer.log" ]; then
+    NR_KILLED=$(grep ">>> START OF PROCESS CLEANUP <<<" | wc -l)
+    echo "Number of stalled tests so far: ${NR_KILLED}"
+  fi
 }
 
 for suite in "${SUITES[@]}"; do
