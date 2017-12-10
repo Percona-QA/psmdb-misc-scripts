@@ -10,6 +10,7 @@ def resmoke2junit(skip_long_lines=1):
 
     cwd = os.getcwd()
     error_log = deque("",200)
+    all_bytes = string.maketrans('', '')
 
     with open('junit.xml', 'w') as junitfile:
         junitfile.write('<?xml version="1.0" ?>\n')
@@ -45,8 +46,8 @@ def resmoke2junit(skip_long_lines=1):
                                         if len(line) >= 2048 and skip_long_lines == 1:
                                             error_log.append('### Skipped very long line ###\n')
                                         else:
-                                            printable = set(string.printable)
-                                            error_log.append(filter(lambda x: x in printable, line))
+                                            line = line.translate(all_bytes, all_bytes[:32]) + '\n'
+                                            error_log.append(line)
                                         has_error_text = 1
 
                             if has_error_text == 0:
