@@ -12,6 +12,7 @@ causally_consistent_jscore_passthrough|rocksdb
 causally_consistent_jscore_passthrough_auth|rocksdb
 change_streams|rocksdb
 change_streams_mongos_passthrough|rocksdb
+change_streams_secondary_reads|rocksdb
 concurrency|rocksdb
 concurrency_replication|rocksdb
 concurrency_sharded|rocksdb
