@@ -28,7 +28,7 @@ run_system_validations() {
 
   # check for needed mongo binaries
 
-  for binary in bsondump mongo mongod mongodump mongoexport mongofiles mongoimport mongooplog mongorestore mongos mongostat; do
+  for binary in bsondump mongo mongod mongodump mongoexport mongofiles mongoimport mongorestore mongos mongostat; do
     if [ ! -x "./${binary}" ]; then
       echo "Could not find ./${binary}; make sure you are running this from the root build directory,"
       echo "that the MongoDB binaries have been built and the mongo-tools binaries have been copied"
