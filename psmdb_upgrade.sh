@@ -27,6 +27,7 @@ PSMDB_OLD_BINDIR=$4
 PSMDB_NEW_BINDIR=$5
 BASE_DATADIR="${WORKDIR}/data"
 MONGO_START_TIMEOUT=600
+MONGO_JAVA_DRIVER="3.6.1"
 
 # Parameters of parameterized build
 if [ -z "$MONGOD_EXTRA" ]; then
@@ -104,10 +105,10 @@ TEST_DB_FILE=${WORKDIR}/primer-dataset.json
 
 # Download sysbench-mongodb
 if [ "${SKIP_SYSBENCH}" = "false" ]; then
-  if [ ! -f mongo-java-driver-3.2.1.jar ]; then
-    wget https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
+  if [ ! -f mongo-java-driver-${MONGO_JAVA_DRIVER}.jar ]; then
+    wget https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/${MONGO_JAVA_DRIVER}/mongo-java-driver-${MONGO_JAVA_DRIVER}.jar
   fi
-  export CLASSPATH=$PWD/mongo-java-driver-3.2.1.jar:$CLASSPATH
+  export CLASSPATH=$PWD/mongo-java-driver-${MONGO_JAVA_DRIVER}.jar:$CLASSPATH
   if [ ! -d sysbench-mongodb ]; then
     git clone https://github.com/Percona-Lab/sysbench-mongodb.git
   fi
