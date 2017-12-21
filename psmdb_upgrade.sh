@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This script is used to test upgrade of PSMDB.
 # It can test single instances or replicasets with different SE's.
 # Created by Tomislav Plavcic
@@ -71,7 +71,7 @@ fi
 rm -rf ${BASE_DATADIR}
 rm -f ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}.tar
 
-HOST=$(hostname)
+HOST="localhost"
 NODE1_PORT=27017
 NODE2_PORT=27018
 NODE3_PORT=27019
