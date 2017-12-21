@@ -36,8 +36,8 @@ fi
 if [ -z "$LEAVE_RUNNING" ]; then
   LEAVE_RUNNING=false
 fi
-if [ -z "$SKIP_SYSBENCH" ]; then
-  SKIP_SYSBENCH=false
+if [ -z "$SKIP_BENCH" ]; then
+  SKIP_BENCH=false
 fi
 if [ -z "$SDURATION" ]; then
   SDURATION=5
@@ -104,7 +104,7 @@ fi
 TEST_DB_FILE=${WORKDIR}/primer-dataset.json
 
 # Download sysbench-mongodb
-if [ "${SKIP_SYSBENCH}" = "false" ]; then
+if [ "${SKIP_BENCH}" = "false" ]; then
   if [ ! -f mongo-java-driver-${MONGO_JAVA_DRIVER}.jar ]; then
     wget https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/${MONGO_JAVA_DRIVER}/mongo-java-driver-${MONGO_JAVA_DRIVER}.jar
   fi
@@ -311,7 +311,7 @@ upgrade_next_rs_node()
 if [ ${TEST_TYPE} = "single" ]; then
   start_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-first-start.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data ${OLD_VER} ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
-  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+  if [ "${SKIP_BENCH}" = "false" ]; then
     run_sysbench sbtest ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA}
   fi
   # create db hashes
@@ -323,7 +323,7 @@ if [ ${TEST_TYPE} = "single" ]; then
   stop_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT}
   start_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data ${NEW_VER} ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-import.log
-  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+  if [ "${SKIP_BENCH}" = "false" ]; then
     run_sysbench sbtest2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
   fi
   # create db hashes
@@ -342,7 +342,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   init_replica
   update_primary_info
   import_test_data ${OLD_VER} ${PSMDB_OLD_BINDIR} ${PRIMARY_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${PRIMARY_DATA}/${PRIMARY_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
-  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+  if [ "${SKIP_BENCH}" = "false" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
@@ -362,7 +362,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
   upgrade_next_rs_node
-  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+  if [ "${SKIP_BENCH}" = "false" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
@@ -371,7 +371,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
   upgrade_next_rs_node
-  if [ "${SKIP_SYSBENCH}" = "false" ]; then
+  if [ "${SKIP_BENCH}" = "false" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
