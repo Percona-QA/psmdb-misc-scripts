@@ -37,8 +37,8 @@ fi
 if [ -z "$LEAVE_RUNNING" ]; then
   LEAVE_RUNNING=false
 fi
-if [ -z "$BENCH_TYPE" ]; then
-  BENCH_TYPE=sysbench
+if [ -z "$BENCH_TOOL" ]; then
+  BENCH_TOOL=sysbench
 fi
 if [ -z "$S_DURATION" ]; then
   S_DURATION=5
@@ -105,7 +105,7 @@ fi
 TEST_DB_FILE=${WORKDIR}/primer-dataset.json
 
 # Download benchmarking tool
-if [ "${BENCH_TYPE}" = "sysbench" ]; then
+if [ "${BENCH_TOOL}" = "sysbench" ]; then
   if [ ! -f mongo-java-driver-${MONGO_JAVA_DRIVER}.jar ]; then
     wget https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/${MONGO_JAVA_DRIVER}/mongo-java-driver-${MONGO_JAVA_DRIVER}.jar
   fi
@@ -113,14 +113,16 @@ if [ "${BENCH_TYPE}" = "sysbench" ]; then
   if [ ! -d sysbench-mongodb ]; then
     git clone https://github.com/Percona-Lab/sysbench-mongodb.git
   fi
-elif [ "${BENCH_TYPE}" = "ycsb" ]; then
+elif [ "${BENCH_TOOL}" = "ycsb" ]; then
   if [ ! -d ycsb-${YCSB_VER} ]; then
     rm -f ycsb-${YCSB_VER}.tar.gz
     wget https://github.com/brianfrankcooper/YCSB/releases/download/${YCSB_VER}/ycsb-${YCSB_VER}.tar.gz
     tar xf ycsb-${YCSB_VER}.tar.gz
     rm -f ycsb-${YCSB_VER}.tar.gz
   fi
-
+elif [ "${BENCH_TOOL}" != "none" ]; then
+  echo "Unknown benchmarking tool selected. Please use \"export BENCH_TOOL=sysbench|ycsb|none\" !"
+  exit 1
 fi
 
 ### COMMON FUNCTIONS
@@ -238,8 +240,8 @@ run_bench()
   local FUN_DATA=$5
 
   # Execute sysbench-mongodb
-  echo "Executing ${BENCH_TYPE} run on node ${FUN_PORT} database ${FUN_DATABASE}"
-  if [ "${BENCH_TYPE}" = "sysbench" ]; then
+  echo "Executing ${BENCH_TOOL} run on node ${FUN_PORT} database ${FUN_DATABASE}"
+  if [ "${BENCH_TOOL}" = "sysbench" ]; then
     # Set run parameters
     sed -i "/export DB_NAME=/c\export DB_NAME=${FUN_DATABASE}" sysbench-mongodb/config.bash
     sed -i "/export USERNAME=/c\export USERNAME=none" sysbench-mongodb/config.bash
@@ -260,13 +262,13 @@ run_bench()
     mv *.txt ${FUN_DATA}
     mv *.tsv ${FUN_DATA}
     popd
-  elif [ "${BENCH_TYPE}" = "ycsb" ]; then
+  elif [ "${BENCH_TOOL}" = "ycsb" ]; then
     pushd ycsb-${YCSB_VER}
     ./bin/ycsb load mongodb -s -P workloads/workloada -p recordcount=${B_DOCSPERCOL} -threads ${B_LOADER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_ycsb-load.txt
-    ./bin/ycsb.sh run mongodb -s -P workloads/workloadb -p recordcount=${B_DOCSPERCOL} -threads ${B_WRITER_THREADS} -p mongodb.url="localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_ycsb-run.txt
+    ./bin/ycsb.sh run mongodb -s -P workloads/workloadb -p recordcount=${B_DOCSPERCOL} -threads ${B_WRITER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_ycsb-run.txt
     popd
   fi
-  echo "Finished with ${BENCH_TYPE} run on node ${FUN_PORT} database ${FUN_DATABASE}"
+  echo "Finished with ${BENCH_TOOL} run on node ${FUN_PORT} database ${FUN_DATABASE}"
 }
 
 show_node_info()
@@ -327,7 +329,7 @@ upgrade_next_rs_node()
 if [ ${TEST_TYPE} = "single" ]; then
   start_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-first-start.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data ${OLD_VER} ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
-  if [ "${BENCH_TYPE}" != "none" ]; then
+  if [ "${BENCH_TOOL}" != "none" ]; then
     run_bench bench_test ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA}
   fi
   # create db hashes
@@ -339,7 +341,7 @@ if [ ${TEST_TYPE} = "single" ]; then
   stop_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT}
   start_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data ${NEW_VER} ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-import.log
-  if [ "${BENCH_TYPE}" != "none" ]; then
+  if [ "${BENCH_TOOL}" != "none" ]; then
     run_bench bench_test2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
   fi
   # create db hashes
@@ -358,7 +360,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   init_replica
   update_primary_info
   import_test_data ${OLD_VER} ${PSMDB_OLD_BINDIR} ${PRIMARY_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${PRIMARY_DATA}/${PRIMARY_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
-  if [ "${BENCH_TYPE}" != "none" ]; then
+  if [ "${BENCH_TOOL}" != "none" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
@@ -378,7 +380,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
   upgrade_next_rs_node
-  if [ "${BENCH_TYPE}" != "none" ]; then
+  if [ "${BENCH_TOOL}" != "none" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
@@ -387,7 +389,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
   upgrade_next_rs_node
-  if [ "${BENCH_TYPE}" != "none" ]; then
+  if [ "${BENCH_TOOL}" != "none" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
@@ -407,7 +409,13 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     killall mongod
   fi
   diff --from-file=${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log ${NODE2_DATA}/${NODE2_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node2-dbhash-before.log ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log ${NODE2_DATA}/${NODE2_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node2-dbhash-after.log ${NODE3_DATA}/${NODE3_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node3-dbhash-after.log
-  exit $?
+  RESULT=$?
+  if [ ${RESULT} -ne 0 ]; then
+    echo "### SUCCESS: Data after upgrade seems to have the same dbhash as before upgrade! ###"
+  else
+    echo "### ERROR: Data after upgrade seems to have different dbhash then it had before upgrade! ###"
+  fi
+  exit $RESULT
 else
   echo "Wrong test type specified!"
   exit 1
