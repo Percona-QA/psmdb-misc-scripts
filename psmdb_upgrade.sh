@@ -357,7 +357,13 @@ if [ ${TEST_TYPE} = "single" ]; then
     stop_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-final-stop.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT}
   fi
   diff ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
-  exit $?
+  RESULT=$?
+  if [ ${RESULT} -ne 0 ]; then
+    echo "### SUCCESS: Data after upgrade seems to have the same dbhash as before upgrade! ###"
+  else
+    echo "### ERROR: Data after upgrade seems to have different dbhash then it had before upgrade! ###"
+  fi
+  exit $RESULT
 elif [ ${TEST_TYPE} = "replicaset" ]; then
   start_replica
   init_replica
