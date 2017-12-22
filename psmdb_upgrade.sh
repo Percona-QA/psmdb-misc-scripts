@@ -359,9 +359,9 @@ if [ ${TEST_TYPE} = "single" ]; then
   diff ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
   RESULT=$?
   if [ ${RESULT} -ne 0 ]; then
-    echo "### SUCCESS: Data after upgrade seems to have the same dbhash as before upgrade! ###"
-  else
     echo "### ERROR: Data after upgrade seems to have different dbhash then it had before upgrade! ###"
+  else
+    echo "### SUCCESS: Data after upgrade seems to have the same dbhash as before upgrade! ###"
   fi
   exit $RESULT
 elif [ ${TEST_TYPE} = "replicaset" ]; then
@@ -420,9 +420,9 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   diff --from-file=${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log ${NODE2_DATA}/${NODE2_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node2-dbhash-before.log ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log ${NODE2_DATA}/${NODE2_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node2-dbhash-after.log ${NODE3_DATA}/${NODE3_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node3-dbhash-after.log
   RESULT=$?
   if [ ${RESULT} -ne 0 ]; then
-    echo "### SUCCESS: Data after upgrade seems to have the same dbhash as before upgrade! ###"
-  else
     echo "### ERROR: Data after upgrade seems to have different dbhash then it had before upgrade! ###"
+  else
+    echo "### SUCCESS: Data after upgrade seems to have the same dbhash as before upgrade! ###"
   fi
   exit $RESULT
 else
