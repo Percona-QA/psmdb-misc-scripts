@@ -40,14 +40,17 @@ fi
 if [ -z "$BENCH_TOOL" ]; then
   BENCH_TOOL=sysbench
 fi
+if [ -z "$Y_OPERATIONS" ]; then
+  Y_OPERATIONS=1000000
+fi
 if [ -z "$S_DURATION" ]; then
   S_DURATION=5
 fi
 if [ -z "$S_COLLECTIONS" ]; then
-  S_COLLECTIONS=10
+  S_COLLECTIONS=1
 fi
 if [ -z "$B_DOCSPERCOL" ]; then
-  B_DOCSPERCOL=100000
+  B_DOCSPERCOL=1000000
 fi
 if [ -z "$S_WRITE_CONCERN" ]; then
   S_WRITE_CONCERN="SAFE"
@@ -264,8 +267,8 @@ run_bench()
     popd
   elif [ "${BENCH_TOOL}" = "ycsb" ]; then
     pushd ycsb-${YCSB_VER}
-    ./bin/ycsb load mongodb -s -P workloads/workloada -p recordcount=${B_DOCSPERCOL} -threads ${B_LOADER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_ycsb-load.txt
-    ./bin/ycsb.sh run mongodb -s -P workloads/workloadb -p recordcount=${B_DOCSPERCOL} -threads ${B_WRITER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_ycsb-run.txt
+    ./bin/ycsb load mongodb -s -P workloads/workloadb -p recordcount=${B_DOCSPERCOL} -threads ${B_LOADER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_ycsb-load.txt
+    ./bin/ycsb.sh run mongodb -s -P workloads/workloadb -p recordcount=${B_DOCSPERCOL} -p operationcount=${Y_OPERATIONS} -threads ${B_WRITER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_ycsb-run.txt
     popd
   fi
   echo "Finished with ${BENCH_TOOL} run on node ${FUN_PORT} database ${FUN_DATABASE}"
