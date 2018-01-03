@@ -125,5 +125,5 @@ slow1|mmapv1|wiredTiger|inMemory|rocksdb
 ssl|default
 ssl_special|default
 tool|mmapv1|wiredTiger|inMemory|rocksdb
-unittests|default
+ unittests|default
 watchdog|mmapv1|wiredTiger|inMemory|rocksdb

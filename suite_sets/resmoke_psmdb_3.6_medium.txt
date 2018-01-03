@@ -63,5 +63,5 @@ sharding_last_stable_mongos_and_mixed_shards|default
 ssl|default
 ssl_special|default
 tool|wiredTiger|rocksdb
-unittests|default
+ unittests|default
 watchdog|default

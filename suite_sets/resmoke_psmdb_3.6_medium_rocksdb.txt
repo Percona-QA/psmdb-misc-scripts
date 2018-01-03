@@ -56,5 +56,5 @@ sharding_last_stable_mongos_and_mixed_shards|rocksdb
 ssl|rocksdb
 ssl_special|rocksdb
 tool|rocksdb
-unittests|rocksdb
+ unittests|rocksdb
 watchdog|rocksdb

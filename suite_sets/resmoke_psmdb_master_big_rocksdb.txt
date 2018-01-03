@@ -100,5 +100,5 @@ slow1|rocksdb
 ssl|rocksdb
 ssl_special|rocksdb
 tool|rocksdb
-unittests|rocksdb
+ unittests|rocksdb
 watchdog|rocksdb
