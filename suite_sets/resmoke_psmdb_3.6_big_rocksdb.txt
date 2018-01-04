@@ -101,4 +101,3 @@ ssl|rocksdb
 ssl_special|rocksdb
 tool|rocksdb
  unittests|rocksdb
-watchdog|rocksdb

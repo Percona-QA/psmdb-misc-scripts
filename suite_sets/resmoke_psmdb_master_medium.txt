@@ -64,4 +64,3 @@ ssl|default
 ssl_special|default
 tool|wiredTiger|rocksdb
  unittests|default
-watchdog|default
