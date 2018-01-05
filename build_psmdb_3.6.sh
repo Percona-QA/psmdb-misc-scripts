@@ -61,8 +61,8 @@ fi
 #
 REVISION=$(git rev-parse --short HEAD)
 REVISION_LONG=$(git rev-parse HEAD)
-PSM_VERSION=$(git tag|grep "psmdb-3.4"|tail -n1|cut -d "-" -f2)
-PSM_RELEASE=$(git tag|grep "psmdb-3.4"|tail -n1|cut -d "-" -f3,4)
+PSM_VERSION=$(git tag|grep "psmdb-3.6"|tail -n1|cut -d "-" -f2)
+PSM_RELEASE=$(git tag|grep "psmdb-3.6"|tail -n1|cut -d "-" -f3,4)
 TARBALL_NAME="percona-server-mongodb-${PSM_VERSION}-${PSM_RELEASE}-${REVISION}${TARBALL_SUFFIX}"
 # create a proper version.json
 echo "{" > version.json
