@@ -7,6 +7,8 @@
 WORKDIR=$(pwd)
 INTERVAL=1800
 REGEX='^[0-9]+$'
+TIMEOUT_AFTER_CYCLES=12
+TIMEOUT_CYCLE=0
 
 if [ -z "$1" ]; then
   echo "You can specify check interval in seconds as first parameter."
@@ -48,12 +50,17 @@ while true; do
   if [ $(grep "resmoke" ${WORKDIR}/ps-output-new.txt|wc -l) -ne 0 ]; then
     if [ "$(md5sum ${WORKDIR}/ps-output-new.txt|cut -f1 -d ' ')" == "$(md5sum ${WORKDIR}/ps-output-old.txt|cut -f1 -d ' ')" ]; then
       LOAD=$(uptime|grep -o "[0-9]*\.[0-9]*$"|cut -f 1 -d '.')
-      if [ ${LOAD} -lt 1 ]; then
+      if [ ${LOAD} -lt 1 -o ${TIMEOUT_CYCLE} -gt ${TIMEOUT_AFTER_CYCLES} ]; then
         write_log
         killall -9 mongod mongos mongo >/dev/null 2>&1
         sleep 300
         save_state
+        TIMEOUT_CYCLE=0
+      else
+        TIMEOUT_CYCLE=$((TIMEOUT_CYCLE + 1))
       fi
+    else
+      TIMEOUT_CYCLE=0
     fi
   fi
 done
