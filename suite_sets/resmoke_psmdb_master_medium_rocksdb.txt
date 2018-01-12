@@ -9,7 +9,7 @@ bulk_gle_passthrough|rocksdb
 concurrency|rocksdb
 concurrency_replication|rocksdb
 concurrency_sharded|rocksdb
-!concurrency_simultaneous --executor=concurrency jstests/concurrency/fsm_all_simultaneous.js|rocksdb
+!concurrency_simultaneous --suites=concurrency jstests/concurrency/fsm_all_simultaneous.js|rocksdb
 core|rocksdb
 core_auth|rocksdb
 core_minimum_batch_size|rocksdb
