@@ -44,7 +44,7 @@ mongo_rocks|rocksdb
 mongos_test|default
 multiversion|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
+  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "linux_x86_64" "2.4" "2.6" "3.0" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 no_passthrough|mmapv1|wiredTiger|rocksdb
 no_passthrough --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
@@ -78,7 +78,7 @@ sharding_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
 sharding_legacy|default
 sharding_legacy_multiversion|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "Linux/x86_64" "2.4" "2.6" "3.0" "3.2.1"
+  $ python buildscripts/setup_multiversion_mongodb.py ${DBPATH}/install ${DBPATH}/multiversion "base" "linux_x86_64" "2.4" "2.6" "3.0" "3.2.1"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 slow1|mmapv1|wiredTiger|inMemory|rocksdb
 slow2|mmapv1|wiredTiger|inMemory|rocksdb
