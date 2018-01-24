@@ -3,6 +3,8 @@
 # It can test single instances or replicasets with different SE's.
 # Created by Tomislav Plavcic
 
+set -e
+
 if [ "$#" -ne 5 ]; then
   echo "This script requires absolute workdir, test type, storage engine and directories for old and new binaries as parameters!";
   echo "Example: ./psmdb_upgrade.sh /tmp/psmdb-upgrade single rocksdb /mongo-old-bindir /mongo-new-bindir"
@@ -19,6 +21,7 @@ killall -9 mongod > /dev/null 2>&1 || true
 killall -9 mongos > /dev/null 2>&1 || true
 sleep 5
 
+COMPATIBILITY="3.6"
 SCRIPT_PWD=$(cd `dirname $0` && pwd)
 WORKDIR=$1
 TEST_TYPE=$2
@@ -279,19 +282,22 @@ show_node_info()
   local FUN_PORT=$1
   local FUN_TEXT=$2
   echo -e "\n\n##### Show databases info on node ${FUN_PORT} ${FUN_TEXT} #####\n"
-  ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "rs.slaveOk(); db.adminCommand('listDatabases')"
+  ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --quiet --eval "rs.slaveOk(); db.adminCommand('listDatabases')"
   echo -e "\n\n##### Show server info on node ${FUN_PORT} ${FUN_TEXT} #####\n"
-  ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.serverStatus()"
+  ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --quiet --eval "db.serverStatus({ rocksdb: 0, metrics: 0, locks: 0, tcmalloc: 0 })"
   echo -e "\n\n##### Show info on bench_test database on node ${FUN_PORT} ${FUN_TEXT} #####\n"
-  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/bench_test --eval "db.stats()"
-  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 })"
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/bench_test --quiet --eval "db.stats()"
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/bench_test --quiet --eval "db.runCommand({ dbHash: 1 })"
   echo -e "\n\n##### Show info on test database on node ${FUN_PORT} ${FUN_TEXT} #####\n"
-  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/test --eval "db.stats()"
-  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/test --eval "db.runCommand({ dbHash: 1 })"
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/test --quiet --eval "db.stats()"
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${FUN_PORT}/test --quiet --eval "db.runCommand({ dbHash: 1 })"
   echo -e "\n\n##### Show replica set status on node ${FUN_PORT} ${FUN_TEXT} #####\n"
-  ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "rs.status()"
+  ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --quiet --eval "rs.status()"
   echo -e "\n\n##### Show isMaster info on node ${FUN_PORT} ${FUN_TEXT} #####\n"
-  ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --eval "db.isMaster()"
+  ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --quiet --eval "db.isMaster()"
+  echo -e "\n\n##### Show featureCompatibilityVersion on node ${FUN_PORT} ${FUN_TEXT} #####\n"
+  ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --quiet --eval "db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } );"
+  echo -e "\n"
 }
 
 update_primary_info()
@@ -299,9 +305,9 @@ update_primary_info()
   PRIMARY_PORT=""
   PRIMARY_DATA=""
   for node_port in ${NODE1_PORT} ${NODE2_PORT} ${NODE3_PORT}; do
-    if [ $(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --eval 'db.isMaster().ismaster' | tail -n1) = "true" ]; then
+    if [ $(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --quiet --eval 'db.isMaster().ismaster') = "true" ]; then
       PRIMARY_PORT=$node_port
-      PRIMARY_DATA=$(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --eval 'db.serverCmdLineOpts().parsed.storage.dbPath' | tail -n1)
+      PRIMARY_DATA=$(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --quiet --eval 'db.serverCmdLineOpts().parsed.storage.dbPath')
       break;
     fi
   done
@@ -309,12 +315,19 @@ update_primary_info()
 
 choose_rs_node_upgrade()
 {
+  local NODE_TYPE=$1
   UPGRADE_PORT=""
   UPGRADE_DATA=""
   for node_port in ${NODE3_PORT} ${NODE2_PORT} ${NODE1_PORT}; do
-    if [ $(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --eval 'db.serverBuildInfo().version'|tail -n1) = "${OLD_VER}" ]; then
+    if [ $(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --quiet --eval 'db.isMaster().ismaster') = "true" ]; then
+      CUR_NODE_TYPE="PRIMARY"
+    else
+      CUR_NODE_TYPE="SECONDARY"
+    fi
+    CUR_NODE_VER="$(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --quiet --eval 'db.serverBuildInfo().version')"
+    if [ "${CUR_NODE_VER}" = "${OLD_VER}" -a "${CUR_NODE_TYPE}" = "${NODE_TYPE}" ]; then
       UPGRADE_PORT=$node_port
-      UPGRADE_DATA=$(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --eval 'db.serverCmdLineOpts().parsed.storage.dbPath' | tail -n1)
+      UPGRADE_DATA=$(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --quiet --eval 'db.serverCmdLineOpts().parsed.storage.dbPath')
       break;
     fi
   done
@@ -322,7 +335,11 @@ choose_rs_node_upgrade()
 
 upgrade_next_rs_node()
 {
-  choose_rs_node_upgrade
+  local NODE_TYPE=$1
+  choose_rs_node_upgrade ${NODE_TYPE}
+  if [ ${NODE_TYPE} = "PRIMARY" ]; then
+    ${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${UPGRADE_PORT} --quiet --eval 'rs.stepDown();' || true
+  fi
   echo -e "\n\n##### Upgrading ${HOST}:${UPGRADE_PORT} - ${UPGRADE_DATA} #####\n"
   stop_single ${OLD_VER} ${UPGRADE_DATA} ${UPGRADE_DATA}/${UPGRADE_PORT}-${OLD_VER}-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB_OLD_BINDIR} ${UPGRADE_PORT}
   start_single ${NEW_VER} ${UPGRADE_DATA} ${UPGRADE_DATA}/${UPGRADE_PORT}-${NEW_VER}-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB_NEW_BINDIR} ${UPGRADE_PORT} ${STORAGE_ENGINE} rs0
@@ -385,10 +402,10 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   #
   echo -e "\n\n##### Show info of node ${PRIMARY_PORT} after sysbench and before any upgrades #####\n"
   show_node_info ${PRIMARY_PORT} "beforeUpgrade"
-  upgrade_next_rs_node
+  upgrade_next_rs_node "SECONDARY"
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
-  upgrade_next_rs_node
+  upgrade_next_rs_node "SECONDARY"
   if [ "${BENCH_TOOL}" != "none" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
@@ -397,9 +414,11 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
-  upgrade_next_rs_node
+  upgrade_next_rs_node "PRIMARY"
+  update_primary_info
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${PRIMARY_PORT}/test --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+  sleep 10
   if [ "${BENCH_TOOL}" != "none" ]; then
-    update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
     run_bench bench_test3 ${PRIMARY_PORT} FALSE "afterAllUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
@@ -414,9 +433,19 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   #
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
+
+  NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion.version")
+  NODE2_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion.version")
+  NODE3_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion.version")
+  if [ "${NODE1_COMP}" != "${COMPATIBILITY}" -o "${NODE2_COMP}" != "${COMPATIBILITY}" -o "${NODE3_COMP}" != "${COMPATIBILITY}" ]; then
+    echo "Compatibility version is not ${COMPATIBILITY} on all nodes!"
+    exit 1
+  fi
+
   if [ "${LEAVE_RUNNING}" = "false" ]; then
     killall mongod
   fi
+
   diff --from-file=${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log ${NODE2_DATA}/${NODE2_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node2-dbhash-before.log ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log ${NODE2_DATA}/${NODE2_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node2-dbhash-after.log ${NODE3_DATA}/${NODE3_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node3-dbhash-after.log
   RESULT=$?
   if [ ${RESULT} -ne 0 ]; then
