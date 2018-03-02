@@ -448,11 +448,11 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   fi
   NODE2_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion.version")
   if [ -z "${NODE2_COMP}" ]; then
-    NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion")
+    NODE2_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion")
   fi
   NODE3_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion.version")
   if [ -z "${NODE3_COMP}" ]; then
-    NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion")
+    NODE3_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion")
   fi
   if [ "${NODE1_COMP}" != "${COMPATIBILITY}" -o "${NODE2_COMP}" != "${COMPATIBILITY}" -o "${NODE3_COMP}" != "${COMPATIBILITY}" ]; then
     echo "ERROR: Compatibility version is not ${COMPATIBILITY} on all nodes!"
