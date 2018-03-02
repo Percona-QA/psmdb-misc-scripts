@@ -21,7 +21,6 @@ killall -9 mongod > /dev/null 2>&1 || true
 killall -9 mongos > /dev/null 2>&1 || true
 sleep 5
 
-COMPATIBILITY="3.6"
 SCRIPT_PWD=$(cd `dirname $0` && pwd)
 WORKDIR=$1
 TEST_TYPE=$2
@@ -30,10 +29,15 @@ PSMDB_OLD_BINDIR=$4
 PSMDB_NEW_BINDIR=$5
 BASE_DATADIR="${WORKDIR}/data"
 MONGO_START_TIMEOUT=600
-MONGO_JAVA_DRIVER="3.6.1"
 YCSB_VER="0.12.0"
 
 # Parameters of parameterized build
+if [ -z "$COMPATIBILITY" ]; then
+  COMPATIBILITY="3.6"
+fi
+if [ -z "$MONGO_JAVA_DRIVER" ]; then
+  MONGO_JAVA_DRIVER="3.6.1"
+fi
 if [ -z "$MONGOD_EXTRA" ]; then
   MONGOD_EXTRA=""
 fi
