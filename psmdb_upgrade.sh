@@ -135,7 +135,9 @@ elif [ "${BENCH_TOOL}" != "none" ]; then
   exit 1
 fi
 
+###
 ### COMMON FUNCTIONS
+###
 archives() {
   rm -rf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
   mkdir ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
@@ -348,7 +350,9 @@ upgrade_next_rs_node()
   stop_single ${OLD_VER} ${UPGRADE_DATA} ${UPGRADE_DATA}/${UPGRADE_PORT}-${OLD_VER}-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB_OLD_BINDIR} ${UPGRADE_PORT}
   start_single ${NEW_VER} ${UPGRADE_DATA} ${UPGRADE_DATA}/${UPGRADE_PORT}-${NEW_VER}-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB_NEW_BINDIR} ${UPGRADE_PORT} ${STORAGE_ENGINE} rs0
 }
+###
 ### END COMMON FUNCTIONS
+###
 
 if [ ${TEST_TYPE} = "single" ]; then
   start_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-first-start.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
@@ -439,10 +443,27 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
 
   NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion.version")
+  if [ -z "${NODE1_COMP}" ]; then
+    NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion")
+  fi
   NODE2_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion.version")
+  if [ -z "${NODE2_COMP}" ]; then
+    NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion")
+  fi
   NODE3_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion.version")
+  if [ -z "${NODE3_COMP}" ]; then
+    NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion")
+  fi
   if [ "${NODE1_COMP}" != "${COMPATIBILITY}" -o "${NODE2_COMP}" != "${COMPATIBILITY}" -o "${NODE3_COMP}" != "${COMPATIBILITY}" ]; then
     echo "Compatibility version is not ${COMPATIBILITY} on all nodes!"
+    exit 1
+  fi
+
+  NODE1_VER=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --quiet --eval "db.serverStatus().version")
+  NODE2_VER=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --quiet --eval "db.serverStatus().version")
+  NODE3_VER=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --quiet --eval "db.serverStatus().version")
+  if [ "${NODE1_VER}" != "${NODE2_VER}" -o "${NODE2_VER}" != "${NODE3_VER}" ]; then
+    echo "Version is not the same on all nodes!"
     exit 1
   fi
 
