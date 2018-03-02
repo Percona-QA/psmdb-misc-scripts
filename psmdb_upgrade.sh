@@ -455,16 +455,20 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion")
   fi
   if [ "${NODE1_COMP}" != "${COMPATIBILITY}" -o "${NODE2_COMP}" != "${COMPATIBILITY}" -o "${NODE3_COMP}" != "${COMPATIBILITY}" ]; then
-    echo "Compatibility version is not ${COMPATIBILITY} on all nodes!"
+    echo "ERROR: Compatibility version is not ${COMPATIBILITY} on all nodes!"
     exit 1
+  else
+    echo "OK: Compatibility version is ${COMPATIBILITY} on all nodes!"
   fi
 
   NODE1_VER=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --quiet --eval "db.serverStatus().version")
   NODE2_VER=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --quiet --eval "db.serverStatus().version")
   NODE3_VER=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --quiet --eval "db.serverStatus().version")
   if [ "${NODE1_VER}" != "${NODE2_VER}" -o "${NODE2_VER}" != "${NODE3_VER}" ]; then
-    echo "Version is not the same on all nodes!"
+    echo "ERROR: Version is not the same on all nodes!"
     exit 1
+  else
+    echo "OK: Version is the same on all nodes: ${NODE1_VER}"
   fi
 
   if [ "${LEAVE_RUNNING}" = "false" ]; then
