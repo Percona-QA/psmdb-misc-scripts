@@ -5,7 +5,7 @@
 # and kills all mongo processes
 
 WORKDIR=$(pwd)
-INTERVAL=1800
+INTERVAL=4500
 REGEX='^[0-9]+$'
 
 if [ -z "$1" ]; then
