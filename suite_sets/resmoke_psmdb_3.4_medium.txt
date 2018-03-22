@@ -63,3 +63,4 @@ ssl|default
 ssl_special|default
 tool|wiredTiger|rocksdb
 unittests|default
+write_concern_majority_passthrough|wiredTiger|inMemory|rocksdb

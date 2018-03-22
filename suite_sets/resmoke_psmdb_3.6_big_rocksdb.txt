@@ -101,3 +101,4 @@ ssl|rocksdb
 ssl_special|rocksdb
 tool|rocksdb
  unittests|rocksdb
+write_concern_majority_passthrough|rocksdb
