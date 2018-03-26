@@ -1,36 +1,36 @@
-aggregation|mmapv1|wiredTiger|inMemory|rocksdb
+aggregation|mmapv1|wiredTiger|inMemory
 aggregation_auth|default
-aggregation_facet_unwind_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-aggregation_read_concern_majority_passthrough|wiredTiger|inMemory|rocksdb
-aggregation_sharded_collections_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-audit|mmapv1|wiredTiger|inMemory|rocksdb
-auth|mmapv1|wiredTiger|rocksdb
+aggregation_facet_unwind_passthrough|mmapv1|wiredTiger|inMemory
+aggregation_read_concern_majority_passthrough|wiredTiger|inMemory
+aggregation_sharded_collections_passthrough|mmapv1|wiredTiger|inMemory
+audit|mmapv1|wiredTiger|inMemory
+auth|mmapv1|wiredTiger
 auth --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-auth_audit|mmapv1|wiredTiger|rocksdb
+auth_audit|mmapv1|wiredTiger
 auth_audit --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-backup|wiredTiger|rocksdb
-bulk_gle_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-causally_consistent_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-causally_consistent_jscore_passthrough_auth|mmapv1|wiredTiger|inMemory|rocksdb
-change_streams|wiredTiger|inMemory|rocksdb
-change_streams_mongos_passthrough|wiredTiger|inMemory|rocksdb
-change_streams_secondary_reads|wiredTiger|rocksdb
-change_streams_sharded_collections_passthrough|wiredTiger|inMemory|rocksdb
-concurrency|mmapv1|wiredTiger|inMemory|rocksdb
-concurrency_replication|mmapv1|wiredTiger|inMemory|rocksdb
-concurrency_sharded|mmapv1|wiredTiger|inMemory|rocksdb
-concurrency_sharded_causal_consistency|mmapv1|wiredTiger|inMemory|rocksdb
-concurrency_sharded_causal_consistency_and_balancer|mmapv1|wiredTiger|inMemory|rocksdb
-concurrency_sharded_with_stepdowns|mmapv1|wiredTiger|inMemory|rocksdb
-concurrency_sharded_with_stepdowns_and_balancer|mmapv1|wiredTiger|inMemory|rocksdb
-!concurrency_simultaneous --suites=concurrency jstests/concurrency/fsm_all_simultaneous.js|mmapv1|wiredTiger|inMemory|rocksdb
-core|mmapv1|wiredTiger|inMemory|rocksdb
+backup|wiredTiger
+bulk_gle_passthrough|mmapv1|wiredTiger|inMemory
+causally_consistent_jscore_passthrough|mmapv1|wiredTiger|inMemory
+causally_consistent_jscore_passthrough_auth|mmapv1|wiredTiger|inMemory
+change_streams|wiredTiger|inMemory
+change_streams_mongos_passthrough|wiredTiger|inMemory
+change_streams_secondary_reads|wiredTiger
+change_streams_sharded_collections_passthrough|wiredTiger|inMemory
+concurrency|mmapv1|wiredTiger|inMemory
+concurrency_replication|mmapv1|wiredTiger|inMemory
+concurrency_sharded|mmapv1|wiredTiger|inMemory
+concurrency_sharded_causal_consistency|mmapv1|wiredTiger|inMemory
+concurrency_sharded_causal_consistency_and_balancer|mmapv1|wiredTiger|inMemory
+concurrency_sharded_with_stepdowns|mmapv1|wiredTiger|inMemory
+concurrency_sharded_with_stepdowns_and_balancer|mmapv1|wiredTiger|inMemory
+!concurrency_simultaneous --suites=concurrency jstests/concurrency/fsm_all_simultaneous.js|mmapv1|wiredTiger|inMemory
+core|mmapv1|wiredTiger|inMemory
 core_auth|default
-core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory|rocksdb
-core_minimum_batch_size|mmapv1|wiredTiger|inMemory|rocksdb
-core_op_query|mmapv1|wiredTiger|inMemory|rocksdb
-dbtest|mmapv1|wiredTiger|inMemory|rocksdb
-decimal|mmapv1|wiredTiger|inMemory|rocksdb
+core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
+core_minimum_batch_size|mmapv1|wiredTiger|inMemory
+core_op_query|mmapv1|wiredTiger|inMemory
+dbtest|mmapv1|wiredTiger|inMemory
+decimal|mmapv1|wiredTiger|inMemory
 disk_mmapv1|default
 disk_wiredtiger --excludeWithAnyTags=requires_mmapv1|default
 dur_jscore_passthrough|default
@@ -38,22 +38,22 @@ durability|default
 external_auth|default
 failpoints|default
 failpoints_auth|default
-gle_auth --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory|rocksdb
-gle_auth --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
-gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory|rocksdb
-gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
+gle_auth --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
+gle_auth --shellWriteMode=commands|mmapv1|wiredTiger|inMemory
+gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
+gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory
 integration_tests_replset|default
 integration_tests_sharded|default
 integration_tests_standalone|default
- jstestfuzz|mmapv1|wiredTiger|inMemory|rocksdb
- jstestfuzz_replication|wiredTiger|inMemory|rocksdb
- jstestfuzz_sharded|wiredTiger|inMemory|rocksdb
-json_schema|mmapv1|wiredTiger|inMemory|rocksdb
-knobs|mmapv1|wiredTiger|inMemory|rocksdb
-master_slave|mmapv1|wiredTiger|rocksdb
+ jstestfuzz|mmapv1|wiredTiger|inMemory
+ jstestfuzz_replication|wiredTiger|inMemory
+ jstestfuzz_sharded|wiredTiger|inMemory
+json_schema|mmapv1|wiredTiger|inMemory
+knobs|mmapv1|wiredTiger|inMemory
+master_slave|mmapv1|wiredTiger
 master_slave --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 master_slave_auth|default
-master_slave_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
+master_slave_jscore_passthrough|mmapv1|wiredTiger|inMemory
 mmap|mmapv1
 mongo_rocks|rocksdb
 mongos_test|default
@@ -61,7 +61,7 @@ multiversion --excludeWithAnyTags=requires_wiredtiger|mmapv1
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-multiversion --excludeWithAnyTags=requires_mmapv1|wiredTiger|rocksdb
+multiversion --excludeWithAnyTags=requires_mmapv1|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
@@ -69,62 +69,62 @@ multiversion_auth --excludeWithAnyTags=requires_wiredtiger|mmapv1
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-multiversion_multistorage_engine|mmapv1|wiredTiger|rocksdb
+multiversion_multistorage_engine|mmapv1|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-no_passthrough|mmapv1|wiredTiger|rocksdb
+no_passthrough|mmapv1|wiredTiger
 no_passthrough --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-no_passthrough_with_mongod|mmapv1|wiredTiger|rocksdb
+no_passthrough_with_mongod|mmapv1|wiredTiger
 no_passthrough_with_mongod --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-parallel|mmapv1|wiredTiger|inMemory|rocksdb
-parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory|rocksdb
-percona_no_passthrough_with_mongod|mmapv1|wiredTiger|inMemory|rocksdb
-ratelimit|mmapv1|wiredTiger|inMemory|rocksdb
-read_concern_majority_passthrough|wiredTiger|inMemory|rocksdb
-read_concern_linearizable_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-read_only|mmapv1|wiredTiger|rocksdb
-read_only_sharded|mmapv1|wiredTiger|rocksdb
+parallel|mmapv1|wiredTiger|inMemory
+parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
+percona_no_passthrough_with_mongod|mmapv1|wiredTiger|inMemory
+ratelimit|mmapv1|wiredTiger|inMemory
+read_concern_majority_passthrough|wiredTiger|inMemory
+read_concern_linearizable_passthrough|mmapv1|wiredTiger|inMemory
+read_only|mmapv1|wiredTiger
+read_only_sharded|mmapv1|wiredTiger
 redaction|default
-replica_sets|mmapv1|wiredTiger|rocksdb
+replica_sets|mmapv1|wiredTiger
 replica_sets --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 replica_sets_auth|default
-replica_sets_initsync_jscore_passthrough|mmapv1|wiredTiger|rocksdb
-replica_sets_initsync_static_jscore_passthrough|mmapv1|wiredTiger|rocksdb
-replica_sets_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-replica_sets_jscore_fcv34_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-replica_sets_kill_secondaries_jscore_passthrough|wiredTiger|rocksdb
-replica_sets_pv0|wiredTiger|rocksdb
+replica_sets_initsync_jscore_passthrough|mmapv1|wiredTiger
+replica_sets_initsync_static_jscore_passthrough|mmapv1|wiredTiger
+replica_sets_jscore_passthrough|mmapv1|wiredTiger|inMemory
+replica_sets_jscore_fcv34_passthrough|mmapv1|wiredTiger|inMemory
+replica_sets_kill_secondaries_jscore_passthrough|wiredTiger
+replica_sets_pv0|wiredTiger
 replica_sets_pv0 --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-replica_sets_resync_static_jscore_passthrough|mmapv1|wiredTiger|rocksdb
-replica_sets_rollback_refetch_no_uuid|wiredTiger|rocksdb
-retryable_writes_jscore_passthrough|wiredTiger|inMemory|rocksdb
-retryable_writes_jscore_stepdown_passthrough|wiredTiger|inMemory|rocksdb
-serial_run|mmapv1|wiredTiger|inMemory|rocksdb
-session_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-sharded_causally_consistent_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-sharded_collections_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-sharding|mmapv1|wiredTiger|rocksdb
+replica_sets_resync_static_jscore_passthrough|mmapv1|wiredTiger
+replica_sets_rollback_refetch_no_uuid|wiredTiger
+retryable_writes_jscore_passthrough|wiredTiger|inMemory
+retryable_writes_jscore_stepdown_passthrough|wiredTiger|inMemory
+serial_run|mmapv1|wiredTiger|inMemory
+session_jscore_passthrough|mmapv1|wiredTiger|inMemory
+sharded_causally_consistent_jscore_passthrough|mmapv1|wiredTiger|inMemory
+sharded_collections_jscore_passthrough|mmapv1|wiredTiger|inMemory
+sharding|mmapv1|wiredTiger
 sharding --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|rocksdb
+sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger
 sharding --shellReadMode=legacy --excludeWithAnyTags=requires_persistence,requires_journaling,requires_find_command|inMemory
 sharding_auth|default
-sharding_auth_audit|mmapv1|wiredTiger|rocksdb
+sharding_auth_audit|mmapv1|wiredTiger
 sharding_auth_audit --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-sharding_continuous_config_stepdown|mmapv1|wiredTiger|rocksdb
+sharding_continuous_config_stepdown|mmapv1|wiredTiger
 sharding_continuous_config_stepdown --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory|rocksdb
-sharding_gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory|rocksdb
-sharding_jscore_op_query_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-sharding_jscore_passthrough|mmapv1|wiredTiger|inMemory|rocksdb
-sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory|rocksdb
+sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
+sharding_gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory
+sharding_jscore_op_query_passthrough|mmapv1|wiredTiger|inMemory
+sharding_jscore_passthrough|mmapv1|wiredTiger|inMemory
+sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
 sharding_last_stable_mongos_and_mixed_shards|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-slow1|mmapv1|wiredTiger|inMemory|rocksdb
+slow1|mmapv1|wiredTiger|inMemory
 ssl|default
 ssl_special|default
-tool|mmapv1|wiredTiger|inMemory|rocksdb
+tool|mmapv1|wiredTiger|inMemory
  unittests|default
-write_concern_majority_passthrough|wiredTiger|inMemory|rocksdb
+write_concern_majority_passthrough|wiredTiger|inMemory
