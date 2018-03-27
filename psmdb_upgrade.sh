@@ -168,7 +168,12 @@ start_single()
 
   echo "Starting node on port ${FUN_NODE_PORT} storage engine: ${FUN_NODE_SE}"
 
-  ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --logpath ${FUN_LOG_ERR} --port ${FUN_NODE_PORT} --logappend --fork  --storageEngine ${FUN_NODE_SE} ${REPL_SET} ${MONGOD_EXTRA} > ${FUN_LOG_ERR} 2>&1 &
+  if [ ${FUN_NODE_VER:0:3} = "3.6" -a ${FUN_NODE_SE} = "rocksdb" ]; then
+    ROCKSDB_EXTRA="--useDeprecatedMongoRocks"
+  else
+    ROCKSDB_EXTRA=""
+  fi
+  ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --logpath ${FUN_LOG_ERR} --port ${FUN_NODE_PORT} --logappend --fork  --storageEngine ${FUN_NODE_SE} ${REPL_SET} ${MONGOD_EXTRA} ${ROCKSDB_EXTRA} > ${FUN_LOG_ERR} 2>&1 &
 
   for X in $(seq 0 ${MONGO_START_TIMEOUT}); do
     sleep 1
