@@ -14,14 +14,14 @@ bulk_gle_passthrough --excludeWithAnyTags=requires_fcv36|rocksdb
  change_streams_mongos_passthrough --excludeWithAnyTags=requires_fcv36|rocksdb
  change_streams_secondary_reads --excludeWithAnyTags=requires_fcv36|rocksdb
  change_streams_sharded_collections_passthrough --excludeWithAnyTags=requires_fcv36|rocksdb
-concurrency --excludeWithAnyTags=requires_fcv36|rocksdb
-concurrency_replication --excludeWithAnyTags=requires_fcv36|rocksdb
-concurrency_sharded --excludeWithAnyTags=requires_fcv36|rocksdb
-concurrency_sharded_causal_consistency --excludeWithAnyTags=requires_fcv36|rocksdb
-concurrency_sharded_causal_consistency_and_balancer --excludeWithAnyTags=requires_fcv36|rocksdb
-concurrency_sharded_with_stepdowns --excludeWithAnyTags=requires_fcv36|rocksdb
-concurrency_sharded_with_stepdowns_and_balancer --excludeWithAnyTags=requires_fcv36|rocksdb
-!concurrency_simultaneous --suites=concurrency jstests/concurrency/fsm_all_simultaneous.js|rocksdb
+ concurrency --excludeWithAnyTags=requires_fcv36|rocksdb
+ concurrency_replication --excludeWithAnyTags=requires_fcv36|rocksdb
+ concurrency_sharded --excludeWithAnyTags=requires_fcv36|rocksdb
+ concurrency_sharded_causal_consistency --excludeWithAnyTags=requires_fcv36|rocksdb
+ concurrency_sharded_causal_consistency_and_balancer --excludeWithAnyTags=requires_fcv36|rocksdb
+ concurrency_sharded_with_stepdowns --excludeWithAnyTags=requires_fcv36|rocksdb
+ concurrency_sharded_with_stepdowns_and_balancer --excludeWithAnyTags=requires_fcv36|rocksdb
+ !concurrency_simultaneous --suites=concurrency jstests/concurrency/fsm_all_simultaneous.js|rocksdb
 core --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
 core_auth --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command,requires_fcv36,rocks_requires_fcv36|rocksdb
@@ -40,7 +40,7 @@ gle_auth_basics_passthrough --shellWriteMode=commands --excludeWithAnyTags=requi
 integration_tests_replset|rocksdb
 integration_tests_sharded|rocksdb
 integration_tests_standalone|rocksdb
-json_schema --excludeWithAnyTags=requires_fcv36|rocksdb
+ json_schema --excludeWithAnyTags=requires_fcv36|rocksdb
 knobs|rocksdb
 master_slave --excludeWithAnyTags=requires_fcv36|rocksdb
 master_slave_auth --excludeWithAnyTags=requires_fcv36|rocksdb
@@ -66,32 +66,32 @@ read_concern_linearizable_passthrough --excludeWithAnyTags=requires_fcv36,rocks_
 read_only --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
  read_only_sharded --excludeWithAnyTags=requires_fcv36|rocksdb
 redaction --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
- replica_sets --excludeWithAnyTags=requires_fcv36|rocksdb
- replica_sets_auth --excludeWithAnyTags=requires_fcv36|rocksdb
+replica_sets --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
+replica_sets_auth --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
 replica_sets_initsync_jscore_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
 replica_sets_initsync_static_jscore_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
 replica_sets_jscore_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
 replica_sets_jscore_fcv34_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
 replica_sets_kill_secondaries_jscore_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
- replica_sets_pv0 --excludeWithAnyTags=requires_fcv36|rocksdb
+replica_sets_pv0 --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
 replica_sets_resync_static_jscore_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
 replica_sets_rollback_refetch_no_uuid --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
  retryable_writes_jscore_passthrough --excludeWithAnyTags=requires_fcv36|rocksdb
  retryable_writes_jscore_stepdown_passthrough --excludeWithAnyTags=requires_fcv36|rocksdb
 serial_run|rocksdb
  session_jscore_passthrough --excludeWithAnyTags=requires_fcv36|rocksdb
- sharded_causally_consistent_jscore_passthrough --excludeWithAnyTags=requires_fcv36|rocksdb
- sharded_collections_jscore_passthrough --excludeWithAnyTags=requires_fcv36|rocksdb
- sharding --excludeWithAnyTags=requires_fcv36|rocksdb
- sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command,requires_fcv36|rocksdb
- sharding_auth --excludeWithAnyTags=requires_fcv36|rocksdb
- sharding_auth_audit --excludeWithAnyTags=requires_fcv36|rocksdb
- sharding_continuous_config_stepdown --excludeWithAnyTags=requires_fcv36|rocksdb
- sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command,requires_fcv36|rocksdb
- sharding_gle_auth_basics_passthrough --shellWriteMode=commands --excludeWithAnyTags=requires_fcv36|rocksdb
- sharding_jscore_op_query_passthrough --excludeWithAnyTags=requires_fcv36|rocksdb
- sharding_jscore_passthrough --excludeWithAnyTags=requires_fcv36|rocksdb
- sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legacy --excludeWithAnyTags=requires_find_command,requires_fcv36|rocksdb
+ sharded_causally_consistent_jscore_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharded_collections_jscore_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharding --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command,requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharding_auth --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharding_auth_audit --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharding_continuous_config_stepdown --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command,requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharding_gle_auth_basics_passthrough --shellWriteMode=commands --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharding_jscore_op_query_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharding_jscore_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
+ sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legacy --excludeWithAnyTags=requires_find_command,requires_fcv36,rocks_requires_fcv36|rocksdb
 sharding_last_stable_mongos_and_mixed_shards --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
