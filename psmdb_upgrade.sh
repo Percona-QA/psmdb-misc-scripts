@@ -405,6 +405,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
     run_bench bench_test ${PRIMARY_PORT} FALSE "beforeUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
   fi
+  sleep 10
   # create db hashes
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
@@ -429,7 +430,11 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
   upgrade_next_rs_node "PRIMARY"
   update_primary_info
-  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${PRIMARY_PORT}/test --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+  if [ "${STORAGE_ENGINE}" != "rocksdb" -o "${COMPATIBILITY}" != "3.6" ]; then
+    ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${PRIMARY_PORT}/test --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+  else
+    COMPATIBILITY="3.4"
+  fi
   sleep 10
   if [ "${BENCH_TOOL}" != "none" ]; then
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
