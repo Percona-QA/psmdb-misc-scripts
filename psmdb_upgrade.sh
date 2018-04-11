@@ -384,10 +384,6 @@ if [ ${TEST_TYPE} = "single" ]; then
   #
   echo -e "\n\n##### Show info of node ${NODE1_PORT} after upgrade #####\n"
   show_node_info ${NODE1_PORT} "afterUpgrade" | tee ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-nodeInfo-afterUpgrade.log
-  if [ "${LEAVE_RUNNING}" = "false" ]; then
-    stop_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-final-stop.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT}
-  fi
-
   NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion.version")
   if [ -z "${NODE1_COMP}" ]; then
     NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion")
@@ -398,6 +394,10 @@ if [ ${TEST_TYPE} = "single" ]; then
   else
     echo "OK: Compatibility version is ${COMPATIBILITY} on all nodes!"
   fi
+  if [ "${LEAVE_RUNNING}" = "false" ]; then
+    stop_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-final-stop.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT}
+  fi
+
   diff ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
   RESULT=$?
   if [ ${RESULT} -ne 0 ]; then
