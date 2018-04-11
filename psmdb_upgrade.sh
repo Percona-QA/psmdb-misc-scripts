@@ -373,6 +373,7 @@ if [ ${TEST_TYPE} = "single" ]; then
   show_node_info ${NODE1_PORT} "beforeUpgrade" | tee ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-nodeInfo-beforeUpgrade.log
   stop_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT}
   start_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/admin --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
   import_test_data ${NEW_VER} ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-import.log
   if [ "${BENCH_TOOL}" != "none" ]; then
     run_bench bench_test2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
@@ -385,6 +386,17 @@ if [ ${TEST_TYPE} = "single" ]; then
   show_node_info ${NODE1_PORT} "afterUpgrade" | tee ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-nodeInfo-afterUpgrade.log
   if [ "${LEAVE_RUNNING}" = "false" ]; then
     stop_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-final-stop.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT}
+  fi
+
+  NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion.version")
+  if [ -z "${NODE1_COMP}" ]; then
+    NODE1_COMP=$(${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --quiet --eval "db.adminCommand({ getParameter: 1, featureCompatibilityVersion: 1 }).featureCompatibilityVersion")
+  fi
+  if [ "${NODE1_COMP}" != "${COMPATIBILITY}" ]; then
+    echo "ERROR: Compatibility version is not ${COMPATIBILITY} on all nodes!"
+    exit 1
+  else
+    echo "OK: Compatibility version is ${COMPATIBILITY} on all nodes!"
   fi
   diff ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
   RESULT=$?
