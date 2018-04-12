@@ -14,8 +14,6 @@ fi
 
 ulimit -c unlimited
 
-set -e
-
 #Kill mongod and mongos processes
 killall -9 mongod > /dev/null 2>&1 || true
 killall -9 mongos > /dev/null 2>&1 || true
@@ -29,14 +27,14 @@ PSMDB_OLD_BINDIR=$4
 PSMDB_NEW_BINDIR=$5
 BASE_DATADIR="${WORKDIR}/data"
 MONGO_START_TIMEOUT=600
-YCSB_VER="0.12.0"
+YCSB_VER="0.13.0"
 
 # Parameters of parameterized build
 if [ -z "$COMPATIBILITY" ]; then
   COMPATIBILITY="3.6"
 fi
 if [ -z "$MONGO_JAVA_DRIVER" ]; then
-  MONGO_JAVA_DRIVER="3.6.1"
+  MONGO_JAVA_DRIVER="3.6.3"
 fi
 if [ -z "$MONGOD_EXTRA" ]; then
   MONGOD_EXTRA=""
