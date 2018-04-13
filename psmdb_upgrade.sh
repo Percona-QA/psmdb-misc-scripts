@@ -371,7 +371,13 @@ if [ ${TEST_TYPE} = "single" ]; then
   show_node_info ${NODE1_PORT} "beforeUpgrade" | tee ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-nodeInfo-beforeUpgrade.log
   stop_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT}
   start_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
-  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/admin --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+
+  if [ "${STORAGE_ENGINE}" != "rocksdb" -o "${COMPATIBILITY}" != "3.6" ]; then
+    ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/admin --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+  else
+    COMPATIBILITY="3.4"
+  fi
+
   import_test_data ${NEW_VER} ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-import.log
   if [ "${BENCH_TOOL}" != "none" ]; then
     run_bench bench_test2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
