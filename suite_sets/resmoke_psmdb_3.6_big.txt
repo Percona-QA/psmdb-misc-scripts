@@ -21,8 +21,8 @@ concurrency_replication|mmapv1|wiredTiger|inMemory
 concurrency_sharded|mmapv1|wiredTiger|inMemory
 concurrency_sharded_causal_consistency|mmapv1|wiredTiger|inMemory
 concurrency_sharded_causal_consistency_and_balancer|mmapv1|wiredTiger|inMemory
-concurrency_sharded_with_stepdowns|mmapv1|wiredTiger|inMemory
-concurrency_sharded_with_stepdowns_and_balancer|mmapv1|wiredTiger|inMemory
+concurrency_sharded_with_stepdowns|wiredTiger|inMemory
+concurrency_sharded_with_stepdowns_and_balancer|wiredTiger|inMemory
 !concurrency_simultaneous --suites=concurrency jstests/concurrency/fsm_all_simultaneous.js|mmapv1|wiredTiger|inMemory
 core|mmapv1|wiredTiger|inMemory
 core_auth|default
