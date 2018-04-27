@@ -4,7 +4,6 @@
 NJOBS=""
 OPT_TARGETS=""
 SCONS_OPTS="--release --opt=on"
-ROCKSDB_TARGET="static_lib"
 CWD=$(pwd)
 TARBALL_SUFFIX=""
 
@@ -25,7 +24,6 @@ do
   -d | --debug )
     shift
     SCONS_OPTS="${SCONS_OPTS} --disable-warnings-as-errors --dbg=on"
-    ROCKSDB_TARGET="dbg"
     TARBALL_SUFFIX="${TARBALL_SUFFIX}-dbg"
     echo "Debug build selected..."
     ;;  
@@ -108,22 +106,10 @@ chmod +x ${TOOLSDIR_ABS}/set_tools_revision.sh
 export CFLAGS="${CFLAGS:-} -fno-omit-frame-pointer"
 export CXXFLAGS="${CFLAGS}"
 export INSTALLDIR=${PSMDIR_ABS}/install
-export PORTABLE=1
-export USE_SSE=1
-#
-# static librocksdb.a
-pushd ${PSMDIR}/src/third_party/rocksdb
-make -j${NJOBS} EXTRA_CFLAGS='-fPIC -DLZ4 -I../lz4-r131 -DSNAPPY -I../snappy-1.1.3 -DHAVE_SSE42' EXTRA_CXXFLAGS='-fPIC -DLZ4 -I../lz4-r131 -DSNAPPY -I../snappy-1.1.3 -DHAVE_SSE42' DISABLE_JEMALLOC=1 ${ROCKSDB_TARGET}
-rm -rf ${INSTALLDIR}
-mkdir -p ${INSTALLDIR}/include
-mkdir -p ${INSTALLDIR}/bin
-mkdir -p ${INSTALLDIR}/lib
-make install-static INSTALL_PATH=${INSTALLDIR}
-popd
 #
 # Finally build Percona Server for MongoDB with SCons
 cd ${PSMDIR_ABS}
-buildscripts/scons.py CC=${CC} CXX=${CXX} --ssl ${SCONS_OPTS} -j${NJOBS} --use-sasl-client --wiredtiger --audit --rocksdb --inmemory --hotbackup ${ASAN_OPTIONS} CPPPATH=${INSTALLDIR}/include LIBPATH=${INSTALLDIR}/lib ${PSM_TARGETS}
+buildscripts/scons.py CC=${CC} CXX=${CXX} --ssl ${SCONS_OPTS} -j${NJOBS} --use-sasl-client --wiredtiger --audit --inmemory --hotbackup ${ASAN_OPTIONS} CPPPATH=${INSTALLDIR}/include LIBPATH=${INSTALLDIR}/lib ${PSM_TARGETS}
 #
 # Build mongo tools
 cd ${TOOLSDIR_ABS}
