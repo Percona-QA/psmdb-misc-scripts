@@ -87,3 +87,4 @@ ssl|default
 ssl_special|default
 tool|mmapv1|wiredTiger|inMemory|PerconaFT|rocksdb
 unittests|default
+write_concern_majority_passthrough|wiredTiger|PerconaFT|rocksdb
