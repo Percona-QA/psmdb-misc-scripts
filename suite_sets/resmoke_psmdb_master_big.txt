@@ -58,19 +58,19 @@ mmap|mmapv1
 mongos_test|default
 multiversion --excludeWithAnyTags=requires_wiredtiger|mmapv1
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4" "3.6"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 multiversion --excludeWithAnyTags=requires_mmapv1|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4" "3.6"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 multiversion_auth --excludeWithAnyTags=requires_wiredtiger|mmapv1
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4" "3.6"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 multiversion_multistorage_engine|mmapv1|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4" "3.6"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 no_passthrough|mmapv1|wiredTiger
 no_passthrough --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
@@ -119,7 +119,7 @@ sharding_jscore_passthrough|mmapv1|wiredTiger|inMemory
 sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
 sharding_last_stable_mongos_and_mixed_shards|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4"
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition "base" --platformArchitecture "linux_x86_64" "3.0" "3.2" "3.4" "3.6"
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 slow1|mmapv1|wiredTiger|inMemory
 ssl|default
