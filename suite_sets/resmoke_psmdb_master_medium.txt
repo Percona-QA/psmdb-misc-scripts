@@ -9,7 +9,7 @@ bulk_gle_passthrough|wiredTiger
 concurrency|wiredTiger
 concurrency_replication|wiredTiger
 concurrency_sharded|wiredTiger
-!concurrency_simultaneous --suites=concurrency jstests/concurrency/fsm_all_simultaneous.js|wiredTiger
+concurrency_simultaneous|mmapv1|wiredTiger|inMemory
 core|mmapv1|wiredTiger|inMemory
 core_auth|default
 core_minimum_batch_size|mmapv1|wiredTiger|inMemory
@@ -31,10 +31,7 @@ integration_tests_sharded|default
 integration_tests_standalone|default
 json_schema|default
 knobs|wiredTiger
-master_slave|wiredTiger
-master_slave --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-master_slave_auth|default
-master_slave_jscore_passthrough|wiredTiger|inMemory
+ logging_perf|mmapv1|wiredTiger|inMemory
 mongos_test|default
 no_passthrough|wiredTiger
 no_passthrough_with_mongod|wiredTiger

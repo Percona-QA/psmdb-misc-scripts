@@ -9,6 +9,7 @@ auth --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 auth_audit|mmapv1|wiredTiger
 auth_audit --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 backup|wiredTiger
+benchmarks --jobs=1 --perfReportFile=perf.json|default
 bulk_gle_passthrough|mmapv1|wiredTiger|inMemory
 causally_consistent_jscore_passthrough|mmapv1|wiredTiger|inMemory
 causally_consistent_jscore_passthrough_auth|mmapv1|wiredTiger|inMemory
@@ -23,7 +24,7 @@ concurrency_sharded_causal_consistency|mmapv1|wiredTiger|inMemory
 concurrency_sharded_causal_consistency_and_balancer|mmapv1|wiredTiger|inMemory
 concurrency_sharded_with_stepdowns|wiredTiger|inMemory
 concurrency_sharded_with_stepdowns_and_balancer|wiredTiger|inMemory
-!concurrency_simultaneous --suites=concurrency jstests/concurrency/fsm_all_simultaneous.js|mmapv1|wiredTiger|inMemory
+concurrency_simultaneous|mmapv1|wiredTiger|inMemory
 core|mmapv1|wiredTiger|inMemory
 core_auth|default
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
@@ -50,10 +51,7 @@ integration_tests_standalone|default
  jstestfuzz_sharded|wiredTiger|inMemory
 json_schema|mmapv1|wiredTiger|inMemory
 knobs|mmapv1|wiredTiger|inMemory
-master_slave|mmapv1|wiredTiger
-master_slave --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-master_slave_auth|default
-master_slave_jscore_passthrough|mmapv1|wiredTiger|inMemory
+ logging_perf|mmapv1|wiredTiger|inMemory
 mmap|mmapv1
 mongos_test|default
 multiversion --excludeWithAnyTags=requires_wiredtiger|mmapv1
@@ -92,9 +90,6 @@ replica_sets_initsync_jscore_passthrough|mmapv1|wiredTiger
 replica_sets_initsync_static_jscore_passthrough|mmapv1|wiredTiger
 replica_sets_jscore_passthrough|mmapv1|wiredTiger|inMemory
 replica_sets_kill_secondaries_jscore_passthrough|wiredTiger
-replica_sets_pv0|wiredTiger
-replica_sets_pv0 --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-replica_sets_resync_static_jscore_passthrough|mmapv1|wiredTiger
 replica_sets_rollback_refetch_no_uuid|wiredTiger
 retryable_writes_jscore_passthrough|wiredTiger|inMemory
 retryable_writes_jscore_stepdown_passthrough|wiredTiger|inMemory
