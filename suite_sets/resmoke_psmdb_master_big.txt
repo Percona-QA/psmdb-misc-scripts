@@ -10,6 +10,8 @@ auth_audit|mmapv1|wiredTiger
 auth_audit --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 backup|wiredTiger
 benchmarks --jobs=1 --perfReportFile=perf.json|default
+benchmarks_sharding --jobs=1 --perfReportFile=perf_sharding.json|default
+buildscripts_test|default
 bulk_gle_passthrough|mmapv1|wiredTiger|inMemory
 causally_consistent_jscore_passthrough|mmapv1|wiredTiger|inMemory
 causally_consistent_jscore_passthrough_auth|mmapv1|wiredTiger|inMemory
@@ -30,6 +32,7 @@ core_auth|default
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
 core_minimum_batch_size|mmapv1|wiredTiger|inMemory
 core_op_query|mmapv1|wiredTiger|inMemory
+core_txns|wiredTiger|inMemory
 dbtest|mmapv1|wiredTiger|inMemory
 decimal|mmapv1|wiredTiger|inMemory
 disk_mmapv1|default

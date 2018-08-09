@@ -5,6 +5,7 @@ audit|wiredTiger
 auth|default
 auth_audit|default
 backup|wiredTiger
+buildscripts_test|default
 bulk_gle_passthrough|wiredTiger
 concurrency|wiredTiger
 concurrency_replication|wiredTiger
@@ -14,6 +15,7 @@ core|mmapv1|wiredTiger|inMemory
 core_auth|default
 core_minimum_batch_size|mmapv1|wiredTiger|inMemory
 core_op_query|wiredTiger|inMemory
+core_txns|wiredTiger|inMemory
 dbtest|wiredTiger
 decimal|wiredTiger|inMemory
 disk_mmapv1|default
