@@ -50,6 +50,7 @@ while true; do
       LOAD=$(uptime|grep -o "[0-9]*\.[0-9]*$"|cut -f 1 -d '.')
       if [ ${LOAD} -lt 1 ]; then
         write_log
+        rm -rf /tmp/mongodb*.sock
         killall -9 mongod mongos mongo >/dev/null 2>&1
         sleep 300
         save_state
