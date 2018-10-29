@@ -9,7 +9,7 @@ buildscripts_test|default
 bulk_gle_passthrough|wiredTiger
 concurrency|wiredTiger
 concurrency_replication|wiredTiger
-concurrency_sharded|wiredTiger
+concurrency_sharded_replication|wiredTiger
 concurrency_simultaneous|mmapv1|wiredTiger|inMemory
 core|mmapv1|wiredTiger|inMemory
 core_auth|default
