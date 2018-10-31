@@ -78,7 +78,8 @@ multiversion_multistorage_engine|mmapv1|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4 3.6
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-no_passthrough|mmapv1|wiredTiger
+no_passthrough --excludeWithAnyTags=requires_wiredtiger,uses_transactions,requires_document_locking|mmapv1
+no_passthrough|wiredTiger
 no_passthrough --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
 no_passthrough_with_mongod|mmapv1|wiredTiger
 no_passthrough_with_mongod --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
