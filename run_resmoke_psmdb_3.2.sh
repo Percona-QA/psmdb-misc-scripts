@@ -156,7 +156,8 @@ for suite in "${SUITES[@]}"; do
           echo "Suite Definition: ${suiteRawName}${suiteOptions:+ ${suiteOptions}}|${suiteElement}" | tee -a "${logOutputFile}"
           [ "${suiteRunSet}" == "default" ] && resmokeParams=${RESMOKE_DEFAULT}
           [ "${suiteRunSet}" == "auth" ] && resmokeParams=${RESMOKE_AUTH}
-          resmokeParams="${RESMOKE_BASE} ${resmokeParams} ${suiteOptions} ${suiteRunSetOptions}"
+          excludeTagsVar="RESMOKE_EXCLUDE_${DEFAULT_ENGINE}"
+          resmokeParams="${RESMOKE_BASE} ${resmokeParams} ${!excludeTagsVar} ${suiteOptions} ${suiteRunSetOptions}"
           if $useSuitesOption; then
             resmokeParams="${resmokeParams} --suites=${suite}"
           fi
@@ -193,7 +194,8 @@ for suite in "${SUITES[@]}"; do
               fi
               echo "-----------------" | tee -a "${logOutputFile}"
               echo "Suite Definition: ${suiteDefinition}${suiteOptions:+ ${suiteOptions}}" | tee -a "${logOutputFile}"
-              resmokeParams="${RESMOKE_BASE} --storageEngine=${engine} ${RESMOKE_SE} ${suiteOptions} ${suiteRunSetOptions}"
+              excludeTagsVar="RESMOKE_EXCLUDE_${engine}"
+              resmokeParams="${RESMOKE_BASE} --storageEngine=${engine} ${RESMOKE_SE} ${!excludeTagsVar} ${suiteOptions} ${suiteRunSetOptions}"
               if $useSuitesOption; then
                 resmokeParams="${resmokeParams} --suites=${suite}"
               fi
