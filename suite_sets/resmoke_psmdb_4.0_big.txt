@@ -3,14 +3,13 @@ aggregation_auth|default
 aggregation_facet_unwind_passthrough|mmapv1|wiredTiger|inMemory
 aggregation_read_concern_majority_passthrough|wiredTiger|inMemory
 aggregation_sharded_collections_passthrough|mmapv1|wiredTiger|inMemory
-aggregation_tde_cbc|default
-aggregation_tde_gcm|default
 audit|mmapv1|wiredTiger|inMemory
 auth|mmapv1|wiredTiger|inMemory
 auth_audit|mmapv1|wiredTiger|inMemory
 backup|wiredTiger
-backup_tde_cbc|default
-backup_tde_gcm|default
+benchmarks --jobs=1 --perfReportFile=perf.json|default
+benchmarks_sharding --jobs=1 --perfReportFile=perf_sharding.json|default
+buildscripts_test|default
 bulk_gle_passthrough|mmapv1|wiredTiger|inMemory
 causally_consistent_jscore_passthrough|mmapv1|wiredTiger|inMemory
 causally_consistent_jscore_passthrough_auth|mmapv1|wiredTiger|inMemory
@@ -20,19 +19,19 @@ change_streams_secondary_reads|wiredTiger
 change_streams_sharded_collections_passthrough|wiredTiger|inMemory
 concurrency|mmapv1|wiredTiger|inMemory
 concurrency_replication|mmapv1|wiredTiger|inMemory
-concurrency_sharded|mmapv1|wiredTiger|inMemory
 concurrency_sharded_causal_consistency|mmapv1|wiredTiger|inMemory
 concurrency_sharded_causal_consistency_and_balancer|mmapv1|wiredTiger|inMemory
+concurrency_sharded_replication|wiredTiger|inMemory
+concurrency_sharded_replication_with_balancer|wiredTiger|inMemory
 concurrency_sharded_with_stepdowns|wiredTiger|inMemory
 concurrency_sharded_with_stepdowns_and_balancer|wiredTiger|inMemory
-!concurrency_simultaneous --suites=concurrency jstests/concurrency/fsm_all_simultaneous.js|mmapv1|wiredTiger|inMemory
+concurrency_simultaneous|mmapv1|wiredTiger|inMemory
 core|mmapv1|wiredTiger|inMemory
 core_auth|default
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
 core_minimum_batch_size|mmapv1|wiredTiger|inMemory
 core_op_query|mmapv1|wiredTiger|inMemory
-core_tde_cbc|default
-core_tde_gcm|default
+core_txns|wiredTiger|inMemory
 dbtest|mmapv1|wiredTiger|inMemory
 decimal|mmapv1|wiredTiger|inMemory
 disk_mmapv1|default
@@ -54,23 +53,20 @@ integration_tests_standalone|default
  jstestfuzz_sharded|wiredTiger|inMemory
 json_schema|mmapv1|wiredTiger|inMemory
 knobs|mmapv1|wiredTiger|inMemory
-master_slave|mmapv1|wiredTiger|inMemory
-master_slave_auth|default
-master_slave_jscore_passthrough|mmapv1|wiredTiger|inMemory
+ logging_perf|mmapv1|wiredTiger|inMemory
 mmap|mmapv1
-mongo_rocks|rocksdb
 mongos_test|default
 multiversion|mmapv1|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 multiversion_auth|mmapv1|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 multiversion_multistorage_engine|mmapv1|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 no_passthrough|mmapv1|wiredTiger|inMemory
 no_passthrough_with_mongod|mmapv1|wiredTiger|inMemory
@@ -88,13 +84,7 @@ replica_sets_auth|default
 replica_sets_initsync_jscore_passthrough|mmapv1|wiredTiger
 replica_sets_initsync_static_jscore_passthrough|mmapv1|wiredTiger
 replica_sets_jscore_passthrough|mmapv1|wiredTiger|inMemory
-replica_sets_jscore_fcv34_passthrough|mmapv1|wiredTiger|inMemory
 replica_sets_kill_secondaries_jscore_passthrough|wiredTiger
-replica_sets_pv0|wiredTiger|inMemory
-replica_sets_resync_static_jscore_passthrough|mmapv1|wiredTiger
-replica_sets_rollback_refetch_no_uuid|wiredTiger
-replica_sets_tde_cbc|default
-replica_sets_tde_gcm|default
 retryable_writes_jscore_passthrough|wiredTiger|inMemory
 retryable_writes_jscore_stepdown_passthrough|wiredTiger|inMemory
 serial_run|mmapv1|wiredTiger|inMemory
@@ -113,10 +103,8 @@ sharding_jscore_passthrough|mmapv1|wiredTiger|inMemory
 sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
 sharding_last_stable_mongos_and_mixed_shards|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-sharding_tde_cbc|default
-sharding_tde_gcm|default
 slow1|mmapv1|wiredTiger|inMemory
 ssl|default
 ssl_special|default

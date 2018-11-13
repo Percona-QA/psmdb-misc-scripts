@@ -19,7 +19,7 @@ core_txns|wiredTiger|inMemory
 dbtest|wiredTiger
 decimal|wiredTiger|inMemory
 disk_mmapv1|default
-disk_wiredtiger --excludeWithAnyTags=requires_mmapv1|default
+disk_wiredtiger|default
 dur_jscore_passthrough|default
 durability|default
 external_auth|default
