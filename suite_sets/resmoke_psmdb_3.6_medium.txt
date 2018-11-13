@@ -17,7 +17,7 @@ core_op_query|wiredTiger|rocksdb|inMemory
 dbtest|wiredTiger|rocksdb
 decimal|wiredTiger|rocksdb|inMemory
 disk_mmapv1|default
-disk_wiredtiger --excludeWithAnyTags=requires_mmapv1|default
+disk_wiredtiger|default
 dur_jscore_passthrough|default
 durability|default
 external_auth|default
@@ -31,8 +31,7 @@ integration_tests_sharded|default
 integration_tests_standalone|default
 json_schema|default
 knobs|wiredTiger|rocksdb
-master_slave|wiredTiger|rocksdb
-master_slave --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
+master_slave|wiredTiger|rocksdb|inMemory
 master_slave_auth|default
 master_slave_jscore_passthrough|wiredTiger|inMemory|rocksdb
 mongo_rocks|rocksdb

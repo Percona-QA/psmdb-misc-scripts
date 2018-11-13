@@ -4,10 +4,8 @@ aggregation_facet_unwind_passthrough|wiredTiger|inMemory
 aggregation_read_concern_majority_passthrough|wiredTiger|inMemory
 aggregation_sharded_collections_passthrough|wiredTiger|inMemory
 audit|wiredTiger|inMemory
-auth|wiredTiger
-auth --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-auth_audit|wiredTiger
-auth_audit --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
+auth|wiredTiger|inMemory
+auth_audit|wiredTiger|inMemory
 backup|wiredTiger
 benchmarks --jobs=1 --perfReportFile=perf.json|default
 benchmarks_sharding --jobs=1 --perfReportFile=perf_sharding.json|default
@@ -37,7 +35,7 @@ core_txns|wiredTiger|inMemory
 dbtest|wiredTiger|inMemory
 decimal|wiredTiger|inMemory
 disk_mmapv1|default
-disk_wiredtiger --excludeWithAnyTags=requires_mmapv1|default
+disk_wiredtiger|default
 dur_jscore_passthrough|default
 durability|default
 external_auth|default
@@ -57,11 +55,11 @@ json_schema|wiredTiger|inMemory
 knobs|wiredTiger|inMemory
  logging_perf|wiredTiger|inMemory
 mongos_test|default
-multiversion --excludeWithAnyTags=requires_mmapv1|wiredTiger
+multiversion|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4 3.6
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-multiversion_auth --excludeWithAnyTags=requires_mmapv1|wiredTiger
+multiversion_auth|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4 3.6
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
@@ -69,10 +67,8 @@ multiversion_multistorage_engine|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4 3.6
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-no_passthrough|wiredTiger
-no_passthrough --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-no_passthrough_with_mongod|wiredTiger
-no_passthrough_with_mongod --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
+no_passthrough|wiredTiger|inMemory
+no_passthrough_with_mongod|wiredTiger|inMemory
 parallel|wiredTiger|inMemory
 parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
 percona_no_passthrough_with_mongod|wiredTiger|inMemory
@@ -82,8 +78,7 @@ read_concern_linearizable_passthrough|wiredTiger|inMemory
 read_only|wiredTiger
 read_only_sharded|wiredTiger
 redaction|default
-replica_sets|wiredTiger
-replica_sets --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
+replica_sets|wiredTiger|inMemory
 replica_sets_auth|default
 replica_sets_initsync_jscore_passthrough|wiredTiger
 replica_sets_initsync_static_jscore_passthrough|wiredTiger
@@ -95,15 +90,11 @@ serial_run|wiredTiger|inMemory
 session_jscore_passthrough|wiredTiger|inMemory
 sharded_causally_consistent_jscore_passthrough|wiredTiger|inMemory
 sharded_collections_jscore_passthrough|wiredTiger|inMemory
-sharding|wiredTiger
-sharding --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|wiredTiger
-sharding --shellReadMode=legacy --excludeWithAnyTags=requires_persistence,requires_journaling,requires_find_command|inMemory
+sharding|wiredTiger|inMemory
+sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
 sharding_auth|default
-sharding_auth_audit|wiredTiger
-sharding_auth_audit --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
-sharding_continuous_config_stepdown|wiredTiger
-sharding_continuous_config_stepdown --excludeWithAnyTags=requires_persistence,requires_journaling|inMemory
+sharding_auth_audit|wiredTiger|inMemory
+sharding_continuous_config_stepdown|wiredTiger|inMemory
 sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
 sharding_gle_auth_basics_passthrough --shellWriteMode=commands|wiredTiger|inMemory
 sharding_jscore_op_query_passthrough|wiredTiger|inMemory
