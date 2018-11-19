@@ -74,6 +74,11 @@ fi
 # returns SUITES
 load_suite_set "${basedir}" "${suiteSet}"
 
+
+# detect storage engines
+# returns DEFAULT_ENGINE, ENGINES
+detectEngines
+
 # main script
 
 runResmoke() {
@@ -180,9 +185,6 @@ for suite in "${SUITES[@]}"; do
           fi
           ;;
         "se")
-
-          detectEngines
-
           for engine in "${ENGINES[@]}"; do
 
             if [ ! "${engine}" == "${DEFAULT_ENGINE}" ]; then
