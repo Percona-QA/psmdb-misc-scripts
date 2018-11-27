@@ -27,45 +27,21 @@ PSMDB_OLD_BINDIR=$4
 PSMDB_NEW_BINDIR=$5
 BASE_DATADIR="${WORKDIR}/data"
 MONGO_START_TIMEOUT=600
-YCSB_VER="0.13.0"
-
-# Parameters of parameterized build
-if [ -z "$COMPATIBILITY" ]; then
-  COMPATIBILITY="3.6"
-fi
-if [ -z "$MONGO_JAVA_DRIVER" ]; then
-  MONGO_JAVA_DRIVER="3.6.3"
-fi
-if [ -z "$MONGOD_EXTRA" ]; then
-  MONGOD_EXTRA=""
-fi
-if [ -z "$LEAVE_RUNNING" ]; then
-  LEAVE_RUNNING=false
-fi
-if [ -z "$BENCH_TOOL" ]; then
-  BENCH_TOOL=sysbench
-fi
-if [ -z "$Y_OPERATIONS" ]; then
-  Y_OPERATIONS=1000000
-fi
-if [ -z "$S_DURATION" ]; then
-  S_DURATION=5
-fi
-if [ -z "$S_COLLECTIONS" ]; then
-  S_COLLECTIONS=1
-fi
-if [ -z "$B_DOCSPERCOL" ]; then
-  B_DOCSPERCOL=1000000
-fi
-if [ -z "$S_WRITE_CONCERN" ]; then
-  S_WRITE_CONCERN="SAFE"
-fi
-if [ -z "$B_LOADER_THREADS" ]; then
-  B_LOADER_THREADS=8
-fi
-if [ -z "$B_WRITER_THREADS" ]; then
-  B_WRITER_THREADS=8
-fi
+YCSB_VER="0.15.0"
+CIPHER_MODE="${CIPHER_MODE:-AES256-CBC}"
+ENCRYPTION="${ENCRYPTION:-no}"
+COMPATIBILITY="${COMPATIBILITY:-3.6}"
+MONGO_JAVA_DRIVER="${MONGO_JAVA_DRIVER:-3.6.3}"
+MONGOD_EXTRA=""
+LEAVE_RUNNING=${LEAVE_RUNNING:-false}
+BENCH_TOOL="${BENCH_TOOL:-sysbench}"
+Y_OPERATIONS=${Y_OPERATIONS:-1000000}
+S_DURATION=${S_DURATION:-5}
+S_COLLECTIONS=${S_COLLECTIONS:-1}
+B_DOCSPERCOL=${B_DOCSPERCOL:-1000000}
+S_WRITE_CONCERN="${S_WRITE_CONCERN:-SAFE}"
+B_LOADER_THREADS=${B_LOADER_THREADS:-8}
+B_WRITER_THREADS=${B_WRITER_THREADS:-8}
 
 cd ${WORKDIR}
 
@@ -75,6 +51,10 @@ if [ -z ${PSMDB_OLD_BINDIR} ]; then
 fi
 if [ -z ${PSMDB_NEW_BINDIR} ]; then
   echo "PSMDB new binary directory is mandatory!"
+  exit 1
+fi
+if [ "${STORAGE_ENGINE}" != "wiredTiger" -a "${ENCRYPTION}" != "no" ]; then
+  echo "ERROR: Data at rest encryption is possible only with wiredTiger storage engine!"
   exit 1
 fi
 
@@ -170,6 +150,13 @@ start_single()
     ROCKSDB_EXTRA="--useDeprecatedMongoRocks"
   else
     ROCKSDB_EXTRA=""
+  fi
+  if [ "${FUN_NODE_SE}" = "wiredTiger" ]; then
+    MONGOD_EXTRA="${MONGOD_EXTRA} --wiredTigerCacheSizeGB 1"
+    if [ "${ENCRYPTION}" = "keyfile" ]; then
+      openssl rand -base64 32 > ${FUN_NODE_DATA}/mongodb-keyfile
+      MONGOD_EXTRA="${MONGOD_EXTRA} --enableEncryption --encryptionKeyFile ${FUN_NODE_DATA}/mongodb-keyfile --encryptionCipherMode ${CIPHER_MODE}"
+    fi
   fi
   ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --logpath ${FUN_LOG_ERR} --port ${FUN_NODE_PORT} --logappend --fork  --storageEngine ${FUN_NODE_SE} ${REPL_SET} ${MONGOD_EXTRA} ${ROCKSDB_EXTRA} > ${FUN_LOG_ERR} 2>&1 &
 
@@ -306,6 +293,8 @@ show_node_info()
   ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --quiet --eval "db.isMaster()"
   echo -e "\n\n##### Show featureCompatibilityVersion on node ${FUN_PORT} ${FUN_TEXT} #####\n"
   ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --quiet --eval "db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } );"
+  echo -e "\n\n##### Show encryption startup options on node ${FUN_PORT} ${FUN_TEXT} #####\n"
+  ${PSMDB_NEW_BINDIR}/bin/mongo --host=${HOST} --port ${FUN_PORT} --quiet --eval "db.serverCmdLineOpts().parsed.security;"
   echo -e "\n"
 }
 
