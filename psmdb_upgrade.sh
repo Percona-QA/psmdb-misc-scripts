@@ -151,12 +151,9 @@ start_single()
   else
     ROCKSDB_EXTRA=""
   fi
-  if [ "${FUN_NODE_SE}" = "wiredTiger" ]; then
-    MONGOD_EXTRA="${MONGOD_EXTRA} --wiredTigerCacheSizeGB 1"
-    if [ "${ENCRYPTION}" = "keyfile" ]; then
-      openssl rand -base64 32 > ${FUN_NODE_DATA}/mongodb-keyfile
-      MONGOD_EXTRA="${MONGOD_EXTRA} --enableEncryption --encryptionKeyFile ${FUN_NODE_DATA}/mongodb-keyfile --encryptionCipherMode ${CIPHER_MODE}"
-    fi
+  if [ "${FUN_NODE_SE}" = "wiredTiger" -a "${ENCRYPTION}" = "keyfile" ]; then
+    openssl rand -base64 32 > ${FUN_NODE_DATA}/mongodb-keyfile
+    MONGOD_EXTRA="${MONGOD_EXTRA} --enableEncryption --encryptionKeyFile ${FUN_NODE_DATA}/mongodb-keyfile --encryptionCipherMode ${CIPHER_MODE}"
   fi
   ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --logpath ${FUN_LOG_ERR} --port ${FUN_NODE_PORT} --logappend --fork  --storageEngine ${FUN_NODE_SE} ${REPL_SET} ${MONGOD_EXTRA} ${ROCKSDB_EXTRA} > ${FUN_LOG_ERR} 2>&1 &
 
