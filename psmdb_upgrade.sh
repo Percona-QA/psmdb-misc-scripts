@@ -32,7 +32,7 @@ CIPHER_MODE="${CIPHER_MODE:-AES256-CBC}"
 ENCRYPTION="${ENCRYPTION:-no}"
 COMPATIBILITY="${COMPATIBILITY:-3.6}"
 MONGO_JAVA_DRIVER="${MONGO_JAVA_DRIVER:-3.6.3}"
-MONGOD_EXTRA=""
+MONGOD_EXTRA="${MONGOD_EXTRA:-}"
 LEAVE_RUNNING=${LEAVE_RUNNING:-false}
 BENCH_TOOL="${BENCH_TOOL:-sysbench}"
 Y_OPERATIONS=${Y_OPERATIONS:-1000000}
@@ -136,6 +136,7 @@ start_single()
   local FUN_REPL_SET="$7"
 
   local REPL_SET=""
+  local FUN_MONGOD_EXTRA=""
   if [ ! -z $7 ]; then
     local REPL_SET="--replSet "${FUN_REPL_SET}""
   fi
@@ -147,17 +148,15 @@ start_single()
   echo "Starting node on port ${FUN_NODE_PORT} storage engine: ${FUN_NODE_SE}"
 
   if [ ${FUN_NODE_VER:0:3} = "3.6" -a ${FUN_NODE_SE} = "rocksdb" ]; then
-    ROCKSDB_EXTRA="--useDeprecatedMongoRocks"
-  else
-    ROCKSDB_EXTRA=""
+    FUN_MONGOD_EXTRA="${MONGOD_EXTRA} --useDeprecatedMongoRocks"
   fi
   if [ "${FUN_NODE_SE}" = "wiredTiger" -a "${ENCRYPTION}" = "keyfile" ]; then
     if [ ! -f ${FUN_NODE_DATA}/mongodb-keyfile ]; then
       openssl rand -base64 32 > ${FUN_NODE_DATA}/mongodb-keyfile
     fi
-    MONGOD_EXTRA="${MONGOD_EXTRA} --enableEncryption --encryptionKeyFile ${FUN_NODE_DATA}/mongodb-keyfile --encryptionCipherMode ${CIPHER_MODE}"
+    FUN_MONGOD_EXTRA="${MONGOD_EXTRA} --enableEncryption --encryptionKeyFile ${FUN_NODE_DATA}/mongodb-keyfile --encryptionCipherMode ${CIPHER_MODE}"
   fi
-  ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --logpath ${FUN_LOG_ERR} --port ${FUN_NODE_PORT} --logappend --fork  --storageEngine ${FUN_NODE_SE} ${REPL_SET} ${MONGOD_EXTRA} ${ROCKSDB_EXTRA} > ${FUN_LOG_ERR} 2>&1 &
+  ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --logpath ${FUN_LOG_ERR} --port ${FUN_NODE_PORT} --logappend --fork --storageEngine ${FUN_NODE_SE} ${REPL_SET} ${FUN_MONGOD_EXTRA} > ${FUN_LOG_ERR} 2>&1 &
 
   for X in $(seq 0 ${MONGO_START_TIMEOUT}); do
     sleep 1
