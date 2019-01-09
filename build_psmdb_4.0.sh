@@ -112,13 +112,11 @@ buildscripts/scons.py CC=${CC} CXX=${CXX} --ssl ${SCONS_OPTS} -j${NJOBS} --use-s
 #
 # Build mongo tools
 cd ${TOOLSDIR_ABS}
-rm -rf vendor/pkg
 [[ ${PATH} == *"/usr/local/go/bin"* && -x /usr/local/go/bin/go ]] || export PATH=/usr/local/go/bin:${PATH}
 export GOROOT="/usr/local/go/"
 . ./set_tools_revision.sh
 sed -i 's|VersionStr="$(git describe)"|VersionStr="$PSMDB_TOOLS_REVISION"|' set_goenv.sh
 sed -i 's|Gitspec="$(git rev-parse HEAD)"|Gitspec="$PSMDB_TOOLS_COMMIT_HASH"|' set_goenv.sh
-. ./set_goenv.sh
 if [ "${BUILD_TYPE}" == "debug" ]; then
   sed -i 's|go build|go build -a -x|' build.sh
 else
