@@ -126,8 +126,6 @@ else
 fi
 sed -i 's|exit $ec||' build.sh
 . ./build.sh
-# move mongo tools to PSM installation dir
-mv bin/* ${PSMDIR_ABS}
 # end build tools
 # create psmdb tarball
 cd ${PSMDIR_ABS}
