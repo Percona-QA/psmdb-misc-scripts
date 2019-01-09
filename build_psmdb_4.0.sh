@@ -98,7 +98,6 @@ rm -fr /tmp/${PSMDIR}
 ln -fs ${PSMDIR_ABS} /tmp/${PSMDIR}
 cd /tmp
 #
-MONGO_TOOLS_TAG="r${PSM_VERSION}"
 echo "export PSMDB_TOOLS_COMMIT_HASH=\"${REVISION}\"" > ${TOOLSDIR_ABS}/set_tools_revision.sh
 echo "export PSMDB_TOOLS_REVISION=\"${PSM_VERSION}-${PSM_RELEASE}\"" >> ${TOOLSDIR_ABS}/set_tools_revision.sh
 chmod +x ${TOOLSDIR_ABS}/set_tools_revision.sh
