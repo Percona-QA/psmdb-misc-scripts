@@ -238,6 +238,7 @@ run_bench()
   local FUN_DROP=$3
   local FUN_PREFIX=$4
   local FUN_DATA=$5
+  local FUN_OPERATION=$6
 
   # Execute sysbench-mongodb
   echo "Executing ${BENCH_TOOL} run on node ${FUN_PORT} database ${FUN_DATABASE}"
@@ -264,8 +265,12 @@ run_bench()
     popd
   elif [ "${BENCH_TOOL}" = "ycsb" ]; then
     pushd ycsb-${YCSB_VER}
-    ./bin/ycsb load mongodb -s -P workloads/workloadb -p recordcount=${B_DOCSPERCOL} -threads ${B_LOADER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_ycsb-load.txt
-    ./bin/ycsb.sh run mongodb -s -P workloads/workloadb -p recordcount=${B_DOCSPERCOL} -p operationcount=${Y_OPERATIONS} -threads ${B_WRITER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_ycsb-run.txt
+    if [ "${FUN_OPERATION}" == "load" -o "${FUN_OPERATION}" == "load-update" ]; then
+      ./bin/ycsb load mongodb -s -P workloads/workloadb -p recordcount=${B_DOCSPERCOL} -threads ${B_LOADER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_${FUN_DATABASE}_ycsb-load.txt
+    fi
+    if [ "${FUN_OPERATION}" == "update" -o "${FUN_OPERATION}" == "load-update" ]; then
+      ./bin/ycsb.sh run mongodb -s -P workloads/workloadb -p recordcount=${B_DOCSPERCOL} -p operationcount=${Y_OPERATIONS} -threads ${B_WRITER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_${FUN_DATABASE}_ycsb-run.txt
+    fi
     popd
   fi
   echo "Finished with ${BENCH_TOOL} run on node ${FUN_PORT} database ${FUN_DATABASE}"
@@ -348,7 +353,8 @@ if [ ${TEST_TYPE} = "single" ]; then
   start_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-first-start.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data ${OLD_VER} ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
   if [ "${BENCH_TOOL}" != "none" ]; then
-    run_bench bench_test ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA}
+    run_bench bench_test ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA} load
+    run_bench bench_test2 ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA} load
   fi
   # create db hashes
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
@@ -367,7 +373,7 @@ if [ ${TEST_TYPE} = "single" ]; then
 
   import_test_data ${NEW_VER} ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-import.log
   if [ "${BENCH_TOOL}" != "none" ]; then
-    run_bench bench_test2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA}
+    run_bench bench_test2 ${NODE1_PORT} TRUE afterUpgrade ${NODE1_DATA} update
   fi
   # create db hashes
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
@@ -406,7 +412,8 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_bench bench_test ${PRIMARY_PORT} FALSE "beforeUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
+    run_bench bench_test ${PRIMARY_PORT} FALSE "beforeUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA} load
+    run_bench bench_test2 ${PRIMARY_PORT} FALSE "beforeUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA} load
   fi
   sleep 10
   # create db hashes
@@ -427,7 +434,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_bench bench_test2 ${PRIMARY_PORT} FALSE "afterTwoUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
+    run_bench bench_test2 ${PRIMARY_PORT} FALSE "afterTwoUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA} update
   fi
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
@@ -442,7 +449,7 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   if [ "${BENCH_TOOL}" != "none" ]; then
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
     echo "PRIMARY_DATA: ${PRIMARY_DATA}"
-    run_bench bench_test3 ${PRIMARY_PORT} FALSE "afterAllUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA}
+    run_bench bench_test2 ${PRIMARY_PORT} FALSE "afterAllUpgrade-${PRIMARY_PORT}" ${PRIMARY_DATA} update
   fi
   # create db hashes
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
