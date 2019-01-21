@@ -21,7 +21,7 @@ sleep 5
 
 SCRIPT_PWD=$(cd `dirname $0` && pwd)
 WORKDIR=$1
-TEST_TYPE=$2
+LAYOUT_TYPE=$2
 STORAGE_ENGINE=$3
 PSMDB_OLD_BINDIR=$4
 PSMDB_NEW_BINDIR=$5
@@ -30,7 +30,6 @@ MONGO_START_TIMEOUT=600
 YCSB_VER="0.15.0"
 CIPHER_MODE="${CIPHER_MODE:-AES256-CBC}"
 ENCRYPTION="${ENCRYPTION:-no}"
-COMPATIBILITY="${COMPATIBILITY:-3.6}"
 MONGO_JAVA_DRIVER="${MONGO_JAVA_DRIVER:-3.6.3}"
 MONGOD_EXTRA="${MONGOD_EXTRA:-}"
 LEAVE_RUNNING=${LEAVE_RUNNING:-false}
@@ -59,7 +58,7 @@ if [ "${STORAGE_ENGINE}" != "wiredTiger" -a "${ENCRYPTION}" != "no" ]; then
 fi
 
 rm -rf ${BASE_DATADIR}
-rm -f ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}.tar
+rm -f ${WORKDIR}/results_${LAYOUT_TYPE}_${STORAGE_ENGINE}.tar
 
 HOST="localhost"
 NODE1_PORT=27017
@@ -80,6 +79,15 @@ check_version() {
 
 OLD_VER=$(check_version ${PSMDB_OLD_BINDIR})
 NEW_VER=$(check_version ${PSMDB_NEW_BINDIR})
+
+COMPATIBILITY=$(echo ${NEW_VER}|grep -oE "[0-9]+\.[0-9]+")
+
+GT_VERSION=$(echo -e "${NEW_VER}\n${OLD_VER}" | sort -t. -k1,1nr -k2,2nr -k3,3nr | head -1)
+if [ "${GT_VERSION}" = "${OLD_VER}" ]; then
+  TEST_TYPE="downgrade"
+else
+  TEST_TYPE="upgrade"
+fi
 
 echo "Workdir: ${WORKDIR}"
 echo "Datadir: ${BASE_DATADIR}"
@@ -117,10 +125,10 @@ fi
 ### COMMON FUNCTIONS
 ###
 archives() {
-  rm -rf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
-  mkdir ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
-  find data -maxdepth 3 -type f \( -iname \*.log -o -iname \*.txt -o -iname \*.tsv \) -exec cp {} ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER} \;
-  tar czf ${WORKDIR}/results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}.tar.gz -C ${WORKDIR} results_${TEST_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
+  rm -rf ${WORKDIR}/results_${LAYOUT_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
+  mkdir ${WORKDIR}/results_${LAYOUT_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
+  find data -maxdepth 3 -type f \( -iname \*.log -o -iname \*.txt -o -iname \*.tsv \) -exec cp {} ${WORKDIR}/results_${LAYOUT_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER} \;
+  tar czf ${WORKDIR}/results_${LAYOUT_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}.tar.gz -C ${WORKDIR} results_${LAYOUT_TYPE}_${STORAGE_ENGINE}_${OLD_VER}_${NEW_VER}
 }
 
 trap archives EXIT KILL
@@ -349,7 +357,7 @@ upgrade_next_rs_node()
 ### END COMMON FUNCTIONS
 ###
 
-if [ ${TEST_TYPE} = "single" ]; then
+if [ ${LAYOUT_TYPE} = "single" ]; then
   start_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-first-start.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data ${OLD_VER} ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
   if [ "${BENCH_TOOL}" != "none" ]; then
@@ -359,16 +367,24 @@ if [ ${TEST_TYPE} = "single" ]; then
   # create db hashes
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
+
+  # downgrade featureCompatibilityVersion to lower version
+  if [ "${TEST_TYPE}" == "downgrade" ]; then
+    ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/admin --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+  fi
   #
   echo -e "\n\n##### Show info of node ${NODE1_PORT} before upgrade #####\n"
   show_node_info ${NODE1_PORT} "beforeUpgrade" | tee ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-nodeInfo-beforeUpgrade.log
   stop_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-upgrade-stop.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT}
   start_single ${NEW_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-after-upgrade-start.log ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
 
-  if [ "${STORAGE_ENGINE}" != "rocksdb" -o "${COMPATIBILITY}" != "3.6" ]; then
-    ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/admin --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
-  else
-    COMPATIBILITY="3.4"
+  # upgrade featureCompatibilityVersion to higher version
+  if [ "${TEST_TYPE}" == "upgrade" ]; then
+		if [ "${STORAGE_ENGINE}" != "rocksdb" -o "${COMPATIBILITY}" != "3.6" ]; then
+			${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/admin --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+		else
+			COMPATIBILITY="3.4"
+		fi
   fi
 
   import_test_data ${NEW_VER} ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-import.log
@@ -403,7 +419,7 @@ if [ ${TEST_TYPE} = "single" ]; then
     echo "### SUCCESS: Data after upgrade seems to have the same dbhash as before upgrade! ###"
   fi
   exit $RESULT
-elif [ ${TEST_TYPE} = "replicaset" ]; then
+elif [ ${LAYOUT_TYPE} = "replicaset" ]; then
   start_replica
   init_replica
   update_primary_info
@@ -424,6 +440,12 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log
   #
+  # downgrade featureCompatibilityVersion to lower version before RS downgrade
+  update_primary_info
+  if [ "${TEST_TYPE}" == "downgrade" ]; then
+    ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${PRIMARY_PORT}/test --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+  fi
+  #
   echo -e "\n\n##### Show info of node ${PRIMARY_PORT} after sysbench and before any upgrades #####\n"
   show_node_info ${PRIMARY_PORT} "beforeUpgrade"
   upgrade_next_rs_node "SECONDARY"
@@ -440,10 +462,12 @@ elif [ ${TEST_TYPE} = "replicaset" ]; then
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
   upgrade_next_rs_node "PRIMARY"
   update_primary_info
-  if [ "${STORAGE_ENGINE}" != "rocksdb" -o "${COMPATIBILITY}" != "3.6" ]; then
-    ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${PRIMARY_PORT}/test --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
-  else
-    COMPATIBILITY="3.4"
+  if [ "${TEST_TYPE}" == "upgrade" ]; then
+		if [ "${STORAGE_ENGINE}" != "rocksdb" -o "${COMPATIBILITY}" != "3.6" ]; then
+			${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${PRIMARY_PORT}/test --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+		else
+			COMPATIBILITY="3.4"
+		fi
   fi
   sleep 10
   if [ "${BENCH_TOOL}" != "none" ]; then
