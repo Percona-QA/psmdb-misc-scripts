@@ -370,7 +370,7 @@ if [ "${LAYOUT_TYPE}" == "single" ]; then
 
   # downgrade featureCompatibilityVersion to lower version
   if [ "${TEST_TYPE}" == "downgrade" ]; then
-    ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/admin --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+    ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/admin --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
   fi
   #
   echo -e "\n\n##### Show info of node ${NODE1_PORT} before upgrade #####\n"
@@ -419,6 +419,7 @@ if [ "${LAYOUT_TYPE}" == "single" ]; then
     echo "### SUCCESS: Data after upgrade seems to have the same dbhash as before upgrade! ###"
   fi
   exit $RESULT
+
 elif [ "${LAYOUT_TYPE}" == "replicaset" ]; then
   start_replica
   init_replica
@@ -443,7 +444,7 @@ elif [ "${LAYOUT_TYPE}" == "replicaset" ]; then
   # downgrade featureCompatibilityVersion to lower version before RS downgrade
   update_primary_info
   if [ "${TEST_TYPE}" == "downgrade" ]; then
-    ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${PRIMARY_PORT}/test --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
+    ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${PRIMARY_PORT}/test --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
   fi
   #
   echo -e "\n\n##### Show info of node ${PRIMARY_PORT} after sysbench and before any upgrades #####\n"
