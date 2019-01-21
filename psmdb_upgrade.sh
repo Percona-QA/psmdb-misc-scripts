@@ -96,14 +96,14 @@ echo "Version ${NEW_VER} bindir: ${PSMDB_NEW_BINDIR}"
 
 # Download test database
 if [ ! -f primer-dataset.json ]; then
-  wget https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json
+  wget --no-verbose https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json
 fi
 TEST_DB_FILE=${WORKDIR}/primer-dataset.json
 
 # Download benchmarking tool
 if [ "${BENCH_TOOL}" = "sysbench" ]; then
   if [ ! -f mongo-java-driver-${MONGO_JAVA_DRIVER}.jar ]; then
-    wget https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/${MONGO_JAVA_DRIVER}/mongo-java-driver-${MONGO_JAVA_DRIVER}.jar
+    wget --no-verbose https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/${MONGO_JAVA_DRIVER}/mongo-java-driver-${MONGO_JAVA_DRIVER}.jar
   fi
   export CLASSPATH=$PWD/mongo-java-driver-${MONGO_JAVA_DRIVER}.jar:$CLASSPATH
   if [ ! -d sysbench-mongodb ]; then
@@ -112,7 +112,7 @@ if [ "${BENCH_TOOL}" = "sysbench" ]; then
 elif [ "${BENCH_TOOL}" = "ycsb" ]; then
   if [ ! -d ycsb-${YCSB_VER} ]; then
     rm -f ycsb-${YCSB_VER}.tar.gz
-    wget https://github.com/brianfrankcooper/YCSB/releases/download/${YCSB_VER}/ycsb-${YCSB_VER}.tar.gz
+    wget --no-verbose https://github.com/brianfrankcooper/YCSB/releases/download/${YCSB_VER}/ycsb-${YCSB_VER}.tar.gz
     tar xf ycsb-${YCSB_VER}.tar.gz
     rm -f ycsb-${YCSB_VER}.tar.gz
   fi
