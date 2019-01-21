@@ -155,10 +155,10 @@ start_single()
 
   echo "Starting node on port ${FUN_NODE_PORT} storage engine: ${FUN_NODE_SE}"
 
-  if [ ${FUN_NODE_VER:0:3} = "3.6" -a ${FUN_NODE_SE} = "rocksdb" ]; then
+  if [ "${FUN_NODE_VER:0:3}" == "3.6" -a "${FUN_NODE_SE}" == "rocksdb" ]; then
     FUN_MONGOD_EXTRA="${MONGOD_EXTRA} --useDeprecatedMongoRocks"
   fi
-  if [ "${FUN_NODE_SE}" = "wiredTiger" -a "${ENCRYPTION}" = "keyfile" ]; then
+  if [ "${FUN_NODE_SE}" == "wiredTiger" -a "${ENCRYPTION}" == "keyfile" ]; then
     if [ ! -f ${FUN_NODE_DATA}/mongodb-keyfile ]; then
       openssl rand -base64 32 > ${FUN_NODE_DATA}/mongodb-keyfile
     fi
@@ -346,7 +346,7 @@ upgrade_next_rs_node()
 {
   local NODE_TYPE=$1
   choose_rs_node_upgrade ${NODE_TYPE}
-  if [ ${NODE_TYPE} = "PRIMARY" ]; then
+  if [ "${NODE_TYPE}" == "PRIMARY" ]; then
     ${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${UPGRADE_PORT} --quiet --eval 'rs.stepDown();' || true
   fi
   echo -e "\n\n##### Upgrading ${HOST}:${UPGRADE_PORT} - ${UPGRADE_DATA} #####\n"
@@ -357,7 +357,7 @@ upgrade_next_rs_node()
 ### END COMMON FUNCTIONS
 ###
 
-if [ ${LAYOUT_TYPE} = "single" ]; then
+if [ "${LAYOUT_TYPE}" == "single" ]; then
   start_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-first-start.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data ${OLD_VER} ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
   if [ "${BENCH_TOOL}" != "none" ]; then
@@ -419,7 +419,7 @@ if [ ${LAYOUT_TYPE} = "single" ]; then
     echo "### SUCCESS: Data after upgrade seems to have the same dbhash as before upgrade! ###"
   fi
   exit $RESULT
-elif [ ${LAYOUT_TYPE} = "replicaset" ]; then
+elif [ "${LAYOUT_TYPE}" == "replicaset" ]; then
   start_replica
   init_replica
   update_primary_info
