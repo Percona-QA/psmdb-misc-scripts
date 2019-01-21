@@ -79,11 +79,13 @@ check_version() {
 
 OLD_VER=$(check_version ${PSMDB_OLD_BINDIR})
 NEW_VER=$(check_version ${PSMDB_NEW_BINDIR})
+UPSTREAM_OLD_VER=$(echo "${OLD_VER}"|sed 's/-.*$//')
+UPSTREAM_NEW_VER=$(echo "${NEW_VER}"|sed 's/-.*$//')
 
-COMPATIBILITY=$(echo ${NEW_VER}|grep -oE "[0-9]+\.[0-9]+")
+COMPATIBILITY=$(echo ${UPSTREAM_NEW_VER}|grep -oE "[0-9]+\.[0-9]+")
 
-GT_VERSION=$(echo -e "${NEW_VER}\n${OLD_VER}" | sort -t. -k1,1nr -k2,2nr -k3,3nr | head -1)
-if [ "${GT_VERSION}" = "${OLD_VER}" ]; then
+GT_VERSION=$(echo -e "${UPSTREAM_NEW_VER}\n${UPSTREAM_OLD_VER}" | sort -t. -k1,1nr -k2,2nr -k3,3nr | head -1)
+if [ "${GT_VERSION}" = "${UPSTREAM_OLD_VER}" ]; then
   TEST_TYPE="downgrade"
 else
   TEST_TYPE="upgrade"
