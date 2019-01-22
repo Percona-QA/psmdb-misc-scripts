@@ -100,7 +100,7 @@ PSM_TARGETS="mongod mongos mongo perconadecrypt mongobridge${OPT_TARGETS}"
 ARCH=$(uname -m 2>/dev/null||true)
 PSMDIR=$(basename ${CWD})
 PSMDIR_ABS=${CWD}
-TOOLSDIR="${PSMDIR}/mongo-tools"
+TOOLSDIR="mongo-tools"
 TOOLSDIR_ABS="${PSMDIR_ABS}/${TOOLSDIR}"
 export TOOLS_TAGS="ssl sasl"
 
@@ -131,23 +131,15 @@ buildscripts/scons.py CC=${CC} CXX=${CXX} --ssl ${SCONS_OPTS} -j${NJOBS} --use-s
 #
 # Build mongo tools
 cd ${TOOLSDIR_ABS}
-mkdir -p build_tools/src/github.com/mongodb/mongo-tools
 rm -rf vendor/pkg
 [[ ${PATH} == *"/usr/local/go/bin"* && -x /usr/local/go/bin/go ]] || export PATH=/usr/local/go/bin:${PATH}
-export GOROOT="/usr/local/go/"
-cp -r $(ls | grep -v build_tools) build_tools/src/github.com/mongodb/mongo-tools/
-cd build_tools/src/github.com/mongodb/mongo-tools
+. ./set_gopath.sh
 . ./set_tools_revision.sh
-sed -i 's|VersionStr="$(git describe)"|VersionStr="$PSMDB_TOOLS_REVISION"|' set_goenv.sh
-sed -i 's|Gitspec="$(git rev-parse HEAD)"|Gitspec="$PSMDB_TOOLS_COMMIT_HASH"|' set_goenv.sh
-. ./set_goenv.sh
-if [ "${BUILD_TYPE}" == "debug" ]; then
-  sed -i 's|go build|go build -a -x|' build.sh
-else
-  sed -i 's|go build|go build -a |' build.sh
-fi
-sed -i 's|exit $ec||' build.sh
-. ./build.sh
+mkdir -p bin
+for i in bsondump mongostat mongofiles mongoexport mongoimport mongorestore mongodump mongotop mongoreplay; do
+echo "Building ${i}..."
+go build -a -o "bin/$i" -ldflags "-X github.com/mongodb/mongo-tools/common/options.Gitspec=${PSMDB_TOOLS_COMMIT_HASH} -X github.com/mongodb/mongo-tools/common/options.VersionStr=${PSMDB_TOOLS_REVISION}" -tags "${TOOLS_TAGS}" "$i/main/$i.go"
+done
 # end build tools
 # create psmdb tarball
 cd ${PSMDIR_ABS}
@@ -158,4 +150,4 @@ cp ${TOOLSDIR_ABS}/bin/* ${TARBALL_NAME}/bin
 tar --owner=0 --group=0 -czf ${TARBALL_NAME}.tar.gz ${TARBALL_NAME}
 rm -rf ${TARBALL_NAME}
 # move mongo tools to PSM root dir for running tests
-mv ${TOOLSDIR_ABS}/build_tools/src/github.com/mongodb/mongo-tools/bin/* ${PSMDIR_ABS}
+mv ${TOOLSDIR_ABS}/bin/* ${PSMDIR_ABS}

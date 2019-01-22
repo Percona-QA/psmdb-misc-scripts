@@ -98,7 +98,7 @@ PSM_TARGETS="mongod mongos mongo perconadecrypt mongobridge${OPT_TARGETS}"
 ARCH=$(uname -m 2>/dev/null||true)
 PSMDIR=$(basename ${CWD})
 PSMDIR_ABS=${CWD}
-TOOLSDIR="${PSMDIR}/mongo-tools"
+TOOLSDIR="mongo-tools"
 TOOLSDIR_ABS="${PSMDIR_ABS}/${TOOLSDIR}"
 export TOOLS_TAGS="ssl sasl"
 
@@ -140,7 +140,7 @@ cd ${PSMDIR_ABS}
 mkdir -p ${TARBALL_NAME}/bin
 cp mongo* ${TARBALL_NAME}/bin
 cp percona* ${TARBALL_NAME}/bin
-cp ${TOOLSDIR_ABS}/bin/* ${TARBALL_NAME}/bin
+cp ${TOOLSDIR_ABS}/build_tools/src/github.com/mongodb/mongo-tools/bin/* ${TARBALL_NAME}/bin
 tar --owner=0 --group=0 -czf ${TARBALL_NAME}.tar.gz ${TARBALL_NAME}
 rm -rf ${TARBALL_NAME}
 # move mongo tools to PSM root dir for running tests
