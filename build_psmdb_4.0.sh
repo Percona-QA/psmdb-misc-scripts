@@ -68,6 +68,15 @@ echo "    \"version\": \"${PSM_VERSION}-${PSM_RELEASE}\"," >> version.json
 echo "    \"githash\": \"${REVISION_LONG}\"" >> version.json
 echo "}" >> version.json
 #
+rm -rf mongo-tools
+MONGO_TOOLS_TAG="r${PSM_VERSION}"
+git clone https://github.com/mongodb/mongo-tools.git
+pushd mongo-tools
+git checkout $MONGO_TOOLS_TAG
+echo "export PSMDB_TOOLS_COMMIT_HASH=\"$(git rev-parse HEAD)\"" > set_tools_revision.sh
+echo "export PSMDB_TOOLS_REVISION=\"${PSM_VERSION}-${PSM_RELEASE}\"" >> set_tools_revision.sh
+chmod +x set_tools_revision.sh
+popd
 #
 # build binaries
 #
@@ -85,22 +94,18 @@ else
   export CXX=$(which g++)
 fi
 #
-PSM_TARGETS="mongod mongos mongo mongobridge${OPT_TARGETS}"
+PSM_TARGETS="mongod mongos mongo perconadecrypt mongobridge${OPT_TARGETS}"
 ARCH=$(uname -m 2>/dev/null||true)
 PSMDIR=$(basename ${CWD})
 PSMDIR_ABS=${CWD}
-TOOLSDIR="src/mongo/gotools/src/github.com/mongodb/mongo-tools"
+TOOLSDIR="${PSMDIR}/mongo-tools"
 TOOLSDIR_ABS="${PSMDIR_ABS}/${TOOLSDIR}"
-TOOLS_TAGS="ssl sasl"
+export TOOLS_TAGS="ssl sasl"
 
 # link PSM dir to /tmp to avoid "argument list too long error"
 rm -fr /tmp/${PSMDIR}
 ln -fs ${PSMDIR_ABS} /tmp/${PSMDIR}
 cd /tmp
-#
-echo "export PSMDB_TOOLS_COMMIT_HASH=\"${REVISION}\"" > ${TOOLSDIR_ABS}/set_tools_revision.sh
-echo "export PSMDB_TOOLS_REVISION=\"${PSM_VERSION}-${PSM_RELEASE}\"" >> ${TOOLSDIR_ABS}/set_tools_revision.sh
-chmod +x ${TOOLSDIR_ABS}/set_tools_revision.sh
 #
 export CFLAGS="${CFLAGS:-} -fno-omit-frame-pointer"
 export CXXFLAGS="${CFLAGS}"
@@ -112,11 +117,16 @@ buildscripts/scons.py CC=${CC} CXX=${CXX} --ssl ${SCONS_OPTS} -j${NJOBS} --use-s
 #
 # Build mongo tools
 cd ${TOOLSDIR_ABS}
+mkdir -p build_tools/src/github.com/mongodb/mongo-tools
+rm -rf vendor/pkg
 [[ ${PATH} == *"/usr/local/go/bin"* && -x /usr/local/go/bin/go ]] || export PATH=/usr/local/go/bin:${PATH}
 export GOROOT="/usr/local/go/"
+cp -r $(ls | grep -v build_tools) build_tools/src/github.com/mongodb/mongo-tools/
+cd build_tools/src/github.com/mongodb/mongo-tools
 . ./set_tools_revision.sh
 sed -i 's|VersionStr="$(git describe)"|VersionStr="$PSMDB_TOOLS_REVISION"|' set_goenv.sh
 sed -i 's|Gitspec="$(git rev-parse HEAD)"|Gitspec="$PSMDB_TOOLS_COMMIT_HASH"|' set_goenv.sh
+. ./set_goenv.sh
 if [ "${BUILD_TYPE}" == "debug" ]; then
   sed -i 's|go build|go build -a -x|' build.sh
 else
@@ -129,8 +139,9 @@ sed -i 's|exit $ec||' build.sh
 cd ${PSMDIR_ABS}
 mkdir -p ${TARBALL_NAME}/bin
 cp mongo* ${TARBALL_NAME}/bin
+cp percona* ${TARBALL_NAME}/bin
 cp ${TOOLSDIR_ABS}/bin/* ${TARBALL_NAME}/bin
 tar --owner=0 --group=0 -czf ${TARBALL_NAME}.tar.gz ${TARBALL_NAME}
 rm -rf ${TARBALL_NAME}
 # move mongo tools to PSM root dir for running tests
-mv ${TOOLSDIR_ABS}/bin/* ${PSMDIR_ABS}
+mv ${TOOLSDIR_ABS}/build_tools/src/github.com/mongodb/mongo-tools/bin/* ${PSMDIR_ABS}
