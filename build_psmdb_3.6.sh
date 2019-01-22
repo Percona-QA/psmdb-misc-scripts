@@ -102,7 +102,7 @@ PSMDIR=$(basename ${CWD})
 PSMDIR_ABS=${CWD}
 TOOLSDIR="mongo-tools"
 TOOLSDIR_ABS="${PSMDIR_ABS}/${TOOLSDIR}"
-export TOOLS_TAGS="ssl sasl"
+TOOLS_TAGS="ssl sasl"
 
 # link PSM dir to /tmp to avoid "argument list too long error"
 rm -fr /tmp/${PSMDIR}

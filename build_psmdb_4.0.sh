@@ -100,7 +100,7 @@ PSMDIR=$(basename ${CWD})
 PSMDIR_ABS=${CWD}
 TOOLSDIR="mongo-tools"
 TOOLSDIR_ABS="${PSMDIR_ABS}/${TOOLSDIR}"
-export TOOLS_TAGS="ssl sasl"
+TOOLS_TAGS="ssl sasl"
 
 # link PSM dir to /tmp to avoid "argument list too long error"
 rm -fr /tmp/${PSMDIR}
@@ -133,7 +133,7 @@ else
   sed -i 's|go build|go build -a |' build.sh
 fi
 sed -i 's|exit $ec||' build.sh
-. ./build.sh
+. ./build.sh ${TOOLS_TAGS}
 # end build tools
 # create psmdb tarball
 cd ${PSMDIR_ABS}
