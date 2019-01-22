@@ -35,7 +35,7 @@ change_streams_whole_db_secondary_reads_passthrough|wiredTiger
 change_streams_whole_db_sharded_collections_passthrough|wiredTiger|inMemory
 concurrency|mmapv1|wiredTiger|inMemory
 concurrency_replication|mmapv1|wiredTiger|inMemory
-concurrency_replication_causal_consistency|wiredTiger|inMemory|mmapv1
+concurrency_replication_causal_consistency|mmapv1|wiredTiger|inMemory
 concurrency_replication_multi_stmt_txn|wiredTiger
 concurrency_sharded_causal_consistency|mmapv1|wiredTiger|inMemory
 concurrency_sharded_causal_consistency_and_balancer|mmapv1|wiredTiger|inMemory
@@ -54,8 +54,8 @@ core_tde_gcm|default
 core_txns|wiredTiger|inMemory
 dbtest|mmapv1|wiredTiger|inMemory
 decimal|mmapv1|wiredTiger|inMemory
-disk_mmapv1|default
-disk_wiredtiger|default
+disk_mmapv1|mmapv1
+disk_wiredtiger|wiredTiger
 dur_jscore_passthrough|default
 durability|default
 external_auth|default

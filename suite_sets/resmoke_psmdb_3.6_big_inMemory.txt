@@ -1,0 +1,125 @@
+aggregation|inMemory
+ aggregation_auth|default
+aggregation_facet_unwind_passthrough|inMemory
+aggregation_read_concern_majority_passthrough|inMemory
+aggregation_sharded_collections_passthrough|inMemory
+ aggregation_tde_cbc|default
+ aggregation_tde_gcm|default
+audit|inMemory
+auth|inMemory
+auth_audit|inMemory
+ backup|wiredTiger
+ backup_tde_cbc|default
+ backup_tde_gcm|default
+bulk_gle_passthrough|inMemory
+causally_consistent_jscore_passthrough|inMemory
+causally_consistent_jscore_passthrough_auth|inMemory
+change_streams|inMemory
+change_streams_mongos_passthrough|inMemory
+ change_streams_secondary_reads|wiredTiger
+change_streams_sharded_collections_passthrough|inMemory
+concurrency|inMemory
+concurrency_replication|inMemory
+concurrency_sharded|inMemory
+concurrency_sharded_causal_consistency|inMemory
+concurrency_sharded_causal_consistency_and_balancer|inMemory
+concurrency_sharded_with_stepdowns|inMemory
+concurrency_sharded_with_stepdowns_and_balancer|inMemory
+!concurrency_simultaneous --suites=concurrency jstests/concurrency/fsm_all_simultaneous.js|inMemory
+core|inMemory
+ core_auth|default
+core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|inMemory
+core_minimum_batch_size|inMemory
+core_op_query|inMemory
+ core_tde_cbc|default
+ core_tde_gcm|default
+dbtest|inMemory
+decimal|inMemory
+ disk_mmapv1|mmapv1
+ disk_wiredtiger|default
+ dur_jscore_passthrough|default
+ durability|default
+ external_auth|default
+ failpoints|default
+ failpoints_auth|default
+gle_auth --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+gle_auth --shellWriteMode=commands|inMemory
+gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+gle_auth_basics_passthrough --shellWriteMode=commands|inMemory
+ integration_tests_replset|default
+ integration_tests_sharded|default
+ integration_tests_standalone|default
+ jstestfuzz|mmapv1|wiredTiger|inMemory
+ jstestfuzz_replication|wiredTiger|inMemory
+ jstestfuzz_sharded|wiredTiger|inMemory
+json_schema|inMemory
+knobs|inMemory
+master_slave|inMemory
+ master_slave_auth|default
+master_slave_jscore_passthrough|inMemory
+ mmap|mmapv1
+ mongo_rocks|rocksdb
+ mongos_test|default
+ multiversion|mmapv1|wiredTiger
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+ multiversion_auth|mmapv1|wiredTiger
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+ multiversion_multistorage_engine|mmapv1|wiredTiger
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+no_passthrough|inMemory
+no_passthrough_with_mongod|inMemory
+parallel|inMemory
+parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|inMemory
+percona_no_passthrough_with_mongod|inMemory
+ratelimit|inMemory
+read_concern_majority_passthrough|inMemory
+read_concern_linearizable_passthrough|inMemory
+ read_only|mmapv1|wiredTiger
+ read_only_sharded|mmapv1|wiredTiger
+ redaction|default
+replica_sets|inMemory
+ replica_sets_auth|default
+ replica_sets_initsync_jscore_passthrough|mmapv1|wiredTiger
+ replica_sets_initsync_static_jscore_passthrough|mmapv1|wiredTiger
+replica_sets_jscore_passthrough|inMemory
+replica_sets_jscore_fcv34_passthrough|inMemory
+ replica_sets_kill_secondaries_jscore_passthrough|wiredTiger
+replica_sets_pv0|inMemory
+ replica_sets_resync_static_jscore_passthrough|mmapv1|wiredTiger
+ replica_sets_rollback_refetch_no_uuid|wiredTiger
+ replica_sets_tde_cbc|default
+ replica_sets_tde_gcm|default
+retryable_writes_jscore_passthrough|inMemory
+retryable_writes_jscore_stepdown_passthrough|inMemory
+serial_run|inMemory
+session_jscore_passthrough|inMemory
+sharded_causally_consistent_jscore_passthrough|inMemory
+sharded_collections_jscore_passthrough|inMemory
+sharding|inMemory
+sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+ sharding_auth|default
+sharding_auth_audit|inMemory
+sharding_continuous_config_stepdown|inMemory
+sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+sharding_gle_auth_basics_passthrough --shellWriteMode=commands|inMemory
+sharding_jscore_op_query_passthrough|inMemory
+sharding_jscore_passthrough|inMemory
+sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+ sharding_last_stable_mongos_and_mixed_shards|default
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.0 3.2 3.4
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+ sharding_tde_cbc|default
+ sharding_tde_gcm|default
+slow1|inMemory
+ ssl|default
+ ssl_special|default
+tool|inMemory
+ unittests|default
+write_concern_majority_passthrough|inMemory

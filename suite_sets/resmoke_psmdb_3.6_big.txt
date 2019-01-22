@@ -35,7 +35,7 @@ core_tde_cbc|default
 core_tde_gcm|default
 dbtest|mmapv1|wiredTiger|inMemory
 decimal|mmapv1|wiredTiger|inMemory
-disk_mmapv1|default
+disk_mmapv1|mmapv1
 disk_wiredtiger|default
 dur_jscore_passthrough|default
 durability|default

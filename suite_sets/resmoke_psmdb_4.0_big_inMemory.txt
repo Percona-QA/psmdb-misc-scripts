@@ -1,0 +1,162 @@
+aggregation|inMemory
+ aggregation_auth|default
+aggregation_facet_unwind_passthrough|inMemory
+aggregation_mongos_passthrough|inMemory
+aggregation_read_concern_majority_passthrough|inMemory
+aggregation_one_shard_sharded_collections|inMemory
+aggregation_sharded_collections_passthrough|inMemory
+ aggregation_tde_cbc|default
+ aggregation_tde_gcm|default
+audit|inMemory
+auth|inMemory
+auth_audit|inMemory
+ backup|wiredTiger
+ backup_tde_cbc|default
+ backup_tde_gcm|default
+ benchmarks --jobs=1 --perfReportFile=perf.json|default
+ benchmarks_sharding --jobs=1 --perfReportFile=perf_sharding.json|default
+ buildscripts_test|default
+bulk_gle_passthrough|inMemory
+causally_consistent_jscore_passthrough|inMemory
+causally_consistent_jscore_passthrough_auth|inMemory
+causally_consistent_jscore_txns_passthrough|inMemory
+change_streams|inMemory
+change_streams_mongos_passthrough|inMemory
+change_streams_mongos_sessions_passthrough|inMemory
+ change_streams_secondary_reads|wiredTiger
+change_streams_sharded_collections_passthrough|inMemory
+change_streams_whole_cluster_mongos_passthrough|inMemory
+change_streams_whole_cluster_passthrough|inMemory
+ change_streams_whole_cluster_secondary_reads_passthrough|wiredTiger
+change_streams_whole_cluster_sharded_collections_passthrough|inMemory
+change_streams_whole_db_mongos_passthrough|inMemory
+change_streams_whole_db_passthrough|inMemory
+ change_streams_whole_db_secondary_reads_passthrough|wiredTiger
+change_streams_whole_db_sharded_collections_passthrough|inMemory
+concurrency|inMemory
+concurrency_replication|inMemory
+concurrency_replication_causal_consistency|inMemory
+ concurrency_replication_multi_stmt_txn|wiredTiger
+concurrency_sharded_causal_consistency|inMemory
+concurrency_sharded_causal_consistency_and_balancer|inMemory
+concurrency_sharded_replication|inMemory
+concurrency_sharded_replication_with_balancer|inMemory
+concurrency_sharded_with_stepdowns|inMemory
+concurrency_sharded_with_stepdowns_and_balancer|inMemory
+concurrency_simultaneous|inMemory
+core|inMemory
+ core_auth|default
+core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|inMemory
+core_minimum_batch_size|inMemory
+core_op_query|inMemory
+ core_tde_cbc|default
+ core_tde_gcm|default
+core_txns|inMemory
+dbtest|inMemory
+decimal|inMemory
+ disk_mmapv1|mmapv1
+ disk_wiredtiger|wiredTiger
+ dur_jscore_passthrough|default
+ durability|default
+ external_auth|default
+ failpoints|default
+ failpoints_auth|default
+gle_auth --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+gle_auth --shellWriteMode=commands|inMemory
+gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+gle_auth_basics_passthrough --shellWriteMode=commands|inMemory
+ integration_tests_replset|default
+ integration_tests_sharded|default
+ integration_tests_standalone|default
+ jstestfuzz|inMemory
+ jstestfuzz_replication|inMemory
+ jstestfuzz_sharded|inMemory
+json_schema|inMemory
+knobs|inMemory
+logical_session_cache_replication_100ms_refresh_jscore_passthrough|inMemory
+logical_session_cache_replication_10sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_replication_1sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_replication_default_refresh_jscore_passthrough|inMemory
+logical_session_cache_sharding_100ms_refresh_jscore_passthrough|inMemory
+logical_session_cache_sharding_10sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_sharding_1sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_sharding_default_refresh_jscore_passthrough|inMemory
+logical_session_cache_standalone_100ms_refresh_jscore_passthrough|inMemory
+logical_session_cache_standalone_10sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_standalone_1sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_standalone_default_refresh_jscore_passthrough|inMemory
+ logging_perf|inMemory
+ mmap|mmapv1
+ mongos_test|default
+ multiversion|mmapv1|wiredTiger
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+ multiversion_auth|mmapv1|wiredTiger
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+ multiversion_multistorage_engine|mmapv1|wiredTiger
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+no_passthrough|inMemory
+no_passthrough_with_mongod|inMemory
+parallel|inMemory
+parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|inMemory
+percona_no_passthrough_with_mongod|inMemory
+ratelimit|inMemory
+read_concern_linearizable_passthrough|inMemory
+read_concern_majority_passthrough|inMemory
+ read_only|mmapv1|wiredTiger
+ read_only_sharded|mmapv1|wiredTiger
+ redaction|default
+replica_sets|inMemory
+ replica_sets_auth|default
+ replica_sets_auth_misc|wiredTiger
+ replica_sets_initsync_jscore_passthrough|mmapv1|wiredTiger
+ replica_sets_initsync_static_jscore_passthrough|mmapv1|wiredTiger
+replica_sets_jscore_passthrough|inMemory
+ replica_sets_kill_primary_jscore_passthrough|wiredTiger
+ replica_sets_kill_secondaries_jscore_passthrough|wiredTiger
+ replica_sets_multi_stmt_txn_jscore_passthrough|wiredTiger
+ replica_sets_tde_cbc|default
+ replica_sets_tde_gcm|default
+ replica_sets_terminate_primary_jscore_passthrough|wiredTiger
+retryable_writes_jscore_passthrough|inMemory
+retryable_writes_jscore_stepdown_passthrough|inMemory
+secondary_reads_passthrough|inMemory
+serial_run|inMemory
+session_jscore_passthrough|inMemory
+sharded_causally_consistent_jscore_passthrough|inMemory
+sharded_collections_jscore_passthrough|inMemory
+sharding|inMemory
+sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+ sharding_auth|default
+sharding_auth_audit|inMemory
+ sharding_auth_audit_misc|wiredTiger
+ sharding_auth_misc|wiredTiger
+sharding_continuous_config_stepdown|inMemory
+sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+sharding_gle_auth_basics_passthrough --shellWriteMode=commands|inMemory
+sharding_jscore_op_query_passthrough|inMemory
+sharding_jscore_passthrough|inMemory
+sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+ sharding_last_stable_mongos_and_mixed_shards|default
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+ sharding_last_stable_mongos_and_mixed_shards_misc|default
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+ sharding_misc|wiredTiger
+ sharding_misc --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|wiredTiger
+ sharding_tde_cbc|default
+ sharding_tde_gcm|default
+slow1|inMemory
+ ssl|default
+ ssl_special|default
+tool|inMemory
+ unittests|default
+write_concern_majority_passthrough|inMemory
