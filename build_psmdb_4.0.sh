@@ -139,8 +139,7 @@ sed -i 's|exit $ec||' build.sh
 # create psmdb tarball
 cd ${PSMDIR_ABS}
 mkdir -p ${TARBALL_NAME}/bin
-cp mongo* ${TARBALL_NAME}/bin
-cp percona* ${TARBALL_NAME}/bin
+for i in mongo* percona*; do [ -f "${i}" ] && cp ${i} ${TARBALL_NAME}/bin; done
 cp ${TOOLSDIR_ABS}/${TOOLSDIR_BUILD}/bin/* ${TARBALL_NAME}/bin
 tar --owner=0 --group=0 -czf ${TARBALL_NAME}.tar.gz ${TARBALL_NAME}
 rm -rf ${TARBALL_NAME}
