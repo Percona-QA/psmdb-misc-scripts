@@ -117,12 +117,13 @@ buildscripts/scons.py CC=${CC} CXX=${CXX} --ssl ${SCONS_OPTS} -j${NJOBS} --use-s
 #
 # Build mongo tools
 cd ${TOOLSDIR_ABS}
-mkdir -p build_tools/src/github.com/mongodb/mongo-tools
+TOOLSDIR_BUILD="build_tools/src/github.com/mongodb/mongo-tools"
+mkdir -p ${TOOLSDIR_BUILD}
 rm -rf vendor/pkg
 [[ ${PATH} == *"/usr/local/go/bin"* && -x /usr/local/go/bin/go ]] || export PATH=/usr/local/go/bin:${PATH}
 export GOROOT="/usr/local/go/"
-cp -r $(ls | grep -v build_tools) build_tools/src/github.com/mongodb/mongo-tools/
-cd build_tools/src/github.com/mongodb/mongo-tools
+cp -r $(ls | grep -v build_tools) ${TOOLSDIR_BUILD}/
+cd ${TOOLSDIR_BUILD}
 . ./set_tools_revision.sh
 sed -i 's|VersionStr="$(git describe)"|VersionStr="$PSMDB_TOOLS_REVISION"|' set_goenv.sh
 sed -i 's|Gitspec="$(git rev-parse HEAD)"|Gitspec="$PSMDB_TOOLS_COMMIT_HASH"|' set_goenv.sh
@@ -140,8 +141,8 @@ cd ${PSMDIR_ABS}
 mkdir -p ${TARBALL_NAME}/bin
 cp mongo* ${TARBALL_NAME}/bin
 cp percona* ${TARBALL_NAME}/bin
-cp ${TOOLSDIR_ABS}/build_tools/src/github.com/mongodb/mongo-tools/bin/* ${TARBALL_NAME}/bin
+cp ${TOOLSDIR_ABS}/${TOOLSDIR_BUILD}/bin/* ${TARBALL_NAME}/bin
 tar --owner=0 --group=0 -czf ${TARBALL_NAME}.tar.gz ${TARBALL_NAME}
 rm -rf ${TARBALL_NAME}
 # move mongo tools to PSM root dir for running tests
-mv ${TOOLSDIR_ABS}/build_tools/src/github.com/mongodb/mongo-tools/bin/* ${PSMDIR_ABS}
+mv ${TOOLSDIR_ABS}/${TOOLSDIR_BUILD}/bin/* ${PSMDIR_ABS}
