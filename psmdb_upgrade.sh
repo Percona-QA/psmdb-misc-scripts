@@ -163,6 +163,7 @@ start_single()
   if [ "${FUN_NODE_SE}" == "wiredTiger" -a "${ENCRYPTION}" == "keyfile" ]; then
     if [ ! -f ${FUN_NODE_DATA}/mongodb-keyfile ]; then
       openssl rand -base64 32 > ${FUN_NODE_DATA}/mongodb-keyfile
+      chmod 600 ${FUN_NODE_DATA}/mongodb-keyfile
     fi
     FUN_MONGOD_EXTRA="${MONGOD_EXTRA} --enableEncryption --encryptionKeyFile ${FUN_NODE_DATA}/mongodb-keyfile --encryptionCipherMode ${CIPHER_MODE}"
   fi
