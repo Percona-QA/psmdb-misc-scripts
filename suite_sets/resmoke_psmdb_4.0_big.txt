@@ -113,7 +113,6 @@ read_only_sharded|mmapv1|wiredTiger
 redaction|default
 replica_sets|mmapv1|wiredTiger|inMemory
 replica_sets_auth|default
-replica_sets_auth_misc|wiredTiger
 replica_sets_initsync_jscore_passthrough|mmapv1|wiredTiger
 replica_sets_initsync_static_jscore_passthrough|mmapv1|wiredTiger
 replica_sets_jscore_passthrough|mmapv1|wiredTiger|inMemory
@@ -134,8 +133,6 @@ sharding|mmapv1|wiredTiger|inMemory
 sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
 sharding_auth|default
 sharding_auth_audit|mmapv1|wiredTiger|inMemory
-sharding_auth_audit_misc|wiredTiger
-sharding_auth_misc|wiredTiger
 sharding_continuous_config_stepdown|mmapv1|wiredTiger|inMemory
 sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
 sharding_gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1|wiredTiger|inMemory
@@ -143,10 +140,6 @@ sharding_jscore_op_query_passthrough|mmapv1|wiredTiger|inMemory
 sharding_jscore_passthrough|mmapv1|wiredTiger|inMemory
 sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1|wiredTiger|inMemory
 sharding_last_stable_mongos_and_mixed_shards|default
-  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
-  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
-sharding_last_stable_mongos_and_mixed_shards_misc|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
