@@ -83,6 +83,9 @@ UPSTREAM_OLD_VER=$(echo "${OLD_VER}"|sed 's/-.*$//')
 UPSTREAM_NEW_VER=$(echo "${NEW_VER}"|sed 's/-.*$//')
 
 COMPATIBILITY=$(echo ${UPSTREAM_NEW_VER}|grep -oE "[0-9]+\.[0-9]+")
+if [ "${STORAGE_ENGINE}" == "rocksdb" -a "${COMPATIBILITY}" == "3.6" ]; then
+  COMPATIBILITY="3.4"
+fi
 
 GT_VERSION=$(echo -e "${UPSTREAM_NEW_VER}\n${UPSTREAM_OLD_VER}" | sort -t. -k1,1nr -k2,2nr -k3,3nr | head -1)
 if [ "${GT_VERSION}" = "${UPSTREAM_OLD_VER}" ]; then
@@ -384,11 +387,7 @@ if [ "${LAYOUT_TYPE}" == "single" ]; then
 
   # upgrade featureCompatibilityVersion to higher version
   if [ "${TEST_TYPE}" == "upgrade" ]; then
-		if [ "${STORAGE_ENGINE}" != "rocksdb" -o "${COMPATIBILITY}" != "3.6" ]; then
-			${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/admin --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
-		else
-			COMPATIBILITY="3.4"
-		fi
+    ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/admin --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
   fi
 
   import_test_data ${NEW_VER} ${PSMDB_NEW_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test2 restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-import.log
@@ -468,11 +467,7 @@ elif [ "${LAYOUT_TYPE}" == "replicaset" ]; then
   upgrade_next_rs_node "PRIMARY"
   update_primary_info
   if [ "${TEST_TYPE}" == "upgrade" ]; then
-		if [ "${STORAGE_ENGINE}" != "rocksdb" -o "${COMPATIBILITY}" != "3.6" ]; then
-			${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${PRIMARY_PORT}/test --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
-		else
-			COMPATIBILITY="3.4"
-		fi
+    ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${PRIMARY_PORT}/test --eval "db.adminCommand( { setFeatureCompatibilityVersion: \"${COMPATIBILITY}\" } );"
   fi
   sleep 10
   if [ "${BENCH_TOOL}" != "none" ]; then
