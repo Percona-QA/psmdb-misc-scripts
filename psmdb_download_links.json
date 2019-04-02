@@ -54,7 +54,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.4/percona-server-mongodb-3.4.19-2.17/binary/tarball/percona-server-mongodb-3.4.19-2.17-xenial-x86_64.tar.gz"
+                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.4/percona-server-mongodb-3.4.20-2.18/binary/tarball/percona-server-mongodb-3.4.20-2.18-xenial-x86_64.tar.gz"
                },
                "edition": "base",
                "target": "linux_x86_64"
@@ -62,7 +62,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "3.4.19"
+         "version": "3.4.20"
       },
       {
          "development_release": false,
