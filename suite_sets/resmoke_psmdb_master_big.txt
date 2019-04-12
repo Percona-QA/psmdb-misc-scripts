@@ -3,10 +3,14 @@ aggregation_auth|default
 aggregation_facet_unwind_passthrough|wiredTiger|inMemory
 aggregation_read_concern_majority_passthrough|wiredTiger|inMemory
 aggregation_sharded_collections_passthrough|wiredTiger|inMemory
+aggregation_tde_cbc|default
+aggregation_tde_gcm|default
 audit|wiredTiger|inMemory
 auth|wiredTiger|inMemory
 auth_audit|wiredTiger|inMemory
 backup|wiredTiger
+backup_tde_cbc|default
+backup_tde_gcm|default
 benchmarks --jobs=1 --perfReportFile=perf.json|default
 benchmarks_sharding --jobs=1 --perfReportFile=perf_sharding.json|default
 buildscripts_test|default
@@ -31,6 +35,8 @@ core_auth|default
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
 core_minimum_batch_size|wiredTiger|inMemory
 core_op_query|wiredTiger|inMemory
+core_tde_cbc|default
+core_tde_gcm|default
 core_txns|wiredTiger|inMemory
 dbtest|wiredTiger|inMemory
 decimal|wiredTiger|inMemory
@@ -83,6 +89,8 @@ replica_sets_initsync_jscore_passthrough|wiredTiger
 replica_sets_initsync_static_jscore_passthrough|wiredTiger
 replica_sets_jscore_passthrough|wiredTiger|inMemory
 replica_sets_kill_secondaries_jscore_passthrough|wiredTiger
+replica_sets_tde_cbc|default
+replica_sets_tde_gcm|default
 retryable_writes_jscore_passthrough|wiredTiger|inMemory
 retryable_writes_jscore_stepdown_passthrough|wiredTiger|inMemory
 serial_run|wiredTiger|inMemory
@@ -103,6 +111,8 @@ sharding_last_stable_mongos_and_mixed_shards|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+sharding_tde_cbc|default
+sharding_tde_gcm|default
 slow1|wiredTiger|inMemory
 ssl|default
 ssl_special|default
