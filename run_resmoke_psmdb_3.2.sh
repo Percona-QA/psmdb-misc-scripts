@@ -45,7 +45,7 @@ RESMOKE_SE=""
 RESMOKE_EXCLUDE_wiredTiger="--excludeWithAnyTags=requires_mmapv1"
 RESMOKE_EXCLUDE_PerconaFT=""
 RESMOKE_EXCLUDE_rocksdb=""
-RESMOKE_EXCLUDE_mmapv1="--excludeWithAnyTags=requires_wiredtiger,uses_transactions,requires_document_locking"
+RESMOKE_EXCLUDE_mmapv1="--excludeWithAnyTags=requires_wiredtiger,uses_transactions,requires_document_locking,requires_majority_read_concern,uses_change_streams"
 RESMOKE_EXCLUDE_inMemory="--excludeWithAnyTags=requires_persistence,requires_journaling,requires_mmapv1,uses_transactions"
 
 run_system_validations

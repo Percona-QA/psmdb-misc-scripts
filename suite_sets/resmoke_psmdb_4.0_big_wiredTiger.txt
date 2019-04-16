@@ -90,11 +90,11 @@ logical_session_cache_standalone_default_refresh_jscore_passthrough|wiredTiger
 mongos_test|default
 multiversion|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7 4.0.5
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 multiversion_auth|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform linux --architecture x86_64 3.2 3.4 3.6 3.6.7 4.0.5
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 multiversion_multistorage_engine|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion

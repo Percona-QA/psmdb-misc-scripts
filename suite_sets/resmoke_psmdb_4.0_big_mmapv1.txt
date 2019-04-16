@@ -133,7 +133,7 @@ sharding|mmapv1
 sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1
  sharding_auth|default
 sharding_auth_audit|mmapv1
-sharding_continuous_config_stepdown|mmapv1
+ sharding_continuous_config_stepdown|mmapv1
 sharding_gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|mmapv1
 sharding_gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1
 sharding_jscore_op_query_passthrough|mmapv1
