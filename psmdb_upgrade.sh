@@ -28,6 +28,7 @@ PSMDB_NEW_BINDIR=$5
 BASE_DATADIR="${WORKDIR}/data"
 MONGO_START_TIMEOUT=600
 YCSB_VER="0.15.0"
+MGODATAGEN_VER="0.7.4"
 CIPHER_MODE="${CIPHER_MODE:-AES256-CBC}"
 ENCRYPTION="${ENCRYPTION:-no}"
 MONGO_JAVA_DRIVER="${MONGO_JAVA_DRIVER:-3.6.3}"
@@ -125,6 +126,11 @@ elif [ "${BENCH_TOOL}" != "none" ]; then
   echo "Unknown benchmarking tool selected. Please use \"export BENCH_TOOL=sysbench|ycsb|none\" !"
   exit 1
 fi
+rm -f mgodatagen_linux_x86_64.tar.gz
+wget --no-verbose https://github.com/feliixx/mgodatagen/releases/download/${MGODATAGEN_VER}/mgodatagen_linux_x86_64.tar.gz
+tar xf mgodatagen_linux_x86_64.tar.gz
+rm -f mgodatagen_linux_x86_64.tar.gz
+wget --no-verbose https://raw.githubusercontent.com/feliixx/mgodatagen/master/datagen/testdata/big.json
 
 ###
 ### COMMON FUNCTIONS
@@ -366,6 +372,7 @@ upgrade_next_rs_node()
 if [ "${LAYOUT_TYPE}" == "single" ]; then
   start_single ${OLD_VER} ${NODE1_DATA} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-first-start.log ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE}
   import_test_data ${OLD_VER} ${PSMDB_OLD_BINDIR} ${NODE1_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
+  ${WORKDIR}/mgodatagen --file=big.json --host=localhost --port=${NODE1_PORT} >> ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
   if [ "${BENCH_TOOL}" != "none" ]; then
     run_bench bench_test ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA} load
     run_bench bench_test2 ${NODE1_PORT} FALSE beforeUpgrade ${NODE1_DATA} load
@@ -373,6 +380,7 @@ if [ "${LAYOUT_TYPE}" == "single" ]; then
   # create db hashes
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/datagen_it_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
 
   # downgrade featureCompatibilityVersion to lower version
   if [ "${TEST_TYPE}" == "downgrade" ]; then
@@ -397,6 +405,7 @@ if [ "${LAYOUT_TYPE}" == "single" ]; then
   # create db hashes
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/datagen_it_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
   #
   echo -e "\n\n##### Show info of node ${NODE1_PORT} after upgrade #####\n"
   show_node_info ${NODE1_PORT} "afterUpgrade" | tee ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-nodeInfo-afterUpgrade.log
@@ -428,6 +437,7 @@ elif [ "${LAYOUT_TYPE}" == "replicaset" ]; then
   init_replica
   update_primary_info
   import_test_data ${OLD_VER} ${PSMDB_OLD_BINDIR} ${PRIMARY_PORT} ${STORAGE_ENGINE} test restaurants ${TEST_DB_FILE} ${PRIMARY_DATA}/${PRIMARY_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
+  ${WORKDIR}/mgodatagen --file=big.json --host=localhost --port=${PRIMARY_PORT} >> ${PRIMARY_DATA}/${PRIMARY_PORT}-${OLD_VER}-${STORAGE_ENGINE}-import.log
   if [ "${BENCH_TOOL}" != "none" ]; then
     update_primary_info
     echo "PRIMARY_PORT: ${PRIMARY_PORT}"
@@ -439,10 +449,13 @@ elif [ "${LAYOUT_TYPE}" == "replicaset" ]; then
   # create db hashes
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/datagen_it_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node1-dbhash-before.log
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE2_DATA}/${NODE2_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node2-dbhash-before.log
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE2_DATA}/${NODE2_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node2-dbhash-before.log
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/datagen_it_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE2_DATA}/${NODE2_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node2-dbhash-before.log
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log
   ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log
+  ${PSMDB_OLD_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/datagen_it_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE3_DATA}/${NODE3_PORT}-${OLD_VER}-${STORAGE_ENGINE}-node3-dbhash-before.log
   #
   # downgrade featureCompatibilityVersion to lower version before RS downgrade
   update_primary_info
@@ -478,10 +491,13 @@ elif [ "${LAYOUT_TYPE}" == "replicaset" ]; then
   # create db hashes
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE1_PORT}/datagen_it_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE1_DATA}/${NODE1_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node1-dbhash-after.log
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE2_DATA}/${NODE2_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node2-dbhash-after.log
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE2_DATA}/${NODE2_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node2-dbhash-after.log
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE2_PORT}/datagen_it_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE2_DATA}/${NODE2_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node2-dbhash-after.log
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet > ${NODE3_DATA}/${NODE3_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node3-dbhash-after.log
   ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/bench_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE3_DATA}/${NODE3_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node3-dbhash-after.log
+  ${PSMDB_NEW_BINDIR}/bin/mongo ${HOST}:${NODE3_PORT}/datagen_it_test --eval "db.runCommand({ dbHash: 1 }).md5" --quiet >> ${NODE3_DATA}/${NODE3_PORT}-${NEW_VER}-${STORAGE_ENGINE}-node3-dbhash-after.log
   #
   echo -e "\n\n##### Show info of node ${UPGRADE_PORT} after upgrade #####\n"
   show_node_info ${UPGRADE_PORT} "afterUpgrade"
