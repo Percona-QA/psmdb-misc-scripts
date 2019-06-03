@@ -51,7 +51,7 @@ while true; do
       if [ ${LOAD} -lt 1 ]; then
         write_log
         rm -rf /tmp/mongodb*.sock
-        killall -9 mongod mongos mongo >/dev/null 2>&1
+        killall -9 mongod mongos mongo mongobridge >/dev/null 2>&1
         sleep 300
         save_state
       fi
