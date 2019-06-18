@@ -175,6 +175,8 @@ start_single()
       chmod 600 ${FUN_NODE_DATA}/mongodb-keyfile
     fi
     FUN_MONGOD_EXTRA="${MONGOD_EXTRA} --enableEncryption --encryptionKeyFile ${FUN_NODE_DATA}/mongodb-keyfile --encryptionCipherMode ${CIPHER_MODE}"
+  elif [ "${FUN_NODE_SE}" == "wiredTiger" -a "${ENCRYPTION}" == "vault" ]; then
+    FUN_MONGOD_EXTRA="${MONGOD_EXTRA} --enableEncryption --encryptionCipherMode ${CIPHER_MODE} --vaultServerName 10.30.6.213 --vaultPort 8200 --vaultTokenFile ${WORKDIR}/mongodb-test-vault-token --vaultSecret secret_v2/data/psmdb-test/package-test --vaultServerCAFile ${WORKDIR}/test.cer"
   fi
   ${FUN_BIN_DIR}/bin/mongod --dbpath ${FUN_NODE_DATA} --logpath ${FUN_LOG_ERR} --port ${FUN_NODE_PORT} --logappend --fork --storageEngine ${FUN_NODE_SE} ${REPL_SET} ${FUN_MONGOD_EXTRA} > ${FUN_LOG_ERR} 2>&1 &
 
