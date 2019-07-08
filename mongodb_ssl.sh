@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 
+HOSTNAME="$(hostname -f)"
+
+# first parameter sets the hostname/CN for certificate
+if [ ! -z "$1" ]; then
+  HOSTNAME="$1"
+fi
+
 # Generate self signed root CA cert
-openssl req -nodes -x509 -newkey rsa:2048 -keyout ca.key -out ca.crt -subj "/C=US/ST=California/L=San Francisco/O=Percona/OU=root/CN=`hostname -f`/emailAddress=tomislav.plavcic@percona.com"
+openssl req -nodes -x509 -newkey rsa:2048 -keyout ca.key -out ca.crt -subj "/C=US/ST=California/L=San Francisco/O=Percona/OU=root/CN=${HOSTNAME}/emailAddress=test@percona.com"
 
 # Generate server cert to be signed
-openssl req -nodes -newkey rsa:2048 -keyout server.key -out server.csr -subj "/C=US/ST=California/L=San Francisco/O=Percona/OU=server/CN=`hostname -f`/emailAddress=tomislav.plavcic@percona.com"
+openssl req -nodes -newkey rsa:2048 -keyout server.key -out server.csr -subj "/C=US/ST=California/L=San Francisco/O=Percona/OU=server/CN=${HOSTNAME}/emailAddress=test@percona.com"
 
 # Sign the server cert
 openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt
@@ -13,7 +20,7 @@ openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out s
 cat server.key server.crt > server.pem
 
 # Generate client cert to be signed
-openssl req -nodes -newkey rsa:2048 -keyout client.key -out client.csr -subj "/C=US/ST=California/L=San Francisco/O=Percona/OU=client/CN=`hostname -f`/emailAddress=tomislav.plavcic@percona.com"
+openssl req -nodes -newkey rsa:2048 -keyout client.key -out client.csr -subj "/C=US/ST=California/L=San Francisco/O=Percona/OU=client/CN=${HOSTNAME}/emailAddress=test@percona.com"
 
 # Sign the client cert
 openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAserial ca.srl -out client.crt
