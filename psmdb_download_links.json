@@ -6,6 +6,54 @@
             {
                "arch": "x86_64",
                "archive": {
+                  "url": "https://www.percona.com/downloads/percona-server-mongodb-4.0/percona-server-mongodb-4.0.10-5/binary/tarball/percona-server-mongodb-4.0.10-5-bionic-x86_64.tar.gz"
+               },
+               "edition": "base",
+               "target": "ubuntu1804"
+            }
+         ],
+         "production_release": true,
+         "release_candidate": false,
+         "version": "4.0.10"
+      },
+      {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
+                  "url": "https://www.percona.com/downloads/percona-server-mongodb-4.0/percona-server-mongodb-4.0.5-2/binary/tarball/percona-server-mongodb-4.0.5-2-bionic-x86_64.tar.gz"
+               },
+               "edition": "base",
+               "target": "ubuntu1804"
+            }
+         ],
+         "production_release": true,
+         "release_candidate": false,
+         "version": "4.0.5"
+      },
+      {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
+                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.6/percona-server-mongodb-3.6.13-3.3/binary/tarball/percona-server-mongodb-3.6.13-3.3-bionic-x86_64.tar.gz"
+               },
+               "edition": "base",
+               "target": "ubuntu1804"
+            }
+         ],
+         "production_release": true,
+         "release_candidate": false,
+         "version": "3.6.13"
+      },
+      {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
                   "url": "https://www.percona.com/downloads/percona-server-mongodb-4.0/percona-server-mongodb-4.0.10-5/binary/tarball/percona-server-mongodb-4.0.10-5-xenial-x86_64.tar.gz"
                },
                "edition": "base",
