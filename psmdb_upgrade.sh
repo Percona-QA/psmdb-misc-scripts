@@ -328,7 +328,7 @@ update_primary_info()
   PRIMARY_PORT=""
   PRIMARY_DATA=""
   for node_port in ${NODE1_PORT} ${NODE2_PORT} ${NODE3_PORT}; do
-    if [ $(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --quiet --eval 'db.isMaster().ismaster') = "true" ]; then
+    if [ "$(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --quiet --eval 'db.isMaster().ismaster')" == "true" ]; then
       PRIMARY_PORT=$node_port
       PRIMARY_DATA=$(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --quiet --eval 'db.serverCmdLineOpts().parsed.storage.dbPath')
       break;
@@ -342,7 +342,7 @@ choose_rs_node_upgrade()
   UPGRADE_PORT=""
   UPGRADE_DATA=""
   for node_port in ${NODE3_PORT} ${NODE2_PORT} ${NODE1_PORT}; do
-    if [ $(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --quiet --eval 'db.isMaster().ismaster') = "true" ]; then
+    if [ "$(${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${node_port} --quiet --eval 'db.isMaster().ismaster')" == "true" ]; then
       CUR_NODE_TYPE="PRIMARY"
     else
       CUR_NODE_TYPE="SECONDARY"
