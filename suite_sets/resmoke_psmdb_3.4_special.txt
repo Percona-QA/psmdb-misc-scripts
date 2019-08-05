@@ -1,4 +1,5 @@
 dbtest|mmapv1|wiredTiger|rocksdb|inMemory
 integration_tests_replset|default
+integration_tests_sharded|default
 integration_tests_standalone|default
 unittests|default
