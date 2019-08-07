@@ -227,10 +227,8 @@ start_replica()
 
 init_replica()
 {
-  ${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${NODE1_PORT} --eval "rs.initiate({ _id: \"rs0\", members: [ { _id: 0, host: \"${HOST}:${NODE1_PORT}\" } ] })"
+  ${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${NODE1_PORT} --eval "rs.initiate({ _id: \"rs0\", writeConcernMajorityJournalDefault: false, members: [ { _id: 0, host: \"${HOST}:${NODE1_PORT}\" }, { _id: 1, host: \"${HOST}:${NODE2_PORT}\" }, { _id: 2, host: \"${HOST}:${NODE3_PORT}\" } ] })"
   sleep 30
-  ${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${NODE1_PORT} --eval "rs.add(\"${HOST}:${NODE2_PORT}\")"
-  ${PSMDB_OLD_BINDIR}/bin/mongo --host=${HOST} --port ${NODE1_PORT} --eval "rs.add(\"${HOST}:${NODE3_PORT}\")"
 }
 
 import_test_data()
