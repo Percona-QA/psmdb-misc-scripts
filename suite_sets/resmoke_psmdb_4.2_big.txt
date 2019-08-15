@@ -34,25 +34,25 @@ change_streams_whole_db_passthrough|wiredTiger|inMemory
 change_streams_whole_db_secondary_reads_passthrough|wiredTiger|inMemory
 change_streams_whole_db_sharded_collections_passthrough|wiredTiger|inMemory
 client_encrypt|wiredTiger|inMemory
-concurrency|wiredTiger|inMemory
-concurrency_replication|wiredTiger|inMemory
-concurrency_replication_causal_consistency|wiredTiger|inMemory
-concurrency_replication_causal_consistency_ubsan|wiredTiger|inMemory
-concurrency_replication_multi_stmt_txn|wiredTiger|inMemory
-concurrency_replication_multi_stmt_txn_ubsan|wiredTiger|inMemory
-concurrency_sharded_causal_consistency|wiredTiger|inMemory
-concurrency_sharded_causal_consistency_and_balancer|wiredTiger|inMemory
-concurrency_sharded_local_read_write_multi_stmt_txn|wiredTiger|inMemory
-concurrency_sharded_local_read_write_multi_stmt_txn_with_balancer|wiredTiger|inMemory
-concurrency_sharded_multi_stmt_txn|wiredTiger|inMemory
-concurrency_sharded_multi_stmt_txn_with_balancer|wiredTiger|inMemory
-concurrency_sharded_multi_stmt_txn_with_stepdowns|wiredTiger|inMemory
-concurrency_sharded_replication|wiredTiger|inMemory
-concurrency_sharded_replication_with_balancer|wiredTiger|inMemory
-concurrency_sharded_with_stepdowns|wiredTiger|inMemory
-concurrency_sharded_with_stepdowns_and_balancer|wiredTiger|inMemory
-concurrency_simultaneous|wiredTiger|inMemory
-concurrency_simultaneous_replication|wiredTiger|inMemory
+concurrency --jobs=1|wiredTiger|inMemory
+concurrency_replication --jobs=1|wiredTiger|inMemory
+concurrency_replication_causal_consistency --jobs=1|wiredTiger|inMemory
+concurrency_replication_causal_consistency_ubsan --jobs=1|wiredTiger|inMemory
+concurrency_replication_multi_stmt_txn --jobs=1|wiredTiger|inMemory
+concurrency_replication_multi_stmt_txn_ubsan --jobs=1|wiredTiger|inMemory
+concurrency_sharded_causal_consistency --jobs=1|wiredTiger|inMemory
+concurrency_sharded_causal_consistency_and_balancer --jobs=1|wiredTiger|inMemory
+concurrency_sharded_local_read_write_multi_stmt_txn --jobs=1|wiredTiger|inMemory
+concurrency_sharded_local_read_write_multi_stmt_txn_with_balancer --jobs=1|wiredTiger|inMemory
+concurrency_sharded_multi_stmt_txn --jobs=1|wiredTiger|inMemory
+concurrency_sharded_multi_stmt_txn_with_balancer --jobs=1|wiredTiger|inMemory
+concurrency_sharded_multi_stmt_txn_with_stepdowns --jobs=1|wiredTiger|inMemory
+concurrency_sharded_replication --jobs=1|wiredTiger|inMemory
+concurrency_sharded_replication_with_balancer --jobs=1|wiredTiger|inMemory
+concurrency_sharded_with_stepdowns --jobs=1|wiredTiger|inMemory
+concurrency_sharded_with_stepdowns_and_balancer --jobs=1|wiredTiger|inMemory
+concurrency_simultaneous --jobs=1|wiredTiger|inMemory
+concurrency_simultaneous_replication --jobs=1|wiredTiger|inMemory
 core|wiredTiger|inMemory
 core_auth|default
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
@@ -110,8 +110,8 @@ multiversion_auth|wiredTiger
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 no_passthrough|wiredTiger|inMemory
 no_passthrough_with_mongod|wiredTiger|inMemory
-parallel|wiredTiger|inMemory
-parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
+parallel --jobs=1|wiredTiger|inMemory
+parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command --jobs=1|wiredTiger|inMemory
 percona_no_passthrough_with_mongod|wiredTiger|inMemory
 ratelimit|wiredTiger|inMemory
 read_concern_majority_passthrough|wiredTiger|inMemory
@@ -161,9 +161,11 @@ sharding_rs_matching_disabled|wiredTiger|inMemory
 sharding_rs_matching_match_busiest_node|wiredTiger|inMemory
 sharding_tde_cbc|default
 sharding_tde_gcm|default
-slow1|wiredTiger|inMemory
+slow1 --jobs=1|wiredTiger|inMemory
 ssl|default
 ssl_special|default
 tool|wiredTiger|inMemory
  unittests|default
+watchdog --jobs=1|wiredTiger|inMemory
+  $ jstests/watchdog/charybdefs_setup.sh
 write_concern_majority_passthrough|wiredTiger|inMemory

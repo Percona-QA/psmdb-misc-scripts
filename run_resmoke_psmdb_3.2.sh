@@ -36,17 +36,17 @@ source "${basedir}/run_smoke_resmoke_funcs.sh"
 
 # smoke parameters
 RESMOKE_JOBS=$(grep -cw ^processor /proc/cpuinfo)
-RESMOKE_BASE="--continueOnFailure --jobs=${RESMOKE_JOBS} --shuffle --storageEngineCacheSizeGB=1"
+RESMOKE_BASE="--continueOnFailure --jobs=${RESMOKE_JOBS} --shuffle"
 RESMOKE_DEFAULT=""
 RESMOKE_AUTH="--auth"
 RESMOKE_SE=""
 
-# default tags to exclude per SE
-RESMOKE_EXCLUDE_wiredTiger="--excludeWithAnyTags=requires_mmapv1"
-RESMOKE_EXCLUDE_PerconaFT=""
-RESMOKE_EXCLUDE_rocksdb=""
-RESMOKE_EXCLUDE_mmapv1="--excludeWithAnyTags=requires_wiredtiger,uses_transactions,requires_document_locking,requires_majority_read_concern,uses_change_streams"
-RESMOKE_EXCLUDE_inMemory="--excludeWithAnyTags=requires_persistence,requires_journaling,requires_mmapv1,uses_transactions"
+# default options for specific SE
+RESMOKE_SE_DEFAULT_wiredTiger="--storageEngineCacheSizeGB=1 --excludeWithAnyTags=requires_mmapv1"
+RESMOKE_SE_DEFAULT_PerconaFT=""
+RESMOKE_SE_DEFAULT_rocksdb=""
+RESMOKE_SE_DEFAULT_mmapv1="--storageEngineCacheSizeGB=1 --excludeWithAnyTags=requires_wiredtiger,uses_transactions,requires_document_locking,requires_majority_read_concern,uses_change_streams"
+RESMOKE_SE_DEFAULT_inMemory="--storageEngineCacheSizeGB=4 --excludeWithAnyTags=requires_persistence,requires_journaling,requires_mmapv1,uses_transactions"
 
 run_system_validations
 
@@ -161,8 +161,8 @@ for suite in "${SUITES[@]}"; do
           echo "Suite Definition: ${suiteRawName}${suiteOptions:+ ${suiteOptions}}|${suiteElement}" | tee -a "${logOutputFile}"
           [ "${suiteRunSet}" == "default" ] && resmokeParams=${RESMOKE_DEFAULT}
           [ "${suiteRunSet}" == "auth" ] && resmokeParams=${RESMOKE_AUTH}
-          excludeTagsVar="RESMOKE_EXCLUDE_${DEFAULT_ENGINE}"
-          resmokeParams="${RESMOKE_BASE} ${resmokeParams} ${!excludeTagsVar} ${suiteOptions} ${suiteRunSetOptions}"
+          seDefaultOpts="RESMOKE_SE_DEFAULT_${DEFAULT_ENGINE}"
+          resmokeParams="${RESMOKE_BASE} ${resmokeParams} ${!seDefaultOpts} ${suiteOptions} ${suiteRunSetOptions}"
           if $useSuitesOption; then
             resmokeParams="${resmokeParams} --suites=${suite}"
           fi
@@ -174,8 +174,8 @@ for suite in "${SUITES[@]}"; do
           echo "-----------------" | tee -a "${logOutputFile}"
           echo "Suite Definition: ${suiteRawName}${suiteOptions:+ ${suiteOptions}}|${suiteElement}" | tee -a "${logOutputFile}"
           if hasEngine "${suiteRunSet}"; then
-            excludeTagsVar="RESMOKE_EXCLUDE_${suiteRunSet}"
-            resmokeParams="${RESMOKE_BASE} ${RESMOKE_SE} --storageEngine=${suiteRunSet} ${!excludeTagsVar} ${suiteOptions} ${suiteRunSetOptions}"
+            seDefaultOpts="RESMOKE_SE_DEFAULT_${suiteRunSet}"
+            resmokeParams="${RESMOKE_BASE} ${RESMOKE_SE} --storageEngine=${suiteRunSet} ${!seDefaultOpts} ${suiteOptions} ${suiteRunSetOptions}"
             if $useSuitesOption; then
               resmokeParams="${resmokeParams} --suites=${suite}"
             fi
@@ -196,8 +196,8 @@ for suite in "${SUITES[@]}"; do
               fi
               echo "-----------------" | tee -a "${logOutputFile}"
               echo "Suite Definition: ${suiteDefinition}${suiteOptions:+ ${suiteOptions}}" | tee -a "${logOutputFile}"
-              excludeTagsVar="RESMOKE_EXCLUDE_${engine}"
-              resmokeParams="${RESMOKE_BASE} --storageEngine=${engine} ${RESMOKE_SE} ${!excludeTagsVar} ${suiteOptions} ${suiteRunSetOptions}"
+              seDefaultOpts="RESMOKE_SE_DEFAULT_${engine}"
+              resmokeParams="${RESMOKE_BASE} --storageEngine=${engine} ${RESMOKE_SE} ${!seDefaultOpts} ${suiteOptions} ${suiteRunSetOptions}"
               if $useSuitesOption; then
                 resmokeParams="${resmokeParams} --suites=${suite}"
               fi

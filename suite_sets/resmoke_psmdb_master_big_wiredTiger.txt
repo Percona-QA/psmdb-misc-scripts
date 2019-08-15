@@ -34,25 +34,25 @@ change_streams_whole_db_passthrough|wiredTiger
 change_streams_whole_db_secondary_reads_passthrough|wiredTiger
 change_streams_whole_db_sharded_collections_passthrough|wiredTiger
 client_encrypt|wiredTiger
-concurrency|wiredTiger
-concurrency_replication|wiredTiger
-concurrency_replication_causal_consistency|wiredTiger
-concurrency_replication_causal_consistency_ubsan|wiredTiger
-concurrency_replication_multi_stmt_txn|wiredTiger
-concurrency_replication_multi_stmt_txn_ubsan|wiredTiger
-concurrency_sharded_causal_consistency|wiredTiger
-concurrency_sharded_causal_consistency_and_balancer|wiredTiger
-concurrency_sharded_local_read_write_multi_stmt_txn|wiredTiger
-concurrency_sharded_local_read_write_multi_stmt_txn_with_balancer|wiredTiger
-concurrency_sharded_multi_stmt_txn|wiredTiger
-concurrency_sharded_multi_stmt_txn_with_balancer|wiredTiger
-concurrency_sharded_multi_stmt_txn_with_stepdowns|wiredTiger
-concurrency_sharded_replication|wiredTiger
-concurrency_sharded_replication_with_balancer|wiredTiger
-concurrency_sharded_with_stepdowns|wiredTiger
-concurrency_sharded_with_stepdowns_and_balancer|wiredTiger
-concurrency_simultaneous|wiredTiger
-concurrency_simultaneous_replication|wiredTiger
+concurrency --jobs=1|wiredTiger
+concurrency_replication --jobs=1|wiredTiger
+concurrency_replication_causal_consistency --jobs=1|wiredTiger
+concurrency_replication_causal_consistency_ubsan --jobs=1|wiredTiger
+concurrency_replication_multi_stmt_txn --jobs=1|wiredTiger
+concurrency_replication_multi_stmt_txn_ubsan --jobs=1|wiredTiger
+concurrency_sharded_causal_consistency --jobs=1|wiredTiger
+concurrency_sharded_causal_consistency_and_balancer --jobs=1|wiredTiger
+concurrency_sharded_local_read_write_multi_stmt_txn --jobs=1|wiredTiger
+concurrency_sharded_local_read_write_multi_stmt_txn_with_balancer --jobs=1|wiredTiger
+concurrency_sharded_multi_stmt_txn --jobs=1|wiredTiger
+concurrency_sharded_multi_stmt_txn_with_balancer --jobs=1|wiredTiger
+concurrency_sharded_multi_stmt_txn_with_stepdowns --jobs=1|wiredTiger
+concurrency_sharded_replication --jobs=1|wiredTiger
+concurrency_sharded_replication_with_balancer --jobs=1|wiredTiger
+concurrency_sharded_with_stepdowns --jobs=1|wiredTiger
+concurrency_sharded_with_stepdowns_and_balancer --jobs=1|wiredTiger
+concurrency_simultaneous --jobs=1|wiredTiger
+concurrency_simultaneous_replication --jobs=1|wiredTiger
 core|wiredTiger
 core_auth|default
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|wiredTiger
@@ -110,8 +110,8 @@ multiversion_auth|wiredTiger
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 no_passthrough|wiredTiger
 no_passthrough_with_mongod|wiredTiger
-parallel|wiredTiger
-parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|wiredTiger
+parallel --jobs=1|wiredTiger
+parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command --jobs=1|wiredTiger
 percona_no_passthrough_with_mongod|wiredTiger
 ratelimit|wiredTiger
 read_concern_majority_passthrough|wiredTiger
@@ -161,9 +161,11 @@ sharding_rs_matching_disabled|wiredTiger
 sharding_rs_matching_match_busiest_node|wiredTiger
 sharding_tde_cbc|default
 sharding_tde_gcm|default
-slow1|wiredTiger
+slow1 --jobs=1|wiredTiger
 ssl|default
 ssl_special|default
 tool|wiredTiger
  unittests|default
+watchdog --jobs=1|wiredTiger
+  $ jstests/watchdog/charybdefs_setup.sh
 write_concern_majority_passthrough|wiredTiger
