@@ -28,23 +28,23 @@ change_streams_whole_db_mongos_passthrough|inMemory
 change_streams_whole_db_passthrough|inMemory
 change_streams_whole_db_sharded_collections_passthrough|inMemory
 client_encrypt|inMemory
-concurrency|inMemory
-concurrency_replication|inMemory
-concurrency_replication_causal_consistency|inMemory
-concurrency_replication_multi_stmt_txn|inMemory
-concurrency_sharded_causal_consistency|inMemory
-concurrency_sharded_causal_consistency_and_balancer|inMemory
-concurrency_sharded_local_read_write_multi_stmt_txn|inMemory
-concurrency_sharded_local_read_write_multi_stmt_txn_with_balancer|inMemory
-concurrency_sharded_multi_stmt_txn|inMemory
-concurrency_sharded_multi_stmt_txn_with_balancer|inMemory
-concurrency_sharded_multi_stmt_txn_with_stepdowns|inMemory
-concurrency_sharded_replication|inMemory
-concurrency_sharded_replication_with_balancer|inMemory
-concurrency_sharded_with_stepdowns|inMemory
-concurrency_sharded_with_stepdowns_and_balancer|inMemory
-concurrency_simultaneous|inMemory
-concurrency_simultaneous_replication|inMemory
+concurrency --jobs=1|inMemory
+concurrency_replication --jobs=1|inMemory
+concurrency_replication_causal_consistency --jobs=1|inMemory
+concurrency_replication_multi_stmt_txn --jobs=1|inMemory
+concurrency_sharded_causal_consistency --jobs=1|inMemory
+concurrency_sharded_causal_consistency_and_balancer --jobs=1|inMemory
+concurrency_sharded_local_read_write_multi_stmt_txn --jobs=1|inMemory
+concurrency_sharded_local_read_write_multi_stmt_txn_with_balancer --jobs=1|inMemory
+concurrency_sharded_multi_stmt_txn --jobs=1|inMemory
+concurrency_sharded_multi_stmt_txn_with_balancer --jobs=1|inMemory
+concurrency_sharded_multi_stmt_txn_with_stepdowns --jobs=1|inMemory
+concurrency_sharded_replication --jobs=1|inMemory
+concurrency_sharded_replication_with_balancer --jobs=1|inMemory
+concurrency_sharded_with_stepdowns --jobs=1|inMemory
+concurrency_sharded_with_stepdowns_and_balancer --jobs=1|inMemory
+concurrency_simultaneous --jobs=1|inMemory
+concurrency_simultaneous_replication --jobs=1|inMemory
 core|inMemory
 core_auth|inMemory
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|inMemory
@@ -99,8 +99,8 @@ multi_stmt_txn_jscore_passthrough_with_migration|inMemory
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 no_passthrough|inMemory
 no_passthrough_with_mongod|inMemory
-parallel|inMemory
-parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|inMemory
+parallel --jobs=1|inMemory
+parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command --jobs=1|inMemory
 percona_no_passthrough_with_mongod|inMemory
 ratelimit|inMemory
 read_concern_linearizable_passthrough|inMemory
@@ -146,9 +146,11 @@ sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legac
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 sharding_rs_matching_disabled|inMemory
 sharding_rs_matching_match_busiest_node|inMemory
-slow1|inMemory
+slow1 --jobs=1|inMemory
 ssl|inMemory
 ssl_special|inMemory
 tool|inMemory
  unittests|default
+watchdog --jobs=1|inMemory
+  $ jstests/watchdog/charybdefs_setup.sh
 write_concern_majority_passthrough|inMemory
