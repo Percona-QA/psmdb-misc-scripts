@@ -158,7 +158,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "3.4.22"
+         "version": "3.4.23"
       },
       {
          "development_release": false,
