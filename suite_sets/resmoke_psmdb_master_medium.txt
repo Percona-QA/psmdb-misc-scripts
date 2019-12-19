@@ -38,7 +38,7 @@ no_passthrough_with_mongod|wiredTiger
 parallel|wiredTiger
 multiversion_multistorage_engine|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 percona_no_passthrough_with_mongod|wiredTiger
 ratelimit|wiredTiger
@@ -54,7 +54,7 @@ sharding_auth|default
 sharding_jscore_passthrough|wiredTiger
 sharding_last_stable_mongos_and_mixed_shards|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 ssl|default
 ssl_special|default
