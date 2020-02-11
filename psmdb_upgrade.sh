@@ -27,21 +27,21 @@ PSMDB_OLD_BINDIR=$4
 PSMDB_NEW_BINDIR=$5
 BASE_DATADIR="${WORKDIR}/data"
 MONGO_START_TIMEOUT=600
-YCSB_VER="0.15.0"
-MGODATAGEN_VER="0.7.4"
+YCSB_VER="0.17.0"
+MGODATAGEN_VER="0.7.5"
 CIPHER_MODE="${CIPHER_MODE:-AES256-CBC}"
 ENCRYPTION="${ENCRYPTION:-no}"
-MONGO_JAVA_DRIVER="${MONGO_JAVA_DRIVER:-3.6.3}"
+MONGO_JAVA_DRIVER="${MONGO_JAVA_DRIVER:-3.12.1}"
 MONGOD_EXTRA="${MONGOD_EXTRA:-}"
 LEAVE_RUNNING=${LEAVE_RUNNING:-false}
-BENCH_TOOL="${BENCH_TOOL:-sysbench}"
+BENCH_TOOL="${BENCH_TOOL:-ycsb}"
 Y_OPERATIONS=${Y_OPERATIONS:-1000000}
 S_DURATION=${S_DURATION:-5}
 S_COLLECTIONS=${S_COLLECTIONS:-1}
 B_DOCSPERCOL=${B_DOCSPERCOL:-1000000}
 S_WRITE_CONCERN="${S_WRITE_CONCERN:-SAFE}"
-B_LOADER_THREADS=${B_LOADER_THREADS:-8}
-B_WRITER_THREADS=${B_WRITER_THREADS:-8}
+B_LOADER_THREADS=${B_LOADER_THREADS:-4}
+B_WRITER_THREADS=${B_WRITER_THREADS:-4}
 
 cd ${WORKDIR}
 
@@ -117,10 +117,10 @@ if [ "${BENCH_TOOL}" = "sysbench" ]; then
   fi
 elif [ "${BENCH_TOOL}" = "ycsb" ]; then
   if [ ! -d ycsb-${YCSB_VER} ]; then
-    rm -f ycsb-${YCSB_VER}.tar.gz
-    wget --no-verbose https://github.com/brianfrankcooper/YCSB/releases/download/${YCSB_VER}/ycsb-${YCSB_VER}.tar.gz
-    tar xf ycsb-${YCSB_VER}.tar.gz
-    rm -f ycsb-${YCSB_VER}.tar.gz
+    rm -f ycsb-mongodb-binding-${YCSB_VER}.tar.gz
+    wget --no-verbose https://github.com/brianfrankcooper/YCSB/releases/download/${YCSB_VER}/ycsb-mongodb-binding-${YCSB_VER}.tar.gz
+    tar xf ycsb-mongodb-binding-${YCSB_VER}.tar.gz
+    rm -f ycsb-mongodb-binding-${YCSB_VER}.tar.gz
   fi
 elif [ "${BENCH_TOOL}" != "none" ]; then
   echo "Unknown benchmarking tool selected. Please use \"export BENCH_TOOL=sysbench|ycsb|none\" !"
@@ -284,7 +284,7 @@ run_bench()
     mv *.tsv ${FUN_DATA}
     popd
   elif [ "${BENCH_TOOL}" = "ycsb" ]; then
-    pushd ycsb-${YCSB_VER}
+    pushd ycsb-mongodb-binding-${YCSB_VER}
     if [ "${FUN_OPERATION}" == "load" -o "${FUN_OPERATION}" == "load-update" ]; then
       ./bin/ycsb load mongodb -s -P workloads/workloadb -p recordcount=${B_DOCSPERCOL} -threads ${B_LOADER_THREADS} -p mongodb.url="mongodb://localhost:${FUN_PORT}/${FUN_DATABASE}" -p mongodb.auth="false" > ${FUN_DATA}/${FUN_PREFIX}_${FUN_DATABASE}_ycsb-load.txt
     fi
