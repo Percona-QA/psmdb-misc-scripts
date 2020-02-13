@@ -214,7 +214,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.6/percona-server-mongodb-3.6.16-3.6/binary/tarball/percona-server-mongodb-3.6.16-3.6-xenial-x86_64.tar.gz"
+                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.6/percona-server-mongodb-3.6.17-4.0/binary/tarball/percona-server-mongodb-3.6.17-4.0-xenial-x86_64.tar.gz"
                },
                "edition": "base",
                "target": "linux_x86_64"
@@ -222,7 +222,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "3.6.16"
+         "version": "3.6.17"
       },
       {
          "development_release": false,
