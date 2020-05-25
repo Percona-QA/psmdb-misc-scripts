@@ -81,6 +81,20 @@ detectEngines
 
 # main script
 
+# starting from version 4.2.7 resmoke has new 'subcommand' syntax
+# to execute tests from test suites we need to prepend parameters
+# with 'run' command
+
+# to detect if we need to insert 'run' try to execute resmoke without parameters
+# new version will exit with error 'missing command'
+
+if python buildscripts/resmoke.py; then
+  commandName=""
+else
+  commandName="run"
+fi
+
+
 runResmoke() {
   local resmokeParams=$1
   local logOutputFile=$2
@@ -99,9 +113,9 @@ runResmoke() {
   echo "Base Directory: ${basedir}" | tee -a "${logOutputFile}"
   echo "Suite Set: ${suiteSet}" | tee -a "${logOutputFile}"
 
-  echo "Running Command: buildscripts/resmoke.py ${resmokeParams}" | tee -a "${logOutputFile}" 
+  echo "Running Command: buildscripts/resmoke.py ${commandName} ${resmokeParams}" | tee -a "${logOutputFile}" 
   # shellcheck disable=SC2086
-  python buildscripts/resmoke.py ${resmokeParams} >>"${logOutputFile}" 2>&1
+  python buildscripts/resmoke.py ${commandName} ${resmokeParams} >>"${logOutputFile}" 2>&1
 
   if [ -f "killer.log" ]; then
     NR_KILLED=$(grep ">>> START OF PROCESS CLEANUP <<<" killer.log | wc -l)
