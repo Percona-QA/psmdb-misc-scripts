@@ -102,11 +102,11 @@ multi_shard_multi_stmt_txn_stepdown_primary_jscore_passthrough|wiredTiger|inMemo
 multi_stmt_txn_jscore_passthrough_with_migration|wiredTiger|inMemory
 multiversion|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 multiversion_auth|wiredTiger
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 no_passthrough|wiredTiger|inMemory
 no_passthrough_with_mongod|wiredTiger|inMemory
