@@ -198,7 +198,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.6/percona-server-mongodb-3.6.17-4.0/binary/tarball/percona-server-mongodb-3.6.17-4.0-bionic-x86_64.tar.gz"
+                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.6/percona-server-mongodb-3.6.18-6.0/binary/tarball/percona-server-mongodb-3.6.18-6.0-bionic-x86_64.tar.gz"
                },
                "edition": "base",
                "target": "ubuntu1804"
@@ -206,7 +206,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "3.6.17"
+         "version": "3.6.18"
       },
       {
          "development_release": false,
@@ -246,7 +246,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.6/percona-server-mongodb-3.6.17-4.0/binary/tarball/percona-server-mongodb-3.6.17-4.0-xenial-x86_64.tar.gz"
+                  "url": "https://www.percona.com/downloads/percona-server-mongodb-3.6/percona-server-mongodb-3.6.18-6.0/binary/tarball/percona-server-mongodb-3.6.18-6.0-xenial-x86_64.tar.gz"
                },
                "edition": "base",
                "target": "linux_x86_64"
@@ -254,7 +254,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "3.6.17"
+         "version": "3.6.18"
       },
       {
          "development_release": false,
