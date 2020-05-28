@@ -85,13 +85,14 @@ detectEngines
 # to execute tests from test suites we need to prepend parameters
 # with 'run' command
 
-# to detect if we need to insert 'run' try to execute resmoke without parameters
-# new version will exit with error 'missing command'
+# to detect if we need to insert 'run' try to execute resmoke with
+# 'list-suites' parameter. It will succeed only on those versions
+# where subcommand syntax exists
 
-if python buildscripts/resmoke.py; then
-  commandName=""
-else
+if python buildscripts/resmoke.py list-suites; then
   commandName="run"
+else
+  commandName=""
 fi
 
 
