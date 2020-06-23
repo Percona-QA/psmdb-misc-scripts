@@ -206,7 +206,7 @@ stop_single()
 
   echo "Stopping node ${FUN_NODE_PORT} version ${FUN_NODE_VER} storage engine ${FUN_NODE_SE}"
   for X in $(seq 0 ${MONGO_START_TIMEOUT}); do
-    sleep 1
+    sleep 10
     if [ $(cat ${FUN_NODE_DATA}/mongod.lock|wc -l) -eq "0" ]; then
       break
     fi
