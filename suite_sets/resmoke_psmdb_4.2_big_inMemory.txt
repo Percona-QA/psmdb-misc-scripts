@@ -72,6 +72,7 @@ gle_auth_basics_passthrough --shellWriteMode=commands|inMemory
  jstestfuzz_sharded|inMemory
 json_schema|inMemory
 knobs|inMemory
+ldapauthz|inMemory
  logging_perf|inMemory
 logical_session_cache_replication_100ms_refresh_jscore_passthrough|inMemory
 logical_session_cache_replication_10sec_refresh_jscore_passthrough|inMemory

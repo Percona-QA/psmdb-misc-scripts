@@ -73,6 +73,7 @@ gle_auth_basics_passthrough --shellWriteMode=commands|mmapv1
  jstestfuzz_sharded|wiredTiger|inMemory
 json_schema|mmapv1
 knobs|mmapv1
+ldapauthz|mmapv1
  logical_session_cache_replication_100ms_refresh_jscore_passthrough|wiredTiger|inMemory
  logical_session_cache_replication_10sec_refresh_jscore_passthrough|wiredTiger|inMemory
  logical_session_cache_replication_1sec_refresh_jscore_passthrough|wiredTiger|inMemory

@@ -31,6 +31,7 @@ integration_tests_sharded|default
 integration_tests_standalone|default
 json_schema|default
 knobs|wiredTiger
+ldapauthz|wiredTiger
  logging_perf|mmapv1|wiredTiger|inMemory
 mongos_test|default
 no_passthrough|wiredTiger

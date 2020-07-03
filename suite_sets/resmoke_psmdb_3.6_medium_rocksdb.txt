@@ -25,6 +25,7 @@ integration_tests_sharded|rocksdb
 integration_tests_standalone|rocksdb
 json_schema|rocksdb
 knobs|rocksdb
+ldapauthz|rocksdb
 master_slave|rocksdb
 master_slave_auth|rocksdb
 master_slave_jscore_passthrough|rocksdb

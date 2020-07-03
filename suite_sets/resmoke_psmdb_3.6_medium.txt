@@ -31,6 +31,7 @@ integration_tests_sharded|default
 integration_tests_standalone|default
 json_schema|default
 knobs|wiredTiger|rocksdb
+ldapauthz|wiredTiger|rocksdb
 master_slave|wiredTiger|rocksdb|inMemory
 master_slave_auth|default
 master_slave_jscore_passthrough|wiredTiger|inMemory|rocksdb
