@@ -42,6 +42,7 @@ integration_tests_sharded|rocksdb
 integration_tests_standalone|rocksdb
  json_schema --excludeWithAnyTags=requires_fcv36|rocksdb
 knobs|rocksdb
+ldapauthz|rocksdb
 master_slave --excludeWithAnyTags=requires_fcv36|rocksdb
 master_slave_auth --excludeWithAnyTags=requires_fcv36|rocksdb
 master_slave_jscore_passthrough --excludeWithAnyTags=requires_fcv36,rocks_requires_fcv36|rocksdb

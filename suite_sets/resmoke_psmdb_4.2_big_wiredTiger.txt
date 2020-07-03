@@ -81,6 +81,7 @@ integration_tests_standalone_audit|default
  jstestfuzz_sharded|wiredTiger
 json_schema|wiredTiger
 knobs|wiredTiger
+ldapauthz|wiredTiger
  logging_perf|wiredTiger
 logical_session_cache_replication_100ms_refresh_jscore_passthrough|wiredTiger
 logical_session_cache_replication_10sec_refresh_jscore_passthrough|wiredTiger
