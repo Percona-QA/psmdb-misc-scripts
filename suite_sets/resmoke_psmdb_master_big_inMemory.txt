@@ -46,8 +46,8 @@ concurrency_sharded_with_stepdowns_and_balancer --jobs=1|inMemory
 concurrency_simultaneous --jobs=1|inMemory
 concurrency_simultaneous_replication --jobs=1|inMemory
 core|inMemory
-core_auth|inMemory
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|inMemory
+core_auth|inMemory
 core_minimum_batch_size|inMemory
 core_op_query|inMemory
 core_txns|inMemory
@@ -67,10 +67,10 @@ gle_auth_basics_passthrough --shellWriteMode=commands|inMemory
  integration_tests_replset|inMemory
  integration_tests_sharded|inMemory
  integration_tests_standalone|inMemory
+json_schema|inMemory
  jstestfuzz|inMemory
  jstestfuzz_replication|inMemory
  jstestfuzz_sharded|inMemory
-json_schema|inMemory
 knobs|inMemory
 ldapauthz|inMemory
  logging_perf|inMemory
@@ -126,8 +126,8 @@ serial_run|inMemory
 session_jscore_passthrough|inMemory
 sharded_causally_consistent_jscore_passthrough|inMemory
 sharded_causally_consistent_jscore_txns_passthrough|inMemory
-sharded_collections_jscore_passthrough|inMemory
 sharded_collections_causally_consistent_jscore_txns_passthrough|inMemory
+sharded_collections_jscore_passthrough|inMemory
 sharded_jscore_txns|inMemory
 sharded_jscore_txns_sharded_collections|inMemory
 sharded_multi_stmt_txn_jscore_passthrough|inMemory
