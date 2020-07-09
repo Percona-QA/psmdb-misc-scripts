@@ -165,7 +165,6 @@ sharding_tde_gcm|default
 slow1 --jobs=1|wiredTiger|inMemory
 ssl|default
 ssl_special|default
-tool|wiredTiger|inMemory
  unittests|default
 watchdog --jobs=1|wiredTiger|inMemory
   $ jstests/watchdog/charybdefs_setup.sh

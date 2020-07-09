@@ -165,7 +165,6 @@ sharding_tde_gcm|wiredTiger
 slow1 --jobs=1|wiredTiger
 ssl|wiredTiger
 ssl_special|wiredTiger
-tool|wiredTiger
  unittests|wiredTiger
 watchdog --jobs=1|wiredTiger
   $ jstests/watchdog/charybdefs_setup.sh

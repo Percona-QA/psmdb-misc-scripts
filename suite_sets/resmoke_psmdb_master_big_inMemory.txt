@@ -150,7 +150,6 @@ sharding_rs_matching_match_busiest_node|inMemory
 slow1 --jobs=1|inMemory
 ssl|inMemory
 ssl_special|inMemory
-tool|inMemory
  unittests|inMemory
 watchdog --jobs=1|inMemory
   $ jstests/watchdog/charybdefs_setup.sh

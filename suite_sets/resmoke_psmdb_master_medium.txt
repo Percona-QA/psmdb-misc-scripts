@@ -59,6 +59,5 @@ sharding_last_stable_mongos_and_mixed_shards|default
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 ssl|default
 ssl_special|default
-tool|wiredTiger
  unittests|default
 write_concern_majority_passthrough|wiredTiger|inMemory
