@@ -55,8 +55,6 @@ core_txns_large_txns_format|inMemory
 dbtest|inMemory
 decimal|inMemory
  disk_wiredtiger|wiredTiger
- dur_jscore_passthrough|default
- durability|default
  external_auth|default
 failpoints|inMemory
 failpoints_auth|inMemory
