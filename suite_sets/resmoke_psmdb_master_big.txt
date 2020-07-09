@@ -54,8 +54,8 @@ concurrency_sharded_with_stepdowns_and_balancer --jobs=1|wiredTiger|inMemory
 concurrency_simultaneous --jobs=1|wiredTiger|inMemory
 concurrency_simultaneous_replication --jobs=1|wiredTiger|inMemory
 core|wiredTiger|inMemory
-core_auth|default
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
+core_auth|default
 core_minimum_batch_size|wiredTiger|inMemory
 core_op_query|wiredTiger|inMemory
 core_tde_cbc|default
@@ -76,10 +76,10 @@ integration_tests_replset|default
 integration_tests_sharded|default
 integration_tests_standalone|default
 integration_tests_standalone_audit|default
+json_schema|wiredTiger|inMemory
  jstestfuzz|wiredTiger|inMemory
  jstestfuzz_replication|wiredTiger|inMemory
  jstestfuzz_sharded|wiredTiger|inMemory
-json_schema|wiredTiger|inMemory
 knobs|wiredTiger|inMemory
 ldapauthz|wiredTiger|inMemory
  logging_perf|wiredTiger|inMemory
@@ -115,8 +115,8 @@ parallel --jobs=1|wiredTiger|inMemory
 parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command --jobs=1|wiredTiger|inMemory
 percona_no_passthrough_with_mongod|wiredTiger|inMemory
 ratelimit|wiredTiger|inMemory
-read_concern_majority_passthrough|wiredTiger|inMemory
 read_concern_linearizable_passthrough|wiredTiger|inMemory
+read_concern_majority_passthrough|wiredTiger|inMemory
 read_only|wiredTiger
 read_only_sharded|wiredTiger
 redaction|default
@@ -133,17 +133,17 @@ replica_sets_multi_stmt_txn_jscore_passthrough|wiredTiger|inMemory
 replica_sets_multi_stmt_txn_kill_primary_jscore_passthrough|wiredTiger|inMemory
 replica_sets_multi_stmt_txn_stepdown_jscore_passthrough|wiredTiger|inMemory
 replica_sets_multi_stmt_txn_terminate_primary_jscore_passthrough|wiredTiger|inMemory
-replica_sets_terminate_primary_jscore_passthrough|wiredTiger|inMemory
 replica_sets_tde_cbc|default
 replica_sets_tde_gcm|default
+replica_sets_terminate_primary_jscore_passthrough|wiredTiger|inMemory
 retryable_writes_jscore_passthrough|wiredTiger|inMemory
 retryable_writes_jscore_stepdown_passthrough|wiredTiger|inMemory
 serial_run|wiredTiger|inMemory
 session_jscore_passthrough|wiredTiger|inMemory
 sharded_causally_consistent_jscore_passthrough|wiredTiger|inMemory
 sharded_causally_consistent_jscore_txns_passthrough|wiredTiger|inMemory
-sharded_collections_jscore_passthrough|wiredTiger|inMemory
 sharded_collections_causally_consistent_jscore_txns_passthrough|wiredTiger|inMemory
+sharded_collections_jscore_passthrough|wiredTiger|inMemory
 sharding|wiredTiger|inMemory
 sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
 sharding_auth|default
