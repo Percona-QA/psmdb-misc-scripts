@@ -1,0 +1,63 @@
+aggregation|default
+aggregation_auth|default
+aggregation_read_concern_majority_passthrough|default
+audit|wiredTiger
+auth|default
+auth_audit|default
+backup|wiredTiger
+buildscripts_test|default
+bulk_gle_passthrough|wiredTiger
+concurrency|wiredTiger
+concurrency_replication|wiredTiger
+concurrency_sharded_replication|wiredTiger
+concurrency_simultaneous|mmapv1|wiredTiger|inMemory
+core|mmapv1|wiredTiger|inMemory
+core_auth|default
+core_minimum_batch_size|mmapv1|wiredTiger|inMemory
+core_op_query|wiredTiger|inMemory
+core_txns|wiredTiger|inMemory
+dbtest|wiredTiger
+decimal|wiredTiger|inMemory
+disk_mmapv1|default
+disk_wiredtiger|default
+external_auth|default
+failpoints|default
+failpoints_auth|default
+ jstestfuzz|wiredTiger
+ jstestfuzz_replication|wiredTiger
+ jstestfuzz_sharded|wiredTiger
+integration_tests_replset|default
+integration_tests_sharded|default
+integration_tests_standalone|default
+json_schema|default
+knobs|wiredTiger
+ldapauthz|wiredTiger
+ logging_perf|mmapv1|wiredTiger|inMemory
+mongos_test|default
+no_passthrough|wiredTiger
+no_passthrough_with_mongod|wiredTiger
+parallel|wiredTiger
+multiversion_multistorage_engine|wiredTiger
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+percona_no_passthrough_with_mongod|wiredTiger
+ratelimit|wiredTiger
+read_concern_majority_passthrough|default
+read_only|wiredTiger
+read_only_sharded|wiredTiger
+redaction|default
+replica_sets|default
+replica_sets_auth|default
+serial_run|default
+sharding|default
+sharding_auth|default
+sharding_jscore_passthrough|wiredTiger
+sharding_last_stable_mongos_and_mixed_shards|default
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+ssl|default
+ssl_special|default
+ unittests|default
+write_concern_majority_passthrough|wiredTiger|inMemory
