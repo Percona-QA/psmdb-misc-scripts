@@ -1,9 +1,12 @@
 aggregation|wiredTiger|inMemory
 aggregation_auth|default
+aggregation_disabled_optimization|wiredTiger|inMemory
 aggregation_facet_unwind_passthrough|wiredTiger|inMemory
 aggregation_mongos_passthrough|wiredTiger|inMemory
 aggregation_one_shard_sharded_collections|wiredTiger|inMemory
 aggregation_read_concern_majority_passthrough|wiredTiger|inMemory
+aggregation_secondary_reads|wiredTiger|inMemory
+aggregation_sharded_collections_causally_consistent_passthrough|wiredTiger|inMemory
 aggregation_sharded_collections_passthrough|wiredTiger|inMemory
 aggregation_tde_cbc|default
 aggregation_tde_gcm|default
@@ -17,12 +20,16 @@ benchmarks --jobs=1 --perfReportFile=perf.json|default
 benchmarks_sharding --jobs=1 --perfReportFile=perf_sharding.json|default
 buildscripts_test|default
 bulk_gle_passthrough|wiredTiger|inMemory
+causally_consistent_hedged_reads_jscore_passthrough|wiredTiger|inMemory
 causally_consistent_jscore_passthrough|wiredTiger|inMemory
 causally_consistent_jscore_passthrough_auth|wiredTiger|inMemory
 causally_consistent_jscore_txns_passthrough|wiredTiger|inMemory
 change_streams|wiredTiger|inMemory
 change_streams_mongos_passthrough|wiredTiger|inMemory
 change_streams_mongos_sessions_passthrough|wiredTiger|inMemory
+change_streams_multi_stmt_txn_mongos_passthrough|wiredTiger|inMemory
+change_streams_multi_stmt_txn_passthrough|wiredTiger|inMemory
+change_streams_multi_stmt_txn_sharded_collections_passthrough|wiredTiger|inMemory
 change_streams_secondary_reads|wiredTiger
 change_streams_sharded_collections_passthrough|wiredTiger|inMemory
 change_streams_whole_cluster_mongos_passthrough|wiredTiger|inMemory
@@ -38,21 +45,32 @@ concurrency --jobs=1|wiredTiger|inMemory
 concurrency_replication --jobs=1|wiredTiger|inMemory
 concurrency_replication_causal_consistency --jobs=1|wiredTiger|inMemory
 concurrency_replication_causal_consistency_ubsan --jobs=1|wiredTiger|inMemory
+concurrency_replication_for_backup_restore --jobs=1|wiredTiger|inMemory
 concurrency_replication_multi_stmt_txn --jobs=1|wiredTiger|inMemory
 concurrency_replication_multi_stmt_txn_ubsan --jobs=1|wiredTiger|inMemory
+concurrency_replication_ubsan --jobs=1|wiredTiger|inMemory
+concurrency_replication_wiredtiger_cursor_sweeps --jobs=1|wiredTiger|inMemory
+concurrency_replication_wiredtiger_eviction_debug --jobs=1|wiredTiger|inMemory
 concurrency_sharded_causal_consistency --jobs=1|wiredTiger|inMemory
 concurrency_sharded_causal_consistency_and_balancer --jobs=1|wiredTiger|inMemory
+concurrency_sharded_clusterwide_ops_add_remove_shards --jobs=1|wiredTiger|inMemory
+concurrency_sharded_kill_primary_with_balancer --jobs=1|wiredTiger|inMemory
 concurrency_sharded_local_read_write_multi_stmt_txn --jobs=1|wiredTiger|inMemory
 concurrency_sharded_local_read_write_multi_stmt_txn_with_balancer --jobs=1|wiredTiger|inMemory
 concurrency_sharded_multi_stmt_txn --jobs=1|wiredTiger|inMemory
+concurrency_sharded_multi_stmt_txn_kill_primary --jobs=1|wiredTiger|inMemory
+concurrency_sharded_multi_stmt_txn_terminate_primary --jobs=1|wiredTiger|inMemory
 concurrency_sharded_multi_stmt_txn_with_balancer --jobs=1|wiredTiger|inMemory
 concurrency_sharded_multi_stmt_txn_with_stepdowns --jobs=1|wiredTiger|inMemory
 concurrency_sharded_replication --jobs=1|wiredTiger|inMemory
 concurrency_sharded_replication_with_balancer --jobs=1|wiredTiger|inMemory
+concurrency_sharded_terminate_primary_with_balancer --jobs=1|wiredTiger|inMemory
 concurrency_sharded_with_stepdowns --jobs=1|wiredTiger|inMemory
 concurrency_sharded_with_stepdowns_and_balancer --jobs=1|wiredTiger|inMemory
 concurrency_simultaneous --jobs=1|wiredTiger|inMemory
 concurrency_simultaneous_replication --jobs=1|wiredTiger|inMemory
+concurrency_simultaneous_replication_wiredtiger_cursor_sweeps --jobs=1|wiredTiger|inMemory
+concurrency_simultaneous_replication_wiredtiger_eviction_debug --jobs=1|wiredTiger|inMemory
 core|wiredTiger|inMemory
 core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
 core_auth|default
@@ -62,32 +80,46 @@ core_tde_cbc|default
 core_tde_gcm|default
 core_txns|wiredTiger|inMemory
 core_txns_large_txns_format|wiredTiger|inMemory
+cwrwc_passthrough|wiredTiger|inMemory
+cwrwc_rc_majority_passthrough|wiredTiger|inMemory
+cwrwc_wc_majority_passthrough|wiredTiger|inMemory
 dbtest|wiredTiger|inMemory
 decimal|wiredTiger|inMemory
 disk_wiredtiger|wiredTiger
+ese|wiredTiger|inMemory
 external_auth|default
+external_auth_aws|wiredTiger|inMemory
 failpoints|default
 failpoints_auth|default
+fle|wiredTiger|inMemory
+free_monitoring|wiredTiger|inMemory
+generational_fuzzer|wiredTiger|inMemory
+generational_fuzzer_replication|wiredTiger|inMemory
 gle_auth --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
 gle_auth --shellWriteMode=commands|wiredTiger|inMemory
 gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
 gle_auth_basics_passthrough --shellWriteMode=commands|wiredTiger|inMemory
+initial_sync_fuzzer|wiredTiger|inMemory
+initial_sync_multiversion_fuzzer|wiredTiger|inMemory
 integration_tests_replset|default
 integration_tests_sharded|default
 integration_tests_standalone|default
-integration_tests_standalone_audit|default
+integration_tests_standalone_audit|wiredTiger|inMemory
 json_schema|wiredTiger|inMemory
  jstestfuzz|wiredTiger|inMemory
  jstestfuzz_replication|wiredTiger|inMemory
  jstestfuzz_sharded|wiredTiger|inMemory
 knobs|wiredTiger|inMemory
 ldapauthz|wiredTiger|inMemory
+libfuzzer|wiredTiger|inMemory
+libunwind|wiredTiger|inMemory
  logging_perf|wiredTiger|inMemory
 logical_session_cache_replication_100ms_refresh_jscore_passthrough|wiredTiger|inMemory
 logical_session_cache_replication_10sec_refresh_jscore_passthrough|wiredTiger|inMemory
 logical_session_cache_replication_1sec_refresh_jscore_passthrough|wiredTiger|inMemory
 logical_session_cache_replication_default_refresh_jscore_passthrough|wiredTiger|inMemory
 logical_session_cache_sharding_100ms_refresh_jscore_passthrough|wiredTiger|inMemory
+logical_session_cache_sharding_100ms_refresh_jscore_txns_passthrough|wiredTiger|inMemory
 logical_session_cache_sharding_10sec_refresh_jscore_passthrough|wiredTiger|inMemory
 logical_session_cache_sharding_1sec_refresh_jscore_passthrough|wiredTiger|inMemory
 logical_session_cache_sharding_default_refresh_jscore_passthrough|wiredTiger|inMemory
@@ -96,6 +128,9 @@ logical_session_cache_standalone_10sec_refresh_jscore_passthrough|wiredTiger|inM
 logical_session_cache_standalone_1sec_refresh_jscore_passthrough|wiredTiger|inMemory
 logical_session_cache_standalone_default_refresh_jscore_passthrough|wiredTiger|inMemory
 mongos_test|default
+mql_model_haskell|wiredTiger|inMemory
+mql_model_mongod|wiredTiger|inMemory
+mqlrun|wiredTiger|inMemory
 multi_shard_local_read_write_multi_stmt_txn_jscore_passthrough|wiredTiger|inMemory
 multi_shard_multi_stmt_txn_jscore_passthrough|wiredTiger|inMemory
 multi_shard_multi_stmt_txn_kill_primary_jscore_passthrough|wiredTiger|inMemory
@@ -111,6 +146,7 @@ multiversion_auth|wiredTiger
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 no_passthrough|wiredTiger|inMemory
 no_passthrough_with_mongod|wiredTiger|inMemory
+ocsp --jobs=1|wiredTiger|inMemory
 parallel --jobs=1|wiredTiger|inMemory
 parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command --jobs=1|wiredTiger|inMemory
 percona_no_passthrough_with_mongod|wiredTiger|inMemory
@@ -129,21 +165,44 @@ replica_sets_kill_primary_jscore_passthrough|wiredTiger|inMemory
 replica_sets_kill_secondaries_jscore_passthrough|wiredTiger
 replica_sets_large_txns_format|wiredTiger|inMemory
 replica_sets_large_txns_format_jscore_passthrough|wiredTiger|inMemory
+replica_sets_max_mirroring|wiredTiger|inMemory
 replica_sets_multi_stmt_txn_jscore_passthrough|wiredTiger|inMemory
 replica_sets_multi_stmt_txn_kill_primary_jscore_passthrough|wiredTiger|inMemory
 replica_sets_multi_stmt_txn_stepdown_jscore_passthrough|wiredTiger|inMemory
 replica_sets_multi_stmt_txn_terminate_primary_jscore_passthrough|wiredTiger|inMemory
+replica_sets_multiversion|wiredTiger|inMemory
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+replica_sets_reconfig_jscore_passthrough|wiredTiger|inMemory
+replica_sets_reconfig_jscore_stepdown_passthrough|wiredTiger|inMemory
+replica_sets_reconfig_kill_primary_jscore_passthrough|wiredTiger|inMemory
 replica_sets_tde_cbc|default
 replica_sets_tde_gcm|default
 replica_sets_terminate_primary_jscore_passthrough|wiredTiger|inMemory
 retryable_writes_jscore_passthrough|wiredTiger|inMemory
 retryable_writes_jscore_stepdown_passthrough|wiredTiger|inMemory
+rollback_fuzzer|wiredTiger|inMemory
+rollback_fuzzer_clean_shutdowns|wiredTiger|inMemory
+rollback_fuzzer_unclean_shutdowns|wiredTiger|inMemory
+rollback_multiversion_fuzzer|wiredTiger|inMemory
+sasl|wiredTiger|inMemory
+sdam_json_test|wiredTiger|inMemory
+search|wiredTiger|inMemory
+search_auth|wiredTiger|inMemory
+search_ssl|wiredTiger|inMemory
+secondary_reads_passthrough|wiredTiger|inMemory
 serial_run|wiredTiger|inMemory
+server_selection_json_test|wiredTiger|inMemory
 session_jscore_passthrough|wiredTiger|inMemory
 sharded_causally_consistent_jscore_passthrough|wiredTiger|inMemory
 sharded_causally_consistent_jscore_txns_passthrough|wiredTiger|inMemory
 sharded_collections_causally_consistent_jscore_txns_passthrough|wiredTiger|inMemory
 sharded_collections_jscore_passthrough|wiredTiger|inMemory
+sharded_jscore_op_query_txns|wiredTiger|inMemory
+sharded_jscore_txns|wiredTiger|inMemory
+sharded_jscore_txns_sharded_collections|wiredTiger|inMemory
+sharded_multi_stmt_txn_jscore_passthrough|wiredTiger|inMemory
 sharding|wiredTiger|inMemory
 sharding --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|wiredTiger|inMemory
 sharding_auth|default
@@ -158,14 +217,22 @@ sharding_last_stable_mongos_and_mixed_shards|default
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+sharding_max_mirroring|wiredTiger|inMemory
+sharding_misc|wiredTiger|inMemory
+sharding_multiversion|wiredTiger|inMemory
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
 sharding_rs_matching_disabled|wiredTiger|inMemory
 sharding_rs_matching_match_busiest_node|wiredTiger|inMemory
 sharding_tde_cbc|default
 sharding_tde_gcm|default
 slow1 --jobs=1|wiredTiger|inMemory
+snmp|wiredTiger|inMemory
 ssl|default
 ssl_special|default
  unittests|default
 watchdog --jobs=1|wiredTiger|inMemory
   $ jstests/watchdog/charybdefs_setup.sh
+with_server|wiredTiger|inMemory
 write_concern_majority_passthrough|wiredTiger|inMemory
