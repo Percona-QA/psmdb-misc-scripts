@@ -35,6 +35,7 @@ change_streams_whole_db_passthrough|inMemory
 change_streams_whole_db_sharded_collections_passthrough|inMemory
 concurrency|inMemory
 concurrency_replication|inMemory
+concurrency_replication_abort_multi_stmt_txn|inMemory
 concurrency_replication_causal_consistency|inMemory
  concurrency_replication_multi_stmt_txn|wiredTiger
 concurrency_sharded_causal_consistency|inMemory
@@ -114,6 +115,7 @@ read_concern_majority_passthrough|inMemory
  redaction|default
 replica_sets|inMemory
  replica_sets_auth|default
+replica_sets_abort_multi_stmt_txn_jscore_passthrough|inMemory
  replica_sets_initsync_jscore_passthrough|mmapv1|wiredTiger
  replica_sets_initsync_static_jscore_passthrough|mmapv1|wiredTiger
 replica_sets_jscore_passthrough|inMemory
