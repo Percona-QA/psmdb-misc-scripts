@@ -1,0 +1,113 @@
+core|wiredTiger
+core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|wiredTiger
+core_auth|wiredTiger
+core_minimum_batch_size|wiredTiger
+core_op_query|wiredTiger
+core_tde_cbc|wiredTiger
+core_tde_gcm|wiredTiger
+core_txns|wiredTiger
+core_txns_large_txns_format|wiredTiger
+cst_jscore_passthrough|wiredTiger
+cwrwc_passthrough|wiredTiger
+cwrwc_rc_majority_passthrough|wiredTiger
+cwrwc_wc_majority_passthrough|wiredTiger
+dbtest|wiredTiger
+decimal|wiredTiger
+disk_wiredtiger|wiredTiger
+ese|wiredTiger
+external_auth|wiredTiger
+external_auth_aws|wiredTiger
+failpoints|wiredTiger
+failpoints_auth|wiredTiger
+feature_flag_multiversion|wiredTiger
+fle|wiredTiger
+free_monitoring|wiredTiger
+generational_fuzzer|wiredTiger
+generational_fuzzer_replication|wiredTiger
+gle_auth --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|wiredTiger
+gle_auth --shellWriteMode=commands|wiredTiger
+gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|wiredTiger
+gle_auth_basics_passthrough --shellWriteMode=commands|wiredTiger
+initial_sync_fuzzer|wiredTiger
+initial_sync_multiversion_fuzzer|wiredTiger
+integration_tests_replset|wiredTiger
+integration_tests_replset_ssl_auth|wiredTiger
+integration_tests_sharded|wiredTiger
+integration_tests_standalone|wiredTiger
+integration_tests_standalone_audit|wiredTiger
+json_schema|wiredTiger
+ jstestfuzz|wiredTiger
+ jstestfuzz_interrupt|wiredTiger
+ jstestfuzz_interrupt_replication|wiredTiger
+ jstestfuzz_replication|wiredTiger
+ jstestfuzz_replication_continuous_stepdown|wiredTiger
+ jstestfuzz_replication_initsync|wiredTiger
+ jstestfuzz_replication_session|wiredTiger
+ jstestfuzz_replication_write_conflicts|wiredTiger
+ jstestfuzz_sharded|wiredTiger
+ jstestfuzz_sharded_causal_consistency|wiredTiger
+ jstestfuzz_sharded_continuous_stepdown|wiredTiger
+ jstestfuzz_sharded_session|wiredTiger
+knobs|wiredTiger
+ldapauthz|wiredTiger
+libfuzzer|wiredTiger
+libunwind|wiredTiger
+ logging_perf|wiredTiger
+logical_session_cache_replication_100ms_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_replication_10sec_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_replication_1sec_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_replication_default_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_sharding_100ms_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_sharding_100ms_refresh_jscore_txns_passthrough|wiredTiger
+logical_session_cache_sharding_10sec_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_sharding_1sec_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_sharding_default_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_standalone_100ms_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_standalone_10sec_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_standalone_1sec_refresh_jscore_passthrough|wiredTiger
+logical_session_cache_standalone_default_refresh_jscore_passthrough|wiredTiger
+mongos_test|wiredTiger
+mql_model_haskell|wiredTiger
+mql_model_mongod|wiredTiger
+mqlrun|wiredTiger
+multi_shard_local_read_write_multi_stmt_txn_jscore_passthrough|wiredTiger
+multi_shard_multi_stmt_txn_jscore_passthrough|wiredTiger
+multi_shard_multi_stmt_txn_kill_primary_jscore_passthrough|wiredTiger
+multi_shard_multi_stmt_txn_stepdown_primary_jscore_passthrough|wiredTiger
+multi_stmt_txn_jscore_passthrough_with_migration|wiredTiger
+multiversion|wiredTiger
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1 4.4
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+multiversion_auth|wiredTiger
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1 4.4
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+no_passthrough|wiredTiger
+no_passthrough_with_mongod|wiredTiger
+ no_server|wiredTiger
+ocsp --jobs=1|wiredTiger
+parallel --jobs=1|wiredTiger
+parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command --jobs=1|wiredTiger
+percona_no_passthrough_with_mongod|wiredTiger
+ratelimit|wiredTiger
+read_concern_linearizable_passthrough|wiredTiger
+read_concern_majority_passthrough|wiredTiger
+read_only|wiredTiger
+read_only_sharded|wiredTiger
+redaction|wiredTiger
+replica_sets|wiredTiger
+replica_sets_api_version_jscore_passthrough|wiredTiger
+replica_sets_auth|wiredTiger
+replica_sets_initsync_jscore_passthrough|wiredTiger
+replica_sets_initsync_static_jscore_passthrough|wiredTiger
+replica_sets_jscore_passthrough|wiredTiger
+replica_sets_kill_primary_jscore_passthrough|wiredTiger
+replica_sets_kill_secondaries_jscore_passthrough|wiredTiger
+replica_sets_large_txns_format|wiredTiger
+replica_sets_large_txns_format_jscore_passthrough|wiredTiger
+replica_sets_max_mirroring|wiredTiger
+replica_sets_multi_stmt_txn_jscore_passthrough|wiredTiger
+replica_sets_multi_stmt_txn_kill_primary_jscore_passthrough|wiredTiger
+replica_sets_multi_stmt_txn_stepdown_jscore_passthrough|wiredTiger
+replica_sets_multi_stmt_txn_terminate_primary_jscore_passthrough|wiredTiger
