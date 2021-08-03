@@ -185,6 +185,8 @@ replica_sets_multiversion|inMemory
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+  $ export PYTHONPATH="$(pwd):$(pwd)/src"
+  $ python  buildscripts/evergreen_gen_multiversion_tests.py generate-exclude-tags --task-path-suffix=/data/multiversion --output=multiversion_exclude_tags.yml
 replica_sets_reconfig_jscore_passthrough|inMemory
 replica_sets_reconfig_jscore_stepdown_passthrough|inMemory
 replica_sets_reconfig_kill_primary_jscore_passthrough|inMemory
@@ -228,12 +230,16 @@ sharding_jscore_passthrough --shellWriteMode=compatibility --shellReadMode=legac
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+  $ export PYTHONPATH="$(pwd):$(pwd)/src"
+  $ python  buildscripts/evergreen_gen_multiversion_tests.py generate-exclude-tags --task-path-suffix=/data/multiversion --output=multiversion_exclude_tags.yml
 sharding_max_mirroring|inMemory
 sharding_misc|inMemory
 sharding_multiversion|inMemory
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
   $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+  $ export PYTHONPATH="$(pwd):$(pwd)/src"
+  $ python  buildscripts/evergreen_gen_multiversion_tests.py generate-exclude-tags --task-path-suffix=/data/multiversion --output=multiversion_exclude_tags.yml
 sharding_rs_matching_disabled|inMemory
 sharding_rs_matching_match_busiest_node|inMemory
  sharding_tde_cbc|inMemory
