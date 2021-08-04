@@ -78,7 +78,7 @@ concurrency_simultaneous_replication --jobs=1|wiredTiger
 concurrency_simultaneous_replication_wiredtiger_cursor_sweeps --jobs=1|wiredTiger
 concurrency_simultaneous_replication_wiredtiger_eviction_debug --jobs=1|wiredTiger
 core|wiredTiger
-core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|wiredTiger
+core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command,requires_timeseries|wiredTiger
 core_auth|wiredTiger
 core_minimum_batch_size|wiredTiger
 core_op_query|wiredTiger
