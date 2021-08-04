@@ -78,7 +78,7 @@ concurrency_simultaneous_replication --jobs=1|inMemory
 concurrency_simultaneous_replication_wiredtiger_cursor_sweeps --jobs=1|inMemory
 concurrency_simultaneous_replication_wiredtiger_eviction_debug --jobs=1|inMemory
 core|inMemory
-core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command|inMemory
+core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command,requires_timeseries|inMemory
 core_auth|inMemory
 core_minimum_batch_size|inMemory
 core_op_query|inMemory
