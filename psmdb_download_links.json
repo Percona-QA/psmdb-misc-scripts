@@ -1,5 +1,21 @@
 {
    "versions": [
+      {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
+                  "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-4.9.0-rc1.tgz"
+               },
+               "edition": "base",
+               "target": "ubuntu1804"
+            }
+         ],
+         "production_release": false,
+         "release_candidate": true,
+         "version": "4.9.0-rc1"
+      },
         {
          "development_release": false,
          "downloads": [
