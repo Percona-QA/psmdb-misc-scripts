@@ -28,7 +28,7 @@ PSMDB_NEW_BINDIR=$5
 BASE_DATADIR="${WORKDIR}/data"
 MONGO_START_TIMEOUT=600
 YCSB_VER="0.17.0"
-MGODATAGEN_VER="0.7.5"
+MGODATAGEN_VER="0.9.2"
 CIPHER_MODE="${CIPHER_MODE:-AES256-CBC}"
 ENCRYPTION="${ENCRYPTION:-no}"
 MONGO_JAVA_DRIVER="${MONGO_JAVA_DRIVER:-3.12.1}"
@@ -127,7 +127,7 @@ elif [ "${BENCH_TOOL}" != "none" ]; then
   exit 1
 fi
 rm -f mgodatagen_linux_x86_64.tar.gz
-wget --no-verbose https://github.com/feliixx/mgodatagen/releases/download/${MGODATAGEN_VER}/mgodatagen_linux_x86_64.tar.gz
+wget --no-verbose https://github.com/feliixx/mgodatagen/releases/download/v${MGODATAGEN_VER}/mgodatagen_${MGODATAGEN_VER}_Linux_x86_64.tar.gz
 tar xf mgodatagen_linux_x86_64.tar.gz
 rm -f mgodatagen_linux_x86_64.tar.gz
 wget --no-verbose https://raw.githubusercontent.com/feliixx/mgodatagen/master/datagen/testdata/big.json
