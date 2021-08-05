@@ -128,8 +128,8 @@ elif [ "${BENCH_TOOL}" != "none" ]; then
 fi
 rm -f mgodatagen_linux_x86_64.tar.gz
 wget --no-verbose https://github.com/feliixx/mgodatagen/releases/download/v${MGODATAGEN_VER}/mgodatagen_${MGODATAGEN_VER}_Linux_x86_64.tar.gz
-tar xf mgodatagen_linux_x86_64.tar.gz
-rm -f mgodatagen_linux_x86_64.tar.gz
+tar xf mgodatagen_${MGODATAGEN_VER}_Linux_x86_64.tar.gz
+rm -f mgodatagen_${MGODATAGEN_VER}_Linux_x86_64.tar.gz
 wget --no-verbose https://raw.githubusercontent.com/feliixx/mgodatagen/master/datagen/testdata/big.json
 
 ###
