@@ -1,5 +1,21 @@
 {
    "versions": [
+       {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-5.0/percona-server-mongodb-5.0.2-1/binary/tarball/percona-server-mongodb-5.0.2-1-x86_64.glibc2.17.tar.gz"
+               },
+               "edition": "base",
+               "target": "ubuntu1804"
+            }
+         ],
+         "production_release": true,
+         "release_candidate": false,
+         "version": "5.0.2"
+       },
       {
          "development_release": false,
          "downloads": [

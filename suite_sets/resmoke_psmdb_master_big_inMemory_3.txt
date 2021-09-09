@@ -1,6 +1,6 @@
 replica_sets_multiversion|inMemory
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1 4.4
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1 4.4 4.9
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
   $ export PYTHONPATH="$(pwd):$(pwd)/src"
   $ python  buildscripts/evergreen_gen_multiversion_tests.py generate-exclude-tags --output=multiversion_exclude_tags.yml
@@ -54,7 +54,7 @@ sharding_last_lts_mongos_and_mixed_shards|inMemory
 sharding_max_mirroring|inMemory
 sharding_multiversion|inMemory
   $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
-  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1 4.4
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1 4.4 4.9
   $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
   $ export PYTHONPATH="$(pwd):$(pwd)/src"
   $ python  buildscripts/evergreen_gen_multiversion_tests.py generate-exclude-tags --output=multiversion_exclude_tags.yml
