@@ -1,0 +1,113 @@
+core|inMemory
+core --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command,requires_timeseries|inMemory
+core_auth|inMemory
+core_minimum_batch_size|inMemory
+core_op_query|inMemory
+ core_tde_cbc|inMemory
+ core_tde_gcm|inMemory
+core_txns|inMemory
+core_txns_large_txns_format|inMemory
+cst_jscore_passthrough|inMemory
+cwrwc_passthrough|inMemory
+cwrwc_rc_majority_passthrough|inMemory
+cwrwc_wc_majority_passthrough|inMemory
+dbtest|inMemory
+decimal|inMemory
+ disk_wiredtiger|inMemory
+ese|inMemory
+ external_auth|inMemory
+external_auth_aws|inMemory
+failpoints|inMemory
+failpoints_auth|inMemory
+feature_flag_multiversion|inMemory
+fle|inMemory
+free_monitoring|inMemory
+generational_fuzzer|inMemory
+generational_fuzzer_replication|inMemory
+gle_auth --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+gle_auth --shellWriteMode=commands|inMemory
+gle_auth_basics_passthrough --shellWriteMode=legacy --shellReadMode=legacy --excludeWithAnyTags=requires_find_command|inMemory
+gle_auth_basics_passthrough --shellWriteMode=commands|inMemory
+initial_sync_fuzzer|inMemory
+initial_sync_multiversion_fuzzer|inMemory
+ integration_tests_replset|inMemory
+integration_tests_replset_ssl_auth|inMemory
+ integration_tests_sharded|inMemory
+ integration_tests_standalone|inMemory
+integration_tests_standalone_audit|inMemory
+json_schema|inMemory
+ jstestfuzz|inMemory
+ jstestfuzz_interrupt|inMemory
+ jstestfuzz_interrupt_replication|inMemory
+ jstestfuzz_replication|inMemory
+ jstestfuzz_replication_continuous_stepdown|inMemory
+ jstestfuzz_replication_initsync|inMemory
+ jstestfuzz_replication_session|inMemory
+ jstestfuzz_replication_write_conflicts|inMemory
+ jstestfuzz_sharded|inMemory
+ jstestfuzz_sharded_causal_consistency|inMemory
+ jstestfuzz_sharded_continuous_stepdown|inMemory
+ jstestfuzz_sharded_session|inMemory
+knobs|inMemory
+ldapauthz|inMemory
+libfuzzer|inMemory
+libunwind|inMemory
+ logging_perf|inMemory
+logical_session_cache_replication_100ms_refresh_jscore_passthrough|inMemory
+logical_session_cache_replication_10sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_replication_1sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_replication_default_refresh_jscore_passthrough|inMemory
+logical_session_cache_sharding_100ms_refresh_jscore_passthrough|inMemory
+logical_session_cache_sharding_100ms_refresh_jscore_txns_passthrough|inMemory
+logical_session_cache_sharding_10sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_sharding_1sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_sharding_default_refresh_jscore_passthrough|inMemory
+logical_session_cache_standalone_100ms_refresh_jscore_passthrough|inMemory
+logical_session_cache_standalone_10sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_standalone_1sec_refresh_jscore_passthrough|inMemory
+logical_session_cache_standalone_default_refresh_jscore_passthrough|inMemory
+ mongos_test|inMemory
+mql_model_haskell|inMemory
+mql_model_mongod|inMemory
+mqlrun|inMemory
+multi_shard_local_read_write_multi_stmt_txn_jscore_passthrough|inMemory
+multi_shard_multi_stmt_txn_jscore_passthrough|inMemory
+multi_shard_multi_stmt_txn_kill_primary_jscore_passthrough|inMemory
+multi_shard_multi_stmt_txn_stepdown_primary_jscore_passthrough|inMemory
+multi_stmt_txn_jscore_passthrough_with_migration|inMemory
+ multiversion|inMemory
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1 4.4 4.9
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+ multiversion_auth|inMemory
+  $ rm -rf ${DBPATH}/install ${DBPATH}/multiversion
+  $ python buildscripts/setup_multiversion_mongodb.py --installDir ${DBPATH}/install --linkDir ${DBPATH}/multiversion --edition base --platform ubuntu1804 --architecture x86_64 3.2 3.4 3.6 4.0 4.0.1 4.0.5 4.2 4.2.1 4.4 4.9
+  $ [[ ${PATH} == *"/data/multiversion"* ]] || export PATH=${PATH}:/data/multiversion
+no_passthrough|inMemory
+no_passthrough_with_mongod|inMemory
+ no_server|inMemory
+ocsp --jobs=1|inMemory
+parallel --jobs=1|inMemory
+parallel --shellReadMode=legacy --shellWriteMode=compatibility --excludeWithAnyTags=requires_find_command --jobs=1|inMemory
+percona_no_passthrough_with_mongod|inMemory
+ratelimit|inMemory
+read_concern_linearizable_passthrough|inMemory
+read_concern_majority_passthrough|inMemory
+ read_only|inMemory
+ read_only_sharded|inMemory
+ redaction|inMemory
+replica_sets|inMemory
+replica_sets_api_version_jscore_passthrough|inMemory
+replica_sets_auth|inMemory
+ replica_sets_initsync_jscore_passthrough|inMemory
+ replica_sets_initsync_static_jscore_passthrough|inMemory
+replica_sets_jscore_passthrough|inMemory
+replica_sets_kill_primary_jscore_passthrough|inMemory
+ replica_sets_kill_secondaries_jscore_passthrough|inMemory
+replica_sets_large_txns_format|inMemory
+replica_sets_large_txns_format_jscore_passthrough|inMemory
+replica_sets_max_mirroring|inMemory
+replica_sets_multi_stmt_txn_jscore_passthrough|inMemory
+replica_sets_multi_stmt_txn_kill_primary_jscore_passthrough|inMemory
+replica_sets_multi_stmt_txn_stepdown_jscore_passthrough|inMemory
+replica_sets_multi_stmt_txn_terminate_primary_jscore_passthrough|inMemory
