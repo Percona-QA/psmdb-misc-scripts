@@ -166,7 +166,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://www.percona.com/downloads/percona-server-mongodb-4.0/percona-server-mongodb-4.0.13-7/binary/tarball/percona-server-mongodb-4.0.13-7-bionic-x86_64.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.0/percona-server-mongodb-4.0.27-22/binary/tarball/percona-server-mongodb-4.0.27-22-x86_64.glibc2.17.tar.gz"
                },
                "edition": "base",
                "target": "ubuntu1804"
@@ -174,7 +174,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "4.0.13"
+         "version": "4.0.27"
       },
       {
          "development_release": false,
