@@ -6,6 +6,22 @@
             {
                "arch": "x86_64",
                "archive": {
+                  "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-5.3.2.tgz"
+               },
+               "edition": "base",
+               "target": "ubuntu2004"
+            }
+         ],
+         "production_release": false,
+         "release_candidate": false,
+         "version": "5.3.2"
+      },
+     {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
                   "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-5.3.2.tgz"
                },
                "edition": "base",
@@ -22,15 +38,15 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-5.0/percona-server-mongodb-5.0.5-4/binary/tarball/percona-server-mongodb-5.0.5-4-x86_64.glibc2.17.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-5.0/percona-server-mongodb-5.0.9-8/binary/tarball/percona-server-mongodb-5.0.9-8-x86_64.glibc2.17.tar.gz"
                },
                "edition": "base",
-               "target": "ubuntu1804"
+               "target": "linux_x86_64"
             }
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "5.0.5"
+         "version": "5.0.9"
        },
       {
          "development_release": false,
