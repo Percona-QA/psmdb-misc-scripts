@@ -174,7 +174,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "4.4.21"
+         "version": "4.4.22"
       },
       {
          "development_release": false,
@@ -190,7 +190,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "4.4.21"
+         "version": "4.4.22"
       },
       {
          "development_release": false,
@@ -206,7 +206,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "4.4.21"
+         "version": "4.4.22"
       },
         {
          "development_release": false,
