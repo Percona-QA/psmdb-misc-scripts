@@ -6,6 +6,38 @@
             {
                "arch": "x86_64",
                "archive": {
+                  "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2204-6.3.2.tgz"
+               },
+               "edition": "base",
+               "target": "ubuntu2204"
+            }
+         ],
+         "production_release": false,
+         "release_candidate": false,
+         "version": "6.3.2"
+      },
+     {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
+                  "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-6.3.2.tgz"
+               },
+               "edition": "base",
+               "target": "ubuntu1804"
+            }
+         ],
+         "production_release": false,
+         "release_candidate": false,
+         "version": "6.3.2"
+      },
+     {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
                   "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-5.3.2.tgz"
                },
                "edition": "base",
