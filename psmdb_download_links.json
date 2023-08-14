@@ -198,7 +198,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.4/percona-server-mongodb-4.4.22-21/binary/tarball/percona-server-mongodb-4.4.22-21-x86_64.glibc2.17.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.4/percona-server-mongodb-4.4.23-22/binary/tarball/percona-server-mongodb-4.4.23-22-x86_64.glibc2.17.tar.gz"
                },
                "edition": "base",
                "target": "linux_x86_64"
@@ -206,7 +206,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "4.4.22"
+         "version": "4.4.23"
       },
       {
          "development_release": false,
@@ -214,7 +214,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.4/percona-server-mongodb-4.4.22-21/binary/tarball/percona-server-mongodb-4.4.22-21-x86_64.glibc2.17.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.4/percona-server-mongodb-4.4.23-22/binary/tarball/percona-server-mongodb-4.4.23-22-x86_64.glibc2.17.tar.gz"
                },
                "edition": "base",
                "target": "ubuntu1804"
@@ -222,7 +222,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "4.4.22"
+         "version": "4.4.23"
       },
       {
          "development_release": false,
@@ -230,7 +230,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.4/percona-server-mongodb-4.4.22-21/binary/tarball/percona-server-mongodb-4.4.22-21-x86_64.glibc2.35.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.4/percona-server-mongodb-4.4.23-22/binary/tarball/percona-server-mongodb-4.4.23-22-x86_64.glibc2.35.tar.gz"
                },
                "edition": "base",
                "target": "ubuntu2204"
@@ -238,7 +238,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "4.4.22"
+         "version": "4.4.23"
       },
         {
          "development_release": false,
