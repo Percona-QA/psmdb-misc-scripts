@@ -57,7 +57,7 @@
                   "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-5.3.2.tgz"
                },
                "edition": "base",
-               "target": "ubuntu2004"
+               "target": "ubuntu2204"
             }
          ],
          "production_release": false,
