@@ -134,31 +134,15 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-6.0/percona-server-mongodb-6.0.15-12/binary/tarball/percona-server-mongodb-6.0.15-12-x86_64.glibc2.17.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-6.0/percona-server-mongodb-6.0.16-13/binary/tarball/percona-server-mongodb-6.0.16-13-x86_64.noble.tar.gz"
                },
                "edition": "base",
-               "target": "linux_x86_64"
+               "target": "ubuntu2404"
             }
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "6.0.15"
-      },
-      {
-         "development_release": false,
-         "downloads": [
-            {
-               "arch": "x86_64",
-               "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-6.0/percona-server-mongodb-6.0.15-12/binary/tarball/percona-server-mongodb-6.0.15-12-x86_64.glibc2.17.tar.gz"
-               },
-               "edition": "base",
-               "target": "ubuntu1804"
-            }
-         ],
-         "production_release": true,
-         "release_candidate": false,
-         "version": "6.0.15"
+         "version": "6.0.16"
       },
       {
          "development_release": false,
@@ -182,31 +166,15 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-5.0/percona-server-mongodb-5.0.28-24/binary/tarball/percona-server-mongodb-5.0.28-24-x86_64.jammy.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-5.0/percona-server-mongodb-5.0.28-24/binary/tarball/percona-server-mongodb-5.0.28-24-x86_64.noble.tar.gz"
                },
                "edition": "base",
-               "target": "ubuntu2204"
+               "target": "ubuntu2404"
             }
          ],
          "production_release": true,
          "release_candidate": false,
          "version": "5.0.28"
-      },
-      {
-         "development_release": false,
-         "downloads": [
-            {
-               "arch": "x86_64",
-               "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-5.0/percona-server-mongodb-5.0.27-23/binary/tarball/percona-server-mongodb-5.0.27-23-x86_64.glibc2.17.tar.gz"
-               },
-               "edition": "base",
-               "target": "ubuntu1804"
-            }
-         ],
-         "production_release": true,
-         "release_candidate": false,
-         "version": "5.0.27"
       },
       {
          "development_release": false,
@@ -223,22 +191,6 @@
          "production_release": true,
          "release_candidate": false,
          "version": "5.0.28"
-      },
-      {
-         "development_release": false,
-         "downloads": [
-            {
-               "arch": "x86_64",
-               "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-5.0/percona-server-mongodb-5.0.27-23/binary/tarball/percona-server-mongodb-5.0.27-23-x86_64.glibc2.17.tar.gz"
-               },
-               "edition": "base",
-               "target": "linux_x86_64"
-            }
-         ],
-         "production_release": true,
-         "release_candidate": false,
-         "version": "5.0.27"
       },
       {
          "development_release": false,
