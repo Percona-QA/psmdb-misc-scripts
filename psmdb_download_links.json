@@ -262,26 +262,10 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.4/percona-server-mongodb-4.4.29-28/binary/tarball/percona-server-mongodb-4.4.29-28-x86_64.glibc2.17.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.4/percona-server-mongodb-4.4.29-28/binary/tarball/percona-server-mongodb-4.4.29-28-x86_64.glibc2.35.tar.gz"
                },
                "edition": "base",
-               "target": "linux_x86_64"
-            }
-         ],
-         "production_release": true,
-         "release_candidate": false,
-         "version": "4.4.29"
-      },
-      {
-         "development_release": false,
-         "downloads": [
-            {
-               "arch": "x86_64",
-               "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.4/percona-server-mongodb-4.4.29-28/binary/tarball/percona-server-mongodb-4.4.29-28-x86_64.glibc2.17.tar.gz"
-               },
-               "edition": "base",
-               "target": "ubuntu1804"
+               "target": "ubuntu2404"
             }
          ],
          "production_release": true,
@@ -298,6 +282,22 @@
                },
                "edition": "base",
                "target": "ubuntu2204"
+            }
+         ],
+         "production_release": true,
+         "release_candidate": false,
+         "version": "4.4.29"
+      },
+      {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-4.4/percona-server-mongodb-4.4.29-28/binary/tarball/percona-server-mongodb-4.4.29-28-x86_64.glibc2.17.tar.gz"
+               },
+               "edition": "base",
+               "target": "ubuntu1804"
             }
          ],
          "production_release": true,
