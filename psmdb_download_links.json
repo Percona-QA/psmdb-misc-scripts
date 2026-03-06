@@ -1,5 +1,37 @@
 {
    "versions": [
+      {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-8.0/percona-server-mongodb-8.0.19-7/binary/tarball/percona-server-mongodb-8.0.19-7-x86_64.noble.tar.gz"
+               },
+               "edition": "base",
+               "target": "ubuntu2404"
+            }
+         ],
+         "production_release": true,
+         "release_candidate": false,
+         "version": "8.0.19"
+      },
+      {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-8.0/percona-server-mongodb-8.0.19-7/binary/tarball/percona-server-mongodb-8.0.19-7-x86_64.jammy.tar.gz"
+               },
+               "edition": "base",
+               "target": "ubuntu2204"
+            }
+         ],
+         "production_release": true,
+         "release_candidate": false,
+         "version": "8.0.19"
+      },
      {
          "development_release": false,
          "downloads": [
@@ -86,7 +118,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-7.0/percona-server-mongodb-7.0.16-10/binary/tarball/percona-server-mongodb-7.0.16-10-x86_64.noble.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-7.0/percona-server-mongodb-7.0.30-16/binary/tarball/percona-server-mongodb-7.0.30-16-x86_64.noble.tar.gz"
                },
                "edition": "base",
                "target": "ubuntu2404"
@@ -94,7 +126,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "7.0.16"
+         "version": "7.0.30"
       },
       {
          "development_release": false,
@@ -102,7 +134,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-7.0/percona-server-mongodb-7.0.16-10/binary/tarball/percona-server-mongodb-7.0.16-10-x86_64.jammy.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-7.0/percona-server-mongodb-7.0.30-16/binary/tarball/percona-server-mongodb-7.0.30-16-x86_64.jammy.tar.gz"
                },
                "edition": "base",
                "target": "ubuntu2204"
@@ -110,7 +142,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "7.0.16"
+         "version": "7.0.30"
       },
       {
          "development_release": false,
@@ -134,7 +166,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-6.0/percona-server-mongodb-6.0.20-17/binary/tarball/percona-server-mongodb-6.0.20-17-x86_64.noble.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-6.0/percona-server-mongodb-6.0.27-21/binary/tarball/percona-server-mongodb-6.0.27-21-x86_64.noble.tar.gz"
                },
                "edition": "base",
                "target": "ubuntu2404"
@@ -142,7 +174,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "6.0.20"
+         "version": "6.0.27"
       },
       {
          "development_release": false,
@@ -150,7 +182,7 @@
             {
                "arch": "x86_64",
                "archive": {
-                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-6.0/percona-server-mongodb-6.0.20-17/binary/tarball/percona-server-mongodb-6.0.20-17-x86_64.jammy.tar.gz"
+                  "url": "https://downloads.percona.com/downloads/percona-server-mongodb-6.0/percona-server-mongodb-6.0.27-21/binary/tarball/percona-server-mongodb-6.0.27-21-x86_64.jammy.tar.gz"
                },
                "edition": "base",
                "target": "ubuntu2204"
@@ -158,7 +190,7 @@
          ],
          "production_release": true,
          "release_candidate": false,
-         "version": "6.0.20"
+         "version": "6.0.27"
       },
       {
          "development_release": false,
