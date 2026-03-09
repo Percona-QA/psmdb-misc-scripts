@@ -1,5 +1,37 @@
 {
    "versions": [
+     {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
+                  "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2404-8.2.6.tgz"
+               },
+               "edition": "base",
+               "target": "ubuntu2404"
+            }
+         ],
+         "production_release": false,
+         "release_candidate": false,
+         "version": "8.2.6"
+      },
+     {
+         "development_release": false,
+         "downloads": [
+            {
+               "arch": "x86_64",
+               "archive": {
+                  "url": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2204-8.2.6.tgz"
+               },
+               "edition": "base",
+               "target": "ubuntu2204"
+            }
+         ],
+         "production_release": false,
+         "release_candidate": false,
+         "version": "8.2.6"
+      },
       {
          "development_release": false,
          "downloads": [
